@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+
+  backend-main:
+    build: ./back/main
+    ports: 
+      - "8080:8080"
+  
+  frontend:
+    build: ./front
+    ports:
+      - "80:80"
+  
+  ml-recsys:
+    build: ./ml/recsys-service
+    ports: 
+      - "8000:8000"
+  
+  ml-search:
+    build: ./ml/search-service
+    ports: 
+      - "8001:8000"
+
