@@ -12,12 +12,18 @@
 git clone https://github.com/IU-Capstone-Project-2025/team-sync
 cd team-sync
 
-# Build and start containers
+# Build and start containers via docker-compose (try to turn on VPN, if you can't download some dependencies)
 docker-compose up --build
 ```
 
-# Access URL
-for bakend: http::/localhost:8000
+# Access 
+Default ports and sample endpoints
+| **Service** | **Port** | **Sample endpoint** | **localhost curl** |
+| --- | --- | --- | --- |
+| frontent | 80 | `/` | `curl 'http://localhost'` or `curl 'http://localhost:80'` |
+| backend | 8080 | `/hello` | `curl 'http://localhost:8080/hello'` |
+| ml-search | 8001 | `/api/searh` | `curl 'http://localhost:8001/api/search'` |
+| ml-recsys | 8000 | `/api/recsys` | `curl 'http://localhost:8000/api/recsys'` |
 
 ## Tech Stack
 
