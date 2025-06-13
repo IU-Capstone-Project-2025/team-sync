@@ -2,7 +2,6 @@ CREATE TABLE person (
     id SERIAL PRIMARY KEY,
     name VARCHAR(16) NOT NULL,
     surname VARCHAR(32) NOT NULL,
-    tg_alias VARCHAR(64) UNIQUE,
     email VARCHAR(64) UNIQUE NOT NULL
 );
 
@@ -17,12 +16,14 @@ CREATE TABLE student (
     description TEXT,
     github_alias VARCHAR(32) NOT NULL,
     resume_path TEXT,
-    person_id INTEGER NOT NULL REFERENCES person(id)
+    person_id INTEGER NOT NULL REFERENCES person(id),
+    tg_alias VARCHAR(64) UNIQUE NOT NULL
 );
 
 CREATE TABLE professor (
     person_id INTEGER NOT NULL REFERENCES person(id),
-    id SERIAL PRIMARY KEY
+    id SERIAL PRIMARY KEY,
+    tg_alias VARCHAR(64) UNIQUE
 );
 
 CREATE TABLE project (
