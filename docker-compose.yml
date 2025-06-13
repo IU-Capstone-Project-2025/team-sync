@@ -22,3 +22,46 @@ services:
     ports: 
       - "8001:8000"
 
+  postgres:
+    image: postgres:16
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: dev-db
+      POSTGRES_USER: dev-user
+      POSTGRES_PASSWORD: dev-psw
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:9.4.0
+    container_name: pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+  liquibase:
+    image: liquibase/liquibase:4.32.0
+    container_name: liquibase
+    volumes:
+      - ./liquibase:/migration/changelog
+    working_dir: ./liquibase
+    depends_on:
+      - postgres
+    command: >
+      --defaultsFile=liquibase.properties
+      update
+
+volumes:
+  pgdata:
+  pgadmin_data:
+
