@@ -53,8 +53,8 @@ services:
     image: liquibase/liquibase:4.32.0
     container_name: liquibase
     volumes:
-      - ./liquibase:/migration/changelog
-    working_dir: ./liquibase
+      - ./migration:/migration
+    working_dir: /migration
     depends_on:
       - postgres
     command: >

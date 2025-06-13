@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
       id: 1
-      author: Stepan Dementev
+      author: Elizaveta Zagurskih, Stepan Dementev
       changes:
         - sqlFile:
-            path: changelog/TS-39-init-database.sql
+            path: scripts/TS-39-init-database.sql
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ;
