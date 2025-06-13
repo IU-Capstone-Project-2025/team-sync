@@ -64,7 +64,18 @@ CREATE TABLE student_tag (
     tag_id INTEGER REFERENCES tag(id)
 );
 
+CREATE TABLE role (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(16) Unique NOT NULL,
+    description TEXT
+)
+
+CREATE TABLE student_role (
+    student_id INTEGER REFERENCES student(id),
+    role_id INTEGER REFERENCES tag(id)
+)
+
 CREATE TABLE project_tag (
     project_id INTEGER REFERENCES project(id),
     tag_id INTEGER REFERENCES project(id)
-);
+)
