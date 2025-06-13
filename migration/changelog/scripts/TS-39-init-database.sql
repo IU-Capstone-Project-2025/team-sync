@@ -53,15 +53,15 @@ CREATE TABLE student_favourite_project (
     created_at TIMESTAMP
 );
 
-CREATE TABLE tag (
+CREATE TABLE skill (
     id SERIAL PRIMARY KEY,
     name VARCHAR(16) UNIQUE NOT NULL,
     description TEXT
 );
 
-CREATE TABLE student_tag (
+CREATE TABLE student_skill (
     student_id INTEGER REFERENCES student(id),
-    tag_id INTEGER REFERENCES tag(id)
+    skill_id INTEGER REFERENCES skill(id)
 );
 
 CREATE TABLE role (
@@ -72,10 +72,10 @@ CREATE TABLE role (
 
 CREATE TABLE student_role (
     student_id INTEGER REFERENCES student(id),
-    role_id INTEGER REFERENCES tag(id)
+    role_id INTEGER REFERENCES skill(id)
 )
 
-CREATE TABLE project_tag (
+CREATE TABLE project_skill (
     project_id INTEGER REFERENCES project(id),
-    tag_id INTEGER REFERENCES project(id)
+    skill_id INTEGER REFERENCES project(id)
 )
