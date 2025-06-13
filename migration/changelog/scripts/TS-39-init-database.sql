@@ -70,6 +70,11 @@ CREATE TABLE role (
     description TEXT
 )
 
+CREATE TABLE project_role (
+    project_id INTEGER REFERENCES project(id),
+    role_id INTEGER REFERENCES role(id)
+);
+
 CREATE TABLE student_role (
     student_id INTEGER REFERENCES student(id),
     role_id INTEGER REFERENCES skill(id)
