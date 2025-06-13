@@ -3,7 +3,7 @@ CREATE TABLE person (
     name VARCHAR(16) NOT NULL,
     surname VARCHAR(32) NOT NULL,
     tg_alias VARCHAR(64) UNIQUE NOT NULL,
-    email(64) VARCHAR UNIQUE NOT NULL
+    email VARCHAR(64) UNIQUE NOT NULL
 );
 
 CREATE TABLE study_group (
