@@ -68,7 +68,7 @@ CREATE TABLE role (
     id SERIAL PRIMARY KEY,
     name VARCHAR(16) Unique NOT NULL,
     description TEXT
-)
+);
 
 CREATE TABLE project_role (
     project_id INTEGER REFERENCES project(id),
@@ -78,9 +78,9 @@ CREATE TABLE project_role (
 CREATE TABLE student_role (
     student_id INTEGER REFERENCES student(id),
     role_id INTEGER REFERENCES skill(id)
-)
+);
 
 CREATE TABLE project_skill (
     project_id INTEGER REFERENCES project(id),
     skill_id INTEGER REFERENCES project(id)
-)
+);
