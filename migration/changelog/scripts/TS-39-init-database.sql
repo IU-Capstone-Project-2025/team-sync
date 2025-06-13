@@ -2,7 +2,7 @@ CREATE TABLE person (
     id SERIAL PRIMARY KEY,
     name VARCHAR(16) NOT NULL,
     surname VARCHAR(32) NOT NULL,
-    tg_alias VARCHAR(64) UNIQUE NOT NULL,
+    tg_alias VARCHAR(64) UNIQUE,
     email VARCHAR(64) UNIQUE NOT NULL
 );
 
