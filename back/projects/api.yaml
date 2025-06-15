@@ -7,142 +7,14 @@ info:
 servers:
   - url: http://localhost
 
-paths:
-  /skills:
-    get:
-      tags: [Skills]
-      summary: Get available skills
-      responses:
-        '200':
-          description: List of available skills
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SkillListRespone'
-        '400':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-    
-  /roles:
-    get:
-      tags: [Roles]
-      summary: Get available roles
-      responses:
-        '200':
-          description: List of available roles
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RoleListRespone'
-        '400':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /projects:
-    get:
-      tags: [Projects]
-      summary: Get list of projects
-      parameters:
-        - $ref: '#/components/parameters/skillFilter'
-        - $ref: '#/components/parameters/roleFilter'
-        - $ref: '#/components/parameters/courseNameFilter'
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/pageSize'
-      responses:
-        '200':
-          description: Projects retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProjectListResponse'
-        '400':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-    post:
-      tags: [Projects]
-      summary: Create a new project
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProjectCreateRequest'
-      responses:
-        '201':
-          description: Project created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProjectResponse'
-        '400':
-          description: Invalid request body
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /projects/{id}:
-    put:
-      tags: [Projects]
-      summary: Update project by id
-      parameters:
-        - $ref: '#/components/parameters/projectID'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ProjectUpdateRequest'
-      responses:
-        '200':
-          description: Project updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProjectResponse'
-        '400':
-          description: Invalid request body
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Project not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-    delete:
-      tags: [Projects]
-      summary: Delete project by id
-      parameters:
-        - $ref: '#/components/parameters/projectID'
-      responses:
-        '200':
-          description: Project deleted successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BaseResponse'
-        '404':
-          description: Project not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Use JWT token obtained from Auth Service
+
   parameters:
     skillFilter:
       name: skill
@@ -230,7 +102,7 @@ components:
               type: object
               nullable: true
 
-    SkillListRespone:
+    SkillListResponse:
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
         - type: object
@@ -386,3 +258,141 @@ components:
         description:
           type: string
           nullable: true
+
+security:
+  - bearerAuth: []
+
+paths:
+  /skills:
+    get:
+      tags: [Skills]
+      summary: Get available skills
+      responses:
+        '200':
+          description: List of available skills
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkillListRespone'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    
+  /roles:
+    get:
+      tags: [Roles]
+      summary: Get available roles
+      responses:
+        '200':
+          description: List of available roles
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleListRespone'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /projects:
+    get:
+      tags: [Projects]
+      summary: Get list of projects
+      parameters:
+        - $ref: '#/components/parameters/skillFilter'
+        - $ref: '#/components/parameters/roleFilter'
+        - $ref: '#/components/parameters/courseNameFilter'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/pageSize'
+      responses:
+        '200':
+          description: Projects retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectListResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      tags: [Projects]
+      summary: Create a new project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreateRequest'
+      responses:
+        '201':
+          description: Project created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponse'
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /projects/{id}:
+    put:
+      tags: [Projects]
+      summary: Update project by id
+      parameters:
+        - $ref: '#/components/parameters/projectID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdateRequest'
+      responses:
+        '200':
+          description: Project updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponse'
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags: [Projects]
+      summary: Delete project by id
+      parameters:
+        - $ref: '#/components/parameters/projectID'
+      responses:
+        '200':
+          description: Project deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '404':
+          description: Project not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
