@@ -1,0 +1,143 @@
+openapi: 3.0.3
+info:
+  title: Auth Service Api
+  version: 1.0.0
+  description: REST API for logging-in and registering users
+
+servers:
+  - url: http://localhost
+
+components:
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    BaseResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            text:
+              type: string
+        success:
+          type: boolean
+  
+    TokenResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/TokenResponseData'
+
+    TokenResponseData:
+      type: object
+      properties:
+        access_token:
+          type: string
+
+    StudentRegistrationRequest:
+      type: object
+      required:
+        - study_group
+        - description
+        - github_alias
+        - tg_alias
+      properties:
+        study_group:
+          type: string
+          description: Study group of the student. (e.g. "CS-101", "DSAI-1", "SD-3")
+        description:
+          type: string
+          description: Description of the student. (e.g. "I am a first-year student in Computer Science")
+        github_alias:
+          type: string
+          description: GitHub alias of the student.
+        tg_alias:
+          type: string
+          description: Telegram alias of the student.
+    
+    ProfessorRegistrationRequest:
+      type: object
+      properties:
+        tg_alias:
+          type: string
+          description: Telegram alias of the professor.
+          
+security:
+  - bearerAuth: []
+
+paths:
+  /token:
+    get:
+      summary: Get internal JWT
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Successfully retrieved internal JWT
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        '401':
+          description: Invalid external token
+        '409':
+          description: User is not registered
+
+  /student:
+    post:
+      summary: Register new Student and get internal JWT
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudentRegistrationRequest"
+      responses:
+        '200':
+          description: Successfully registered student and retrieved internal JWT
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        '400':
+          description: Bad request, invalid input data
+        '401':
+          description: Invalid external token
+        '409':
+          description: User is already registered or other conflict
+
+  /professor:
+    post:
+      summary: Register new Professor and get internal JWT
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfessorRegistrationRequest"
+      responses:
+        '200':
+          description: Successfully registered professor and retrieved internal JWT
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        '400':
+          description: Bad request, invalid input data
+        '401':
+          description: Invalid external token
+        '409':
+          description: User is already registered or other conflict
