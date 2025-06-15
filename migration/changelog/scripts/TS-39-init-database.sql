@@ -15,7 +15,6 @@ CREATE TABLE student (
     study_group_id INTEGER NOT NULL REFERENCES study_group(id),
     description TEXT,
     github_alias VARCHAR(32) NOT NULL,
-    resume_path TEXT,
     person_id INTEGER NOT NULL REFERENCES person(id),
     tg_alias VARCHAR(64) UNIQUE NOT NULL
 );
