@@ -1,8 +1,11 @@
-openapi: 3.0.4
+openapi: 3.0.3
 info:
   title: Projects Service API
   description: API for managing projects
   version: 1.0.0
+
+servers:
+  - url: http://localhost
 
 paths:
   /projects:
@@ -12,6 +15,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/skillFilter'
         - $ref: '#/components/parameters/roleFilter'
+        - $ref: '#/components/parameters/courseNameFilter'
       responses:
         '200':
           description: Projects retrieved successfully
@@ -117,6 +121,17 @@ components:
       name: role
       in: query
       description: Filter projects by role/roles
+      schema:
+        type: array
+        items:
+          type: string
+      style: form
+      explode: true
+
+    courseNameFilter:
+      name: course_name
+      in: query
+      description: Filter projects by course
       schema:
         type: array
         items:
