@@ -29,7 +29,7 @@ CREATE TABLE project (
     id SERIAL PRIMARY KEY,
     course_name VARCHAR(32) NOT NULL,
     team_lead_id INTEGER NOT NULL REFERENCES person(id),
-    description TEXT,
+    description TEXT NOT NULL,
     project_link TEXT,
     status VARCHAR(16) NOT NULL
 );
@@ -76,10 +76,10 @@ CREATE TABLE project_role (
 
 CREATE TABLE student_role (
     student_id INTEGER REFERENCES student(id),
-    role_id INTEGER REFERENCES skill(id)
+    role_id INTEGER REFERENCES role(id)
 );
 
 CREATE TABLE project_skill (
     project_id INTEGER REFERENCES project(id),
-    skill_id INTEGER REFERENCES project(id)
+    skill_id INTEGER REFERENCES skill(id)
 );
