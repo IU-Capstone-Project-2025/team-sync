@@ -117,7 +117,7 @@ components:
               type: object
               nullable: true
 
-    RoleListRespone:
+    RoleListResponse:
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
         - type: object
@@ -273,7 +273,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SkillListRespone'
+                $ref: '#/components/schemas/SkillListResponse'
         '400':
           description: Invalid request
           content:
@@ -291,7 +291,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RoleListRespone'
+                $ref: '#/components/schemas/RoleListResponse'
         '400':
           description: Invalid request
           content:
