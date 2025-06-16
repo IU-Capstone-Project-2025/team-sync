@@ -1,0 +1,296 @@
+openapi: 3.0.3
+info:
+  title: Resume Service API
+  description: API for managing user (student/professor) profile
+  version: 1.0.0
+
+servers:
+  - url: http://localhost
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    BaseResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          nullable: true
+          properties:
+            code:
+              type: string
+            text:
+              type: string
+        success:
+          type: boolean
+
+    ErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              nullable: true
+
+    PaginatedResponse:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+        total:
+          type: integer
+        page:
+          type: integer
+        pageSize:
+          type: integer
+
+    
+
+    StudentProfileResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Student'
+
+    ProfessorProfileResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Professor'
+
+    UpdateStudentRequest:
+      type: object
+      properties:
+        study_group:
+          type: string
+        description:
+          type: string
+        github_alias:
+          type: string
+        tg_alias:
+          type: string
+        skills:
+          type: array
+          items:
+            type: string
+        roles:
+          type: array
+          items:
+            type: string
+
+    UpdateProfessorRequest:
+      type: object
+      properties:
+        tg_alias:
+          type: string
+          nullable: true
+
+    Studet:
+      type: object
+      properties:
+        id:
+          type: integer
+        person_id:
+          type: integer
+        study_group:
+          type: string
+        description:
+          type: string
+          nullable: true
+        github_alias:
+          type: string
+        tg_alias:
+          type: string
+        skills:
+          type: array
+          items:
+            $ref: '#/components/schemas/Skill'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+
+    Professor:
+      type: object
+      properties:
+        id:
+          type: integer
+        person_id:
+          type: integer
+        tg_alias:
+          type: string
+          nullable: true
+
+
+    Skill:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+
+
+security:
+  - bearerAuth: []
+
+paths:
+  /student/profile:
+    get:
+      tags: [Student]
+      summary: Get student profile
+      responses:
+        '200':
+          description: Student profile retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentProfileResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (user is not a student)
+
+    put:
+      tags: [Student]
+      summary: Update student profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStudentRequest'
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentProfileResponse'
+        '400':
+          description: Invalid request
+        '403':
+          description: Forbidden
+
+  /professor/profile:
+    get:
+      tags: [Professor]
+      summary: Get professor profile
+      responses:
+        '200':
+          description: Professor profile retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfessorProfileResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden (user is not a professor)
+
+    put:
+      tags: [Professor]
+      summary: Update professor profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfessorRequest'
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfessorProfileResponse'
+        '400':
+          description: Invalid request
+        '403':
+          description: Forbidden
+
+  /profile/skills:
+    get:
+      tags: [Common]
+      summary: Get available skills
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page Number
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Number of items per page
+      responses:
+        '200':
+          description: Skills list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Skill'
+
+  /profile/roles:
+    get:
+      tags: [Common]
+      summary: Get available roles
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page Number
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Number of items per page
+      responses:
+        '200':
+          description: Roles list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
