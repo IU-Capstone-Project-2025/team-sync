@@ -17,6 +17,7 @@ components:
   schemas:
     BaseResponse:
       type: object
+      description: Base response structure for all API responses
       properties:
         error:
           type: object
@@ -24,8 +25,10 @@ components:
           properties:
             code:
               type: string
+              example: "VALIDATION_ERROR"
             text:
               type: string
+              example: "Invalid input data"
         success:
           type: boolean
 
@@ -40,6 +43,7 @@ components:
 
     PaginatedResponse:
       type: object
+      description: Paginated list response
       properties:
         items:
           type: array
@@ -70,6 +74,7 @@ components:
 
     UpdateStudentRequest:
       type: object
+      description: Student profile update data
       properties:
         study_group:
           type: string
@@ -97,6 +102,7 @@ components:
 
     Student:
       type: object
+      description: Student profile information
       properties:
         id:
           type: integer
@@ -104,6 +110,7 @@ components:
           type: integer
         study_group:
           type: string
+          example: "CS-101"
         description:
           type: string
           nullable: true
@@ -122,6 +129,7 @@ components:
 
     Professor:
       type: object
+      description: Professor profile information
       properties:
         id:
           type: integer
@@ -145,6 +153,7 @@ components:
 
     Role:
       type: object
+      description: User role information
       properties:
         id:
           type: integer
@@ -154,15 +163,14 @@ components:
           type: string
           nullable: true
 
-
-security:
-  - bearerAuth: []
-
 paths:
   /student/profile/{person_id}:
     get:
       tags: [Profile]
       summary: Get student profile by ID
+      description: Returns complete student profile information
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: person_id
@@ -178,7 +186,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/StudentProfileResponse'
         '401':
-          description: Unauthorized
+          description: Unauthorized - Missing or invalid authentication token
         '403':
           description: Forbidden (user is not a student)
         '404':
@@ -187,6 +195,9 @@ paths:
     put:
       tags: [Profile]
       summary: Update student profile by person_id
+      description: Update student profile information
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: person_id
@@ -218,6 +229,9 @@ paths:
     get:
       tags: [Profile]
       summary: Get Professor profile by ID
+      description: Returns complete professor profile information
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: person_id
@@ -242,6 +256,9 @@ paths:
     put:
       tags: [Profile]
       summary: Update professor profile by person_id
+      description: Update professor profile information
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: person_id
@@ -269,10 +286,13 @@ paths:
         '404':
           description: Professor profile not found  
 
-  /profile/{person_id}/skills:
+  /student/profile/{person_id}/skills:
     get:
       tags: [Profile]
       summary: Get skills of a profile
+      description: Returns list of skills associated with the profile
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: person_id
@@ -297,6 +317,9 @@ paths:
     post:
       tags: [Profile]
       summary: Add a skill to a profile
+      description: Add new skill to user profile
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: person_id
@@ -316,16 +339,25 @@ paths:
                 - skill_id
       responses:
         '200':
-          description: Skill added
+          description: Skill added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
         '400':
-          description: Invalid input
+          description: Invalid input - skill_id is required or invalid
         '403':
-          description: Forbidden
+          description: Forbidden - User not authorized to modify this profile
+        '404':
+          description: Skill not found
 
-  /profile/{person_id}/{skill_id}:
+  /student/profile/{person_id}/skills/{skill_id}:
     delete:
       tags: [Profile]
       summary: Remove a skill from a profile
+      description: Remove skill from user profile
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: person_id
@@ -339,17 +371,24 @@ paths:
             type: integer
       responses:
         '200':
-          description: Skill removed
+          description: Skill removed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '403':
+          description: Forbidden - User not authorized to modify this profile
         '404':
           description: Skill not found in profile
-        '403':
-          description: Forbidden
 
 
-  /profile/{person_id}/roles:
+  /student/profile/{person_id}/roles:
     get:
       tags: [Profile]
       summary: Get roles of a profile
+      description: Returns list of roles associated with the profile
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: person_id
@@ -374,6 +413,9 @@ paths:
     post:
       tags: [Profile]
       summary: Add a role to a profile
+      description: Add new role to user profile
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: person_id
@@ -393,16 +435,24 @@ paths:
                 - role_id
       responses:
         '200':
-          description: Role added
+          description: Role added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
         '400':
-          description: Invalid input
+          description: Invalid input - role_id is required or invalid
         '403':
-          description: Forbidden
+          description: Forbidden - User not authorized to modify this profile
+        '404':
+          description: Role not found
     
-  /profile/{person_id}/{role_id}:
+  /student/profile/{person_id}/roles/{role_id}:
     delete:
       tags: [Profile]
       summary: Remove a role from a profile
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: person_id
@@ -416,8 +466,12 @@ paths:
             type: integer
       responses:
         '200':
-          description: Role removed
+          description: Role removed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '403':
+          description: Forbidden - User not authorized to modify this profile
         '404':
           description: Role not found in profile
-        '403':
-          description: Forbidden
