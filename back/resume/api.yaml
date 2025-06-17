@@ -187,8 +187,6 @@ paths:
                 $ref: '#/components/schemas/StudentProfileResponse'
         '401':
           description: Unauthorized - Missing or invalid authentication token
-        '403':
-          description: Forbidden (user is not a student)
         '404':
           description: Student not found
 
@@ -225,6 +223,59 @@ paths:
         '404':
           description: Student profile not found
 
+    post:
+      tags: [Profile]
+      summary: Create Student profile
+      description: Creates a new student profile for the specified person_id
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the Person for whom to create a Student profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                study_group:
+                  type: string
+                description:
+                  type: string
+                  nullable: true
+                github_alias:
+                  type: string
+                tg_alias:
+                  type: string
+                skills:
+                  type: array
+                  items:
+                    type: integer
+                roles:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '201':
+          description: Student profile created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentProfileResponse'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Person not found 
+
   /professor/profile/{person_id}:
     get:
       tags: [Profile]
@@ -248,8 +299,6 @@ paths:
                 $ref: '#/components/schemas/ProfessorProfileResponse'
         '401':
           description: Unauthorized
-        '403':
-          description: Forbidden (user is not a professor)
         '404':
           description: Professor not found
 
@@ -286,6 +335,46 @@ paths:
         '404':
           description: Professor profile not found  
 
+    post:
+      tags: [Profile]
+      summary: Create Professor profile
+      description: Creates a new professor profile for the specified person_id
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the Person for whom to create a Professor profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tg_alias:
+                  type: string
+                  nullable: true
+              required: []
+      responses:
+        '201':
+          description: Professor profile created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfessorProfileResponse'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Person not found
+
   /student/profile/{person_id}/skills:
     get:
       tags: [Profile]
@@ -316,8 +405,8 @@ paths:
 
     post:
       tags: [Profile]
-      summary: Add a skill to a profile
-      description: Add new skill to user profile
+      summary: Set skills for a profile
+      description: Replace or add multiple skills to user profile
       security:
         - bearerAuth: []
       parameters:
@@ -333,19 +422,21 @@ paths:
             schema:
               type: object
               properties:
-                skill_id:
-                  type: integer
+                skill_ids:
+                  type: array
+                  items:
+                    type: integer
               required:
-                - skill_id
+                - skill_ids
       responses:
         '200':
-          description: Skill added successfully
+          description: Skills added successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/BaseResponse'
         '400':
-          description: Invalid input - skill_id is required or invalid
+          description: Invalid input - skill_ids is required or invalid
         '403':
           description: Forbidden - User not authorized to modify this profile
         '404':
@@ -354,8 +445,8 @@ paths:
   /student/profile/{person_id}/skills/{skill_id}:
     delete:
       tags: [Profile]
-      summary: Remove a skill from a profile
-      description: Remove skill from user profile
+      summary: Remove multiple skills from a profile
+      description: Delete multiple skills from the profile by skill IDs.
       security:
         - bearerAuth: []
       parameters:
@@ -364,14 +455,22 @@ paths:
           required: true
           schema:
             type: integer
-        - in: path
-          name: skill_id
-          required: true
-          schema:
-            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                skill_ids:
+                  type: array
+                  items:
+                    type: integer
+              required:
+                - skill_ids
       responses:
         '200':
-          description: Skill removed successfully
+          description: Skills removed successfully
           content:
             application/json:
               schema:
@@ -412,8 +511,8 @@ paths:
       
     post:
       tags: [Profile]
-      summary: Add a role to a profile
-      description: Add new role to user profile
+      summary: Set roles for a profile
+      description: Replace ir add multiple roles to user profile
       security:
         - bearerAuth: []
       parameters:
@@ -429,13 +528,15 @@ paths:
             schema:
               type: object
               properties:
-                role_id:
-                  type: integer
+                role_ids:
+                  type: array
+                  items:
+                    type: integer
               required:
-                - role_id
+                - role_ids
       responses:
         '200':
-          description: Role added successfully
+          description: Roles added successfully
           content:
             application/json:
               schema:
@@ -450,7 +551,8 @@ paths:
   /student/profile/{person_id}/roles/{role_id}:
     delete:
       tags: [Profile]
-      summary: Remove a role from a profile
+      summary: Remove multiple roles from a profile
+      description: Delete multiple roles from the profile by role IDs.
       security:
         - bearerAuth: []
       parameters:
@@ -459,14 +561,22 @@ paths:
           required: true
           schema:
             type: integer
-        - in: path
-          name: role_id
-          required: true
-          schema:
-            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role_ids:
+                  type: array
+                  items:
+                    type: integer
+              required:
+                - role_ids
       responses:
         '200':
-          description: Role removed successfully
+          description: Roles removed successfully
           content:
             application/json:
               schema:
