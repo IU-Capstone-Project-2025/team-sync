@@ -261,32 +261,32 @@ paths:
           description: Forbidden
 
     post:
-    tags: [Profile]
-    summary: Add a skill to a profile
-    parameters:
-      - in: path
-        name: person_id
-        required: true
-        schema:
-          type: integer
-    requestBody:
-      required: true
-      content:
-        application/json:
+      tags: [Profile]
+      summary: Add a skill to a profile
+      parameters:
+        - in: path
+          name: person_id
+          required: true
           schema:
-            type: object
-            properties:
-              skill_id:
-                type: integer
-            required:
-              - skill_id
-    responses:
-      '200':
-        description: Skill added
-      '400':
-        description: Invalid input
-      '403':
-        description: Forbidden
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                skill_id:
+                  type: integer
+              required:
+                - skill_id
+      responses:
+        '200':
+          description: Skill added
+        '400':
+          description: Invalid input
+        '403':
+          description: Forbidden
 
   /profile/{person_id}/{skill_id}:
     delete:
@@ -294,7 +294,7 @@ paths:
       summary: Remove a skill from a profile
       parameters:
         - in: path
-          name: profile_id
+          name: person_id
           required: true
           schema:
             type: integer
@@ -338,32 +338,32 @@ paths:
           description: Forbidden
       
     post:
-    tags: [Profile]
-    summary: Add a role to a profile
-    parameters:
-      - in: path
-        name: person_id
-        required: true
-        schema:
-          type: integer
-    requestBody:
-      required: true
-      content:
-        application/json:
+      tags: [Profile]
+      summary: Add a role to a profile
+      parameters:
+        - in: path
+          name: person_id
+          required: true
           schema:
-            type: object
-            properties:
-              role_id:
-                type: integer
-            required:
-              - role_id
-    responses:
-      '200':
-        description: Role added
-      '400':
-        description: Invalid input
-      '403':
-        description: Forbidden
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role_id:
+                  type: integer
+              required:
+                - role_id
+      responses:
+        '200':
+          description: Role added
+        '400':
+          description: Invalid input
+        '403':
+          description: Forbidden
     
   /profile/{person_id}/{role_id}:
     delete:
