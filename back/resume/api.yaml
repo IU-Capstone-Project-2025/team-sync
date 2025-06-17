@@ -52,8 +52,6 @@ components:
         pageSize:
           type: integer
 
-    
-
     StudentProfileResponse:
       allOf:
         - $ref: '#/components/schemas/BaseResponse'
@@ -97,7 +95,7 @@ components:
           type: string
           nullable: true
 
-    Studet:
+    Student:
       type: object
       properties:
         id:
@@ -161,10 +159,17 @@ security:
   - bearerAuth: []
 
 paths:
-  /student/profile:
+  /student/profile/{person_id}:
     get:
-      tags: [Student]
-      summary: Get student profile
+      tags: [Profile]
+      summary: Get student profile by ID
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the student whose profile is being requested
       responses:
         '200':
           description: Student profile retrieved
@@ -176,10 +181,19 @@ paths:
           description: Unauthorized
         '403':
           description: Forbidden (user is not a student)
+        '404':
+          description: Student not found
 
     put:
-      tags: [Student]
-      summary: Update student profile
+      tags: [Profile]
+      summary: Update student profile by person_id
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+          description: Student person id
       requestBody:
         required: true
         content:
@@ -188,20 +202,29 @@ paths:
               $ref: '#/components/schemas/UpdateStudentRequest'
       responses:
         '200':
-          description: Profile updated
+          description: Student profile updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StudentProfileResponse'
+                $ref: '#/components/schemas/BaseResponse'
         '400':
           description: Invalid request
         '403':
           description: Forbidden
+        '404':
+          description: Student profile not found
 
-  /professor/profile:
+  /professor/profile/{person_id}:
     get:
-      tags: [Professor]
-      summary: Get professor profile
+      tags: [Profile]
+      summary: Get Professor profile by ID
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the Professor whose profile is being requested
       responses:
         '200':
           description: Professor profile retrieved
@@ -213,10 +236,19 @@ paths:
           description: Unauthorized
         '403':
           description: Forbidden (user is not a professor)
+        '404':
+          description: Professor not found
 
     put:
-      tags: [Professor]
-      summary: Update professor profile
+      tags: [Profile]
+      summary: Update professor profile by person_id
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+          description: Professor person id
       requestBody:
         required: true
         content:
@@ -225,15 +257,17 @@ paths:
               $ref: '#/components/schemas/UpdateProfessorRequest'
       responses:
         '200':
-          description: Profile updated
+          description: Professor profile updated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProfessorProfileResponse'
+                $ref: '#/components/schemas/BaseResponse'
         '400':
           description: Invalid request
         '403':
           description: Forbidden
+        '404':
+          description: Professor profile not found  
 
   /profile/{person_id}/skills:
     get:
