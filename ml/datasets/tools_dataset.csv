@@ -1,0 +1,133 @@
+Role,Tool,Description
+ML / Data Science,Python,"Data science, ML, web, scripting"
+Backend,Python,"Data science, ML, web, scripting"
+Frontend,JavaScript,"Web, frontend/backend, Node.js"
+Backend,JavaScript,"Web, frontend/backend, Node.js"
+Backend,Java,"Enterprise, Android, backend"
+Mobile,Java,"Enterprise, Android, backend"
+Backend,C#,".NET stack, games, enterprise"
+GameDev,C#,".NET stack, games, enterprise"
+Backend,C++,"System, games, embedded"
+GameDev,C++,"System, games, embedded"
+Backend,TypeScript,"Typed JS, large web apps"
+Frontend,TypeScript,"Typed JS, large web apps"
+Backend,Go,"Cloud, backend, scalable systems"
+Backend,Ruby,"Web (Rails), scripting"
+Backend,PHP,"Web, CMS (WordPress, etc.)"
+Frontend,Swift,iOS/macOS apps
+Mobile,Swift,iOS/macOS apps
+Mobile,Kotlin,"Android, JVM apps"
+Backend,Kotlin,"Android, JVM apps"
+System,Rust,"System, secure & performant apps"
+Backend,Rust,"System, secure & performant apps"
+Backend,Scala,"JVM, big data, functional"
+ML / Data Science,Scala,"JVM, big data, functional"
+Mobile,Dart,"Flutter, multi-platform UI"
+Frontend,Dart,"Flutter, multi-platform UI"
+System,C,"System, embedded, OS"
+Scripting/DevOps,Shell (Bash),"Scripting, DevOps"
+DB,SQL,"Databases, queries"
+ML / Data Science,MATLAB,"Engineering, scientific computing"
+Scripting/DevOps,Perl,"Scripting, text processing"
+ML / Data Science,R,"Statistics, data analysis"
+Mobile,Objective-C,Legacy iOS/macOS apps
+Functional/ML,Haskell,"Functional programming, research"
+ML / Data Science,Julia,"Scientific computing, ML"
+Scripting/GameDev,Lua,"Embedded, games, scripting"
+Legacy,Visual Basic,"Legacy enterprise, Windows apps"
+Scripting/Build,Groovy,"JVM, scripting, Gradle build scripts"
+Functional,F#,".NET, functional"
+System/Embedded,Assembly,"Low-level, embedded, firmware"
+Scripting/DevOps,Powershell,"Windows scripting, DevOps"
+Frontend,Elm,Functional frontend web apps
+Backend,Crystal,"Ruby-like, compiled, performance"
+Telecom,Erlang,"Distributed, telecom, messaging"
+Backend,Elixir,"Scalable, distributed web apps"
+Legacy,COBOL,"Legacy enterprise, banking systems"
+ML / Data Science,Fortran,"Scientific, legacy HPC"
+Cloud/Platform,Apex,Salesforce platform
+Enterprise,ABAP,SAP platform
+Blockchain,Solidity,"Smart contracts, blockchain"
+Backend,Django (Python),High-level web framework for rapid development
+Backend,Flask (Python),Lightweight web framework
+Backend,FastAPI (Python),"Modern, fast (async) web APIs"
+ML / Data Science,NumPy (Python),"Scientific computing, arrays"
+ML / Data Science,pandas (Python),Data analysis and manipulation
+ML / Data Science,TensorFlow (Python),Machine learning and deep learning
+ML / Data Science,PyTorch (Python),Deep learning framework
+ML / Data Science,scikit-learn (Python),Machine learning and data mining
+ML / Data Science,Matplotlib (Python),Data visualization
+Backend,Scrapy (Python),Web scraping framework
+Frontend,React (JavaScript),UI library for building frontend interfaces
+Frontend,Vue.js (JavaScript),Progressive frontend framework
+Frontend,Angular (TypeScript),"Robust, typed frontend framework"
+Frontend,Next.js (JavaScript),React-based SSR/SSG web framework
+Backend,Express.js (JavaScript),Minimalist backend framework for Node.js
+Backend,NestJS (TypeScript),Typed backend framework (inspired by Angular)
+Frontend,jQuery (JavaScript),DOM manipulation and utilities
+Frontend,D3.js (JavaScript),Data visualization
+Frontend,Three.js (JavaScript),3D graphics for the web
+Backend,Spring Boot (Java),Rapid enterprise app development
+Backend,Hibernate (Java),Object-relational mapping (ORM)
+Backend,Jakarta EE (Java),Enterprise web applications
+Backend,Micronaut (Java),Modern JVM-based microservices
+Backend,Vert.x (Java),Reactive applications
+Test/Backend,JUnit (Java),Unit testing framework
+Backend,ASP.NET Core (C#),"Web, APIs, microservices"
+Backend,Entity Framework (C#),ORM for data access
+GameDev,Unity (C#),Game development engine
+Mobile,Xamarin (C#),Cross-platform mobile apps
+Frontend,Blazor (C#),WebAssembly frontend apps
+GUI,Qt (C++),Cross-platform GUI and application framework
+Libs/System,Boost (C++),Portable C++ source libraries
+GameDev,Unreal Engine (C++),Game development engine
+ML / Data Science,OpenCV (C++),Computer vision and image processing
+Networking,POCO (C++),Networking and server libraries
+Backend,TypeORM (TypeScript),ORM for TypeScript and Node.js
+Frontend,RxJS (TypeScript),Reactive programming library
+Backend,Gin (Go),Web framework
+Backend,Echo (Go),"High-performance, extensible web framework"
+Backend,Beego (Go),Web application framework
+Backend,Revel (Go),High-productivity web framework
+Backend,GORM (Go),ORM library
+Backend,Ruby on Rails (Ruby),Full-stack web framework
+Backend,Sinatra (Ruby),Lightweight web framework
+Backend,Hanami (Ruby),Modern web framework
+Test/Backend,RSpec (Ruby),Testing tool
+Backend,Laravel (PHP),Elegant web framework
+Backend,Symfony (PHP),Reusable PHP components and web framework
+Backend,CodeIgniter (PHP),Lightweight web framework
+Backend,Yii (PHP),"Fast, secure web framework"
+Test/Backend,PHPUnit (PHP),Testing framework
+Frontend,SwiftUI (Swift),Declarative UI framework for Apple platforms
+Backend,Vapor (Swift),Web framework for Swift
+Networking,Alamofire (Swift),HTTP networking library
+Frontend,Combine (Swift),Reactive programming framework
+Backend,Ktor (Kotlin),Asynchronous web framework for Kotlin
+Backend,Spring (Kotlin),Kotlin support for Spring ecosystem
+Backend,Exposed (Kotlin),ORM framework for Kotlin
+Backend,Rocket (Rust),Web framework
+Backend,Actix (Rust),Powerful actor system and web framework
+System,Tokio (Rust),Asynchronous runtime for Rust
+Backend,Diesel (Rust),ORM and query builder
+System,Serde (Rust),Serialization/deserialization library
+Backend,Play Framework (Scala),Reactive web framework
+Backend,Akka (Scala),Actor-based concurrency framework
+Backend,Slick (Scala),Functional relational mapping (FRM)
+Frontend,Flutter (Dart),Multi-platform UI toolkit
+Backend,Angel (Dart),Web framework
+GameDev,Cocos2d-x (C++),Open source game framework
+GameDev,SDL (C),Simple DirectMedia Layer for multimedia/games
+GUI,GTK (C),GUI toolkit for Linux
+Scripting/DevOps,Bash-it (Shell),Bash framework for scripts and plugins
+Scripting/DevOps,Zsh (Shell),Powerful shell with plugins
+ML / Data Science,BeautifulSoup (Python),HTML/XML parsing library
+ML / Data Science,Requests (Python),HTTP library for Python
+Frontend,Svelte (JavaScript),Modern frontend compiler/framework
+Frontend,Chart.js (JavaScript),Simple and flexible charting library
+Backend,Prisma (TypeScript),Next-generation ORM for Node.js and TypeScript
+Backend,Sequelize (JavaScript),Promise-based ORM for Node.js
+Backend,Hapi (JavaScript),Rich framework for building applications and APIs
+Backend,Deno (TypeScript),Secure JavaScript/TypeScript runtime and libraries
+Backend,Bottle (Python),"Fast, simple micro web-framework"
+Backend,Tornado (Python),Web framework and asynchronous networking library
