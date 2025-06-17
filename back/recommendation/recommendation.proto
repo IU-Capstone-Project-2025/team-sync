@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_package = "ru.teamsync.grpc";
+option java_outer_classname = "RecommendationProto";
+
+service ProjectsRecommendations {
+  rpc FetchRecommendation (ProjectsRecommendationsRequest) returns (ProjectsRecommendationsResponse);
+}
+
+message ProjectsRecommendationsRequest {
+  int32 read_start = 1;
+  int32 amount = 2;
+}
+
+message ProjectsRecommendationsResponse {
+  repeated int32 recommendations = 1;
+}
