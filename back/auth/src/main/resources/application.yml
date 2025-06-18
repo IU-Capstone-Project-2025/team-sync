@@ -6,3 +6,5 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: https://login.microsoftonline.com/TENANT_ID/v2.0
+  web:
+    allowed-origins: http://localhost:5173
