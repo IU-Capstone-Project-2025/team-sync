@@ -1,0 +1,587 @@
+openapi: 3.0.3
+info:
+  title: Resume Service API
+  description: API for managing user (student/professor) profile
+  version: 1.0.0
+
+servers:
+  - url: http://localhost
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    BaseResponse:
+      type: object
+      description: Base response structure for all API responses
+      properties:
+        error:
+          type: object
+          nullable: true
+          properties:
+            code:
+              type: string
+              example: "VALIDATION_ERROR"
+            text:
+              type: string
+              example: "Invalid input data"
+        success:
+          type: boolean
+
+    ErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              type: object
+              nullable: true
+
+    PaginatedResponse:
+      type: object
+      description: Paginated list response
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+        total:
+          type: integer
+        page:
+          type: integer
+        pageSize:
+          type: integer
+
+    StudentProfileResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Student'
+
+    ProfessorProfileResponse:
+      allOf:
+        - $ref: '#/components/schemas/BaseResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/Professor'
+
+    UpdateStudentRequest:
+      type: object
+      description: Student profile update data
+      properties:
+        study_group:
+          type: string
+        description:
+          type: string
+        github_alias:
+          type: string
+        tg_alias:
+          type: string
+        skills:
+          type: array
+          items:
+            type: string
+        roles:
+          type: array
+          items:
+            type: string
+
+    UpdateProfessorRequest:
+      type: object
+      properties:
+        tg_alias:
+          type: string
+          nullable: true
+
+    Student:
+      type: object
+      description: Student profile information
+      properties:
+        id:
+          type: integer
+        person_id:
+          type: integer
+        study_group:
+          type: string
+          example: "CS-101"
+        description:
+          type: string
+          nullable: true
+        github_alias:
+          type: string
+        tg_alias:
+          type: string
+        skills:
+          type: array
+          items:
+            $ref: '#/components/schemas/Skill'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+
+    Professor:
+      type: object
+      description: Professor profile information
+      properties:
+        id:
+          type: integer
+        person_id:
+          type: integer
+        tg_alias:
+          type: string
+          nullable: true
+
+
+    Skill:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+
+    Role:
+      type: object
+      description: User role information
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+
+paths:
+  /student/profile/{person_id}:
+    get:
+      tags: [Profile]
+      summary: Get student profile by ID
+      description: Returns complete student profile information
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the student whose profile is being requested
+      responses:
+        '200':
+          description: Student profile retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentProfileResponse'
+        '401':
+          description: Unauthorized - Missing or invalid authentication token
+        '404':
+          description: Student not found
+
+    put:
+      tags: [Profile]
+      summary: Update student profile by person_id
+      description: Update student profile information
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+          description: Student person id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStudentRequest'
+      responses:
+        '200':
+          description: Student profile updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Invalid request
+        '403':
+          description: Forbidden
+        '404':
+          description: Student profile not found
+
+    post:
+      tags: [Profile]
+      summary: Create Student profile
+      description: Creates a new student profile for the specified person_id
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the Person for whom to create a Student profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                study_group:
+                  type: string
+                description:
+                  type: string
+                  nullable: true
+                github_alias:
+                  type: string
+                tg_alias:
+                  type: string
+                skills:
+                  type: array
+                  items:
+                    type: integer
+                roles:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '201':
+          description: Student profile created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentProfileResponse'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Person not found 
+
+  /professor/profile/{person_id}:
+    get:
+      tags: [Profile]
+      summary: Get Professor profile by ID
+      description: Returns complete professor profile information
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the Professor whose profile is being requested
+      responses:
+        '200':
+          description: Professor profile retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfessorProfileResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Professor not found
+
+    put:
+      tags: [Profile]
+      summary: Update professor profile by person_id
+      description: Update professor profile information
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+          description: Professor person id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfessorRequest'
+      responses:
+        '200':
+          description: Professor profile updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Invalid request
+        '403':
+          description: Forbidden
+        '404':
+          description: Professor profile not found  
+
+    post:
+      tags: [Profile]
+      summary: Create Professor profile
+      description: Creates a new professor profile for the specified person_id
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+          description: ID of the Person for whom to create a Professor profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tg_alias:
+                  type: string
+                  nullable: true
+              required: []
+      responses:
+        '201':
+          description: Professor profile created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfessorProfileResponse'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Person not found
+
+  /student/profile/{person_id}/skills:
+    get:
+      tags: [Profile]
+      summary: Get skills of a profile
+      description: Returns list of skills associated with the profile
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+          description: Person id
+      responses:
+        '200':
+          description: List of skills for the profile
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Skill'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+    post:
+      tags: [Profile]
+      summary: Set skills for a profile
+      description: Replace or add multiple skills to user profile
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                skill_ids:
+                  type: array
+                  items:
+                    type: integer
+              required:
+                - skill_ids
+      responses:
+        '200':
+          description: Skills added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Invalid input - skill_ids is required or invalid
+        '403':
+          description: Forbidden - User not authorized to modify this profile
+        '404':
+          description: Skill not found
+
+  /student/profile/{person_id}/skills/{skill_id}:
+    delete:
+      tags: [Profile]
+      summary: Remove multiple skills from a profile
+      description: Delete multiple skills from the profile by skill IDs.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                skill_ids:
+                  type: array
+                  items:
+                    type: integer
+              required:
+                - skill_ids
+      responses:
+        '200':
+          description: Skills removed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '403':
+          description: Forbidden - User not authorized to modify this profile
+        '404':
+          description: Skill not found in profile
+
+
+  /student/profile/{person_id}/roles:
+    get:
+      tags: [Profile]
+      summary: Get roles of a profile
+      description: Returns list of roles associated with the profile
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+          description: Person id
+      responses:
+        '200':
+          description: List of roles for the profile
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      
+    post:
+      tags: [Profile]
+      summary: Set roles for a profile
+      description: Replace ir add multiple roles to user profile
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role_ids:
+                  type: array
+                  items:
+                    type: integer
+              required:
+                - role_ids
+      responses:
+        '200':
+          description: Roles added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Invalid input - role_id is required or invalid
+        '403':
+          description: Forbidden - User not authorized to modify this profile
+        '404':
+          description: Role not found
+    
+  /student/profile/{person_id}/roles/{role_id}:
+    delete:
+      tags: [Profile]
+      summary: Remove multiple roles from a profile
+      description: Delete multiple roles from the profile by role IDs.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role_ids:
+                  type: array
+                  items:
+                    type: integer
+              required:
+                - role_ids
+      responses:
+        '200':
+          description: Roles removed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '403':
+          description: Forbidden - User not authorized to modify this profile
+        '404':
+          description: Role not found in profile
