@@ -8,3 +8,12 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ;
+  - changeSet:
+    id: 2
+    author: Stepan Dementev
+    changes:
+      - sqlFile:
+          path: scripts/TS-59-add-auth-schemas.sql
+          relativeToChangelogFile: true
+          splitStatements: true
+          endDelimiter: ;
