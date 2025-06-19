@@ -23,7 +23,7 @@ components:
       schema:
         type: array
         items:
-          type: string
+          type: integer
       style: form
       explode: true
 
@@ -34,7 +34,7 @@ components:
       schema:
         type: array
         items:
-          type: string
+          type: integer
       style: form
       explode: true
 
@@ -175,12 +175,12 @@ components:
         skills:
           type: array
           items:
-            type: string
+            type: integer
           minItems: 1
         roles:
           type: array
           items:
-            type: string
+            type: integer
           minItems: 1
 
     ProjectUpdateRequest:
@@ -201,12 +201,12 @@ components:
           skills:
             type: array
             items:
-              type: string
+              type: integer
             minItems: 1
           roles:
             type: array
             items:
-              type: string
+              type: integer
             minItems: 1
 
     Project:
@@ -229,12 +229,12 @@ components:
         skills:
           type: array
           items:
-            type: string
+            type: integer
           minItems: 1
         roles:
           type: array
           items:
-            type: string
+            type: integer
           minItems: 1
 
     Skill:
