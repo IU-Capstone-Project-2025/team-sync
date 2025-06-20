@@ -56,8 +56,8 @@ components:
       required: false
       schema:
         type: integer
-        minimum: 1
-        default: 1
+        minimum: 0
+        default: 0
 
     pageSize:
       name: page_size
@@ -145,10 +145,19 @@ components:
         - $ref: '#/components/schemas/BaseResponse'
         - type: object
           properties:
-            data:
+            content:
               type: array
               items:
                 $ref: '#/components/schemas/Project'
+            totalPages:
+              type: integer
+              example: 10
+            totalElements:
+              type: integer
+              example: 200
+            pageNumber:
+              type: integer
+              example: 0
 
     ProjectCreateRequest:
       type: object
