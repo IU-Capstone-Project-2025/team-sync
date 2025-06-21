@@ -19,9 +19,10 @@ public class JwtService {
     Key key = Keys.hmacShaKeyFor(keyBytes);
     public final long expirationTime = 1000 * 60 * 60;
 
-    public String generateToken(String username) {
+    public String generateToken(String email) {
         return Jwts.builder()
-                .subject(username)
+                .claim("email", email)
+                .issuer("teamsync")
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(key)

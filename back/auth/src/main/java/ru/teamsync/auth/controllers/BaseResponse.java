@@ -1,7 +1,7 @@
 package ru.teamsync.auth.controllers;
 
 public record BaseResponse<T>(
-        Error error,
+        ErrorResponse error,
         Boolean success,
         T data
 ) {
@@ -10,7 +10,7 @@ public record BaseResponse<T>(
     }
 
     public static <T> BaseResponse<T> withError(String code, String message) {
-        return new BaseResponse<>(new Error(code, message), false, null);
+        return new BaseResponse<>(new ErrorResponse(code, message), false, null);
     }
 
     public static <T> BaseResponse<T> withErrorMessage(String message) {
@@ -18,8 +18,3 @@ public record BaseResponse<T>(
     }
 }
 
-record Error(
-        String code,
-        String message
-) {
-}
