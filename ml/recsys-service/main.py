@@ -8,10 +8,7 @@ async def lifespan(app: FastAPI):
     app.state.logger = setup_logging()
     logger = app.state.logger
     logger.info("Application startup")
-    app.state.db = None
     app.state.db = DBModel()
-    if not app.state.db:
-        raise ValueError("Database model is not initialized.")
     while not app.state.db.connection:
         logger.info("Connecting to the database...")
         try:
@@ -22,6 +19,9 @@ async def lifespan(app: FastAPI):
     logger.info("Database connection established successfully.")
     yield
     logger.info("Application shutdown")
+    if app.state.db and app.state.db.connection:
+        logger.info("Closing database connection...")
+        app.state.db.disconnect()
 
 app = FastAPI(lifespan=lifespan)
 
