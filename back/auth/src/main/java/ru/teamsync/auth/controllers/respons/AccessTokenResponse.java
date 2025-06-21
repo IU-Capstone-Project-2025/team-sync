@@ -1,6 +1,4 @@
-package ru.teamsync.auth.controllers;
-
-import lombok.Value;
+package ru.teamsync.auth.controllers.respons;
 
 public record AccessTokenResponse(
         String accessToken

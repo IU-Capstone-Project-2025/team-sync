@@ -1,4 +1,4 @@
-package ru.teamsync.auth.controllers;
+package ru.teamsync.auth.controllers.respons;
 
 public record BaseResponse<T>(
         ErrorResponse error,

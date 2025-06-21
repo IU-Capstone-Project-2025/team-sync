@@ -1,4 +1,4 @@
-package ru.teamsync.auth.controllers;
+package ru.teamsync.auth.controllers.request;
 
 public record RegisterStudentRequest(
         String studyGroup,
