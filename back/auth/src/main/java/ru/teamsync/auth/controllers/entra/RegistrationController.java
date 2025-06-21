@@ -1,4 +1,4 @@
-package ru.teamsync.auth.controllers;
+package ru.teamsync.auth.controllers.entra;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
