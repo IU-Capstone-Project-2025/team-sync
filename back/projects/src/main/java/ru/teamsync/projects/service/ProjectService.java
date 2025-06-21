@@ -2,6 +2,7 @@ package ru.teamsync.projects.service;
 
 import java.util.List;
 
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -11,6 +12,8 @@ import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.specification.ProjectSpecifications;
+import ru.teamsync.projects.dto.request.ProjectCreateRequest;
+import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
 
 @Service
 public class ProjectService {
@@ -18,6 +21,50 @@ public class ProjectService {
 
     public ProjectService(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
+    }
+
+    public void createProject(ProjectCreateRequest request) {
+        Project project = new Project();
+        project.setCourseName(request.getCourseName());
+        project.setTeamLeadId(request.getTeamLeadId());
+        project.setDescription(request.getDescription());
+        project.setProjectLink(request.getProjectLink());
+        project.setStatus(ProjectStatus.valueOf(request.getStatus().toUpperCase()));
+
+        project.setSkillIds(request.getSkills());
+        project.setRoleIds(request.getRoles());
+
+        projectRepository.save(project);
+    }
+
+    public void updateProject(Long projectId, ProjectUpdateRequest request) throws NotFoundException {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NotFoundException());
+
+        if (request.getCourseName() != null)
+            project.setCourseName(request.getCourseName());
+
+        if (request.getTeamLeadId() != null)
+            project.setTeamLeadId(request.getTeamLeadId());
+
+        if (request.getDescription() != null)
+            project.setDescription(request.getDescription());
+
+        if (request.getProjectLink() != null)
+            project.setProjectLink(request.getProjectLink());
+
+        if (request.getStatus() != null)
+            project.setStatus(ProjectStatus.valueOf(request.getStatus().toUpperCase()));
+
+        if (request.getSkills() != null) {
+            project.setSkillIds(request.getSkills());
+        }
+
+        if (request.getRoles() != null) {
+            project.setRoleIds(request.getRoles());
+        }
+
+        projectRepository.save(project);
     }
 
     public Page<Project> getProjects(List<Long> skillIds, List<Long> roleIds, String courseName, ProjectStatus status, Pageable pageable) {

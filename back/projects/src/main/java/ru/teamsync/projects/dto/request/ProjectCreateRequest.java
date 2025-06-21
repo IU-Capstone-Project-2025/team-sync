@@ -1,16 +1,21 @@
 package ru.teamsync.projects.dto.request;
 
+import java.util.List;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import jakarta.validation.constraints.*;
-
-import java.util.List;
+import lombok.Setter;
 
 @Data
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectCreateRequest {
@@ -29,8 +34,8 @@ public class ProjectCreateRequest {
     private String status;
 
     @NotEmpty
-    private List<String> skills;
+    private List<Long> skills;
 
     @NotEmpty
-    private List<String> roles;
+    private List<Long> roles;
 }

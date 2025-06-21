@@ -19,6 +19,6 @@ public class ProjectDTO {
     private String projectLink;
     private String status;
 
-    private List<SkillDTO> skills;
-    private List<RoleDTO> roles;
+    private List<Long> skills;
+    private List<Long> roles;
 }

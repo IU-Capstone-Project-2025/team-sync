@@ -1,15 +1,28 @@
 package ru.teamsync.projects.controller;
 
-import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
+import ru.teamsync.projects.dto.request.ProjectCreateRequest;
+import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
 import ru.teamsync.projects.dto.response.BaseResponse;
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.service.ProjectService;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/projects")
@@ -18,6 +31,20 @@ public class ProjectController {
 
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
+    }
+
+    @PostMapping
+    public ResponseEntity<BaseResponse<Void>> createProject(@RequestBody @Valid ProjectCreateRequest request) {
+        projectService.createProject(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponse<>(null, true, null));
+    }
+
+    @PutMapping("/{projectId}")
+    public ResponseEntity<BaseResponse<Void>> updateProject(
+            @PathVariable Long projectId,
+            @RequestBody @Valid ProjectUpdateRequest request) throws NotFoundException {
+        projectService.updateProject(projectId, request);
+        return ResponseEntity.ok(new BaseResponse<>(null, true, null));
     }
 
     @GetMapping
