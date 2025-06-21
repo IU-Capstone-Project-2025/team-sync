@@ -5,7 +5,7 @@ import lombok.*;
 import ru.teamsync.auth.config.security.userdetails.Role;
 
 @Entity
-@Table(name = "security.security_user")
+@Table(name = "security_user", schema = "security")
 @Getter
 @Setter
 @AllArgsConstructor
