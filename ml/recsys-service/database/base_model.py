@@ -1,6 +1,7 @@
 import psycopg2
 from config.config import Config
 from config.logging import setup_logging
+import asyncio
 
 class DBModel:
     def __init__(self):
@@ -10,77 +11,44 @@ class DBModel:
             raise ValueError("Database URL is not set in the configuration.")
         self.connection = None
 
-    def connect(self):
-        try:
-            self.connection = psycopg2.connect(self.db_url)
-        except psycopg2.Error as e:
-            self.logger.error(f"Error connecting to the database: {e}")
-            self.connection = None
+    async def connect(self):
+        max_retries = 10
+        while max_retries > 0 and not self.connection:
+            try:
+                self.connection = psycopg2.connect(self.db_url)
+            except psycopg2.Error as e:
+                self.logger.error(f"Error connecting to the database: {e}, retrying...")
+                max_retries -= 1
+                if max_retries == 0:
+                    raise ConnectionError("Failed to connect to the database after multiple attempts.")
+                await asyncio.sleep(2)
 
+    def fetch_all(self, table_name):
+        """Generic method to fetch all rows from a given table."""
+        if not self.connection:
+            raise ConnectionError("Database connection is not established.")
+        
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(f"SELECT * FROM {table_name}")
+                return cursor.fetchall()
+        except psycopg2.Error as e:
+            self.logger.error(f"Error fetching data from table {table_name}: {e}")
+            return []
+        
     def get_all_skills(self):
         """Returns list of tuples with all skills in the database."""
-        if not self.connection:
-            raise ConnectionError("Database connection is not established.")
-        
-        try:
-            with self.connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM skill")
-                return cursor.fetchall()
-        except psycopg2.Error as e:
-            self.logger.error(f"Error fetching skills: {e}")
-            return []
-
+        return self.fetch_all("skill")
+    
     def get_all_students(self):
         """Returns list of tuples with all students in the database."""
-        if not self.connection:
-            raise ConnectionError("Database connection is not established.")
-        
-        try:
-            with self.connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM student")
-                return cursor.fetchall()
-        except psycopg2.Error as e:
-            self.logger.error(f"Error fetching students: {e}")
-            return []
-
+        return self.fetch_all("student")
+    
     def get_all_projects(self):
         """Returns list of tuples with all projects in the database."""
-        if not self.connection:
-            raise ConnectionError("Database connection is not established.")
-        
-        try:
-            with self.connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM project")
-                return cursor.fetchall()
-        except psycopg2.Error as e:
-            self.logger.error(f"Error fetching projects: {e}")
-            return []
-    
-    def get_students_skills(self, student_id):
-        if not self.connection:
-            raise ConnectionError("Database connection is not established.")
-        
-        try:
-            with self.connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM skill WHERE student_id = %s", (student_id,))
-                return cursor.fetchall()
-        except psycopg2.Error as e:
-            self.logger.error(f"Error fetching skills for student {student_id}: {e}")
-            return []
+        return self.fetch_all("project")
 
-    def get_projects_skills(self, project_id):
-        if not self.connection:
-            raise ConnectionError("Database connection is not established.")
-        
-        try:
-            with self.connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM skill WHERE project_id = %s", (project_id,))
-                return cursor.fetchall()
-        except psycopg2.Error as e:
-            self.logger.error(f"Error fetching skills for project {project_id}: {e}")
-            return []
-
-    def disconnect(self):
+    async def disconnect(self):
         if self.connection:
             self.connection.close()
     

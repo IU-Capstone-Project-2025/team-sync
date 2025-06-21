@@ -9,13 +9,7 @@ async def lifespan(app: FastAPI):
     logger = app.state.logger
     logger.info("Application startup")
     app.state.db = DBModel()
-    while not app.state.db.connection:
-        logger.info("Connecting to the database...")
-        try:
-            app.state.db.connect()
-        except Exception as e:
-            logger.error(f"Failed to connect to the database: {e}")
-            await asyncio.sleep(5)
+    await app.state.db.connect()
     logger.info("Database connection established successfully.")
     yield
     logger.info("Application shutdown")
