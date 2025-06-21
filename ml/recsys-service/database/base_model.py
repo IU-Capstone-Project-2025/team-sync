@@ -30,7 +30,8 @@ class DBModel:
         
         try:
             with self.connection.cursor() as cursor:
-                cursor.execute(f"SELECT * FROM {table_name}")
+                query = psycopg2.sql.SQL("SELECT * FROM {}").format(psycopg2.sql.Identifier(table_name))
+                cursor.execute(query)
                 return cursor.fetchall()
         except psycopg2.Error as e:
             self.logger.error(f"Error fetching data from table {table_name}: {e}")
