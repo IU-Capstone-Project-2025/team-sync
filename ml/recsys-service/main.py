@@ -7,7 +7,7 @@ async def lifespan(app: FastAPI):
     app.state.logger = setup_logging()
     logger = app.state.logger
     logger.info("Application startup")
-    app.state.db = DBModel()
+    app.state.db = DBModel(logger=logger)
     await app.state.db.connect()
     logger.info("Database connection established successfully.")
     yield
