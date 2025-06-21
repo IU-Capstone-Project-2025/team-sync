@@ -1,24 +1,22 @@
 package ru.teamsync.projects.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaseResponse {
-    private Boolean success;
-    private ErrorDetails error;
+public class BaseResponse<T> {
+    private T data;
+    private boolean success;
+    private ErrorResponse error;
 
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ErrorDetails {
-        private String code;
-        private String text;
+    public static <T> BaseResponse<T> ok(T data) {
+        return new BaseResponse<>(data, true, null);
+    }
+
+    public static <T> BaseResponse<T> error(String code, String text) {
+        return new BaseResponse<>(null, false, new ErrorResponse(code, text));
     }
 }
