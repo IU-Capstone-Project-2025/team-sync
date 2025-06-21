@@ -130,7 +130,6 @@ services:
     environment:
       - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow-user:airflow-psw@airflow-postgres/airflow-db
-      - AIRFLOW__WEBSERVER__WEB_SERVER_PORT=8082
     command: scheduler
     volumes:
       - ./airflow/dags:/opt/airflow/dags
@@ -144,6 +143,5 @@ volumes:
   pgdata:
   pgadmin_data:
   keydb_data:
-  airflow_data:
   airflow_pgdata:
     
