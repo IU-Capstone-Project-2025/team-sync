@@ -15,7 +15,7 @@ async def lifespan(app: FastAPI):
     logger.info("Application shutdown")
     if app.state.db and app.state.db.connection:
         logger.info("Closing database connection...")
-        app.state.db.disconnect()
+        await app.state.db.disconnect()
 
 app = FastAPI(lifespan=lifespan)
 
