@@ -6,5 +6,10 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: https://login.microsoftonline.com/TENANT_ID/v2.0
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dev-db
+    username: dev-user
+    password: dev-psw
+    driver-class-name: org.postgresql.Driver
   web:
     allowed-origins: http://localhost:5173

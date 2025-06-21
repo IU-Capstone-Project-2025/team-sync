@@ -7,10 +7,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class BaseController {
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<BaseResponse<Object>> handleException(Exception e) {
+    public ResponseEntity<BaseResponse<Void>> handleException(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(BaseResponse.withErrorMessage(e.getMessage()));
     }
+
+//    @ExceptionHandler(UserIsNotRegisteredException.class)
+//    public ResponseEntity<BaseResponse<Void>> handleUserIsNotRegisteredException(UserIsNotRegisteredException e) {
+//        return ResponseEntity
+//                .status(HttpStatus.CONFLICT)
+//                .body(BaseResponse.withErrorMessage(e.getMessage()));
+//    }
 }
