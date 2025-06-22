@@ -1,6 +1,9 @@
-CREATE TABLE internal_external_user_id(
-    internal_user_id INTEGER,
-    external_user_id VARCHAR(64),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (internal_user_id, external_user_id)
-)
+CREATE SCHEMA security;
+
+CREATE TABLE security.security_user(
+    id SERIAL PRIMARY KEY,
+    internal_user_id INTEGER NOT NULL UNIQUE,
+    external_user_id VARCHAR(128) NOT NULL UNIQUE,
+    email VARCHAR(128) NOT NULL UNIQUE,
+    role VARCHAR(32) NOT NULL
+);
