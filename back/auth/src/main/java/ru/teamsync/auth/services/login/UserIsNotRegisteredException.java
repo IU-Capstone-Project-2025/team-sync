@@ -1,6 +1,8 @@
 package ru.teamsync.auth.services.login;
 
-public class UserIsNotRegisteredException extends RuntimeException {
+import ru.teamsync.auth.services.AuthConflictException;
+
+public class UserIsNotRegisteredException extends AuthConflictException {
 
     public UserIsNotRegisteredException(String message) {
         super(message);

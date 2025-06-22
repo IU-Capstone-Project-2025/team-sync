@@ -30,6 +30,8 @@ public class EntraRegistrationService implements RegistrationService {
     @Override
     public String registerStudentAndGetJwt(Jwt entraJwt, RegisterStudentRequest registerStudentRequest) {
         var person = buildPerson(entraJwt);
+        assertUserWithEmailNotRegistered(person.getEmail());
+
         StudentCreationRequest studentCreationRequest = resumeClientMapper.toStudentCreationRequest(person, registerStudentRequest);
 
         var response = resumeClient.createStudent(studentCreationRequest);
@@ -55,6 +57,8 @@ public class EntraRegistrationService implements RegistrationService {
     @Override
     public String registerProfessorAndGetJwt(Jwt entraJwt, RegisterProfessorRequest registerProfessorRequest) {
         var person = buildPerson(entraJwt);
+        assertUserWithEmailNotRegistered(person.getEmail());
+
         ProfessorCreationRequest professorCreationRequest = resumeClientMapper.toProfessorCreationRequest(person, registerProfessorRequest);
         var response = resumeClient.createProfessor(professorCreationRequest);
 
@@ -85,4 +89,10 @@ public class EntraRegistrationService implements RegistrationService {
         return new PersonCreationRequest(name, surname, email);
     }
 
+    private void assertUserWithEmailNotRegistered(String email) {
+        if (securityUserRepository.existsByEmail(email)) {
+            throw UserAlreadyRegisteredException.withEmail(email);
+        }
+
+    }
 }

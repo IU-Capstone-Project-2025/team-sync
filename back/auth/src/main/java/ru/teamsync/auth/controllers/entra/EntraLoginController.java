@@ -7,19 +7,18 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import ru.teamsync.auth.controllers.respons.AccessTokenResponse;
 import ru.teamsync.auth.controllers.respons.BaseResponse;
-import ru.teamsync.auth.services.JwtService;
-import ru.teamsync.auth.services.login.EntraLoginService;
+import ru.teamsync.auth.services.login.LoginService;
 
 @RestController
 @RequestMapping("/entra/login")
 @RequiredArgsConstructor
 public class EntraLoginController {
 
-    private final EntraLoginService entraLoginService;
+    private final LoginService loginService;
 
-    @GetMapping("login")
+    @GetMapping
     public BaseResponse<AccessTokenResponse> login(@AuthenticationPrincipal Jwt jwt) {
-        String token = entraLoginService.generateJwtByEmail(jwt.getClaim("preferred_username"));
+        String token = loginService.generateJwtByEmail(jwt.getClaim("preferred_username"));
         return BaseResponse.of(new AccessTokenResponse(token));
     }
 

@@ -1,13 +1,12 @@
 package ru.teamsync.auth.controllers;
 
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import ru.teamsync.auth.controllers.respons.BaseResponse;
-import ru.teamsync.auth.services.login.UserIsNotRegisteredException;
+import ru.teamsync.auth.services.AuthConflictException;
 
 @RestControllerAdvice
 public class BaseController {
@@ -18,8 +17,8 @@ public class BaseController {
                 .body(BaseResponse.withErrorMessage(ex.getResourcePath()));
     }
 
-    @ExceptionHandler(UserIsNotRegisteredException.class)
-    public ResponseEntity<BaseResponse<Void>> handleUserNotRegistered(UserIsNotRegisteredException ex) {
+    @ExceptionHandler(AuthConflictException.class)
+    public ResponseEntity<BaseResponse<Void>> handleUserNotRegistered(AuthConflictException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(BaseResponse.withErrorMessage(ex.getMessage()));
     }
