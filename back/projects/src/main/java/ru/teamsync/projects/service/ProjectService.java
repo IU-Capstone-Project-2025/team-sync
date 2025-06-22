@@ -1,5 +1,6 @@
 package ru.teamsync.projects.service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
@@ -37,9 +38,13 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public void updateProject(Long projectId, ProjectUpdateRequest request) throws NotFoundException {
+    public void updateProject(Long projectId, ProjectUpdateRequest request, Long currentUserId) throws NotFoundException, AccessDeniedException {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new NotFoundException());
+
+        if (!project.getTeamLeadId().equals(currentUserId)) {
+            throw new AccessDeniedException("You cannot edit this project");
+        }
 
         if (request.getCourseName() != null)
             project.setCourseName(request.getCourseName());
@@ -96,5 +101,20 @@ public class ProjectService {
         }
 
         return projectRepository.findAll(spec, pageable);
+    }
+
+    public Page<Project> getProjectsByTeamLead(Long teamLeadId, Pageable pageable) {
+        return projectRepository.findAllByTeamLeadId(teamLeadId, pageable);
+    }
+
+    public void deleteProject(Long projectId, Long currentUserId) throws NotFoundException, SecurityException {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(NotFoundException::new);
+
+        if (!project.getTeamLeadId().equals(currentUserId)) {
+            throw new SecurityException("You cannot delete this project");
+        }
+
+        projectRepository.delete(project);
     }
 }
