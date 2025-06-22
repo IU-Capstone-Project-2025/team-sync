@@ -2,24 +2,24 @@ package ru.teamsync.auth.controllers.entra;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import ru.teamsync.auth.controllers.respons.AccessTokenResponse;
 import ru.teamsync.auth.controllers.respons.BaseResponse;
 import ru.teamsync.auth.services.JwtService;
+import ru.teamsync.auth.services.login.EntraLoginService;
 
 @RestController
-@RequestMapping("/entra/auth/")
+@RequestMapping("/entra/login")
 @RequiredArgsConstructor
-public class EntraAuthController {
+public class EntraLoginController {
 
-    private final JwtService jwtService;
+    private final EntraLoginService entraLoginService;
 
     @GetMapping("login")
     public BaseResponse<AccessTokenResponse> login(@AuthenticationPrincipal Jwt jwt) {
-        String token = jwtService.generateToken(jwt.getClaim("preferred_username"));
+        String token = entraLoginService.generateJwtByEmail(jwt.getClaim("preferred_username"));
         return BaseResponse.of(new AccessTokenResponse(token));
     }
 

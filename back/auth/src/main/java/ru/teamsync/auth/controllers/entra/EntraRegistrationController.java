@@ -11,24 +11,24 @@ import ru.teamsync.auth.controllers.request.RegisterProfessorRequest;
 import ru.teamsync.auth.controllers.request.RegisterStudentRequest;
 import ru.teamsync.auth.controllers.respons.AccessTokenResponse;
 import ru.teamsync.auth.controllers.respons.BaseResponse;
-import ru.teamsync.auth.services.RegistrationService;
+import ru.teamsync.auth.services.registration.EntraRegistrationService;
 
 @RestController
-@RequestMapping("/registration")
+@RequestMapping("entra/registration")
 @RequiredArgsConstructor
-public class RegistrationController {
+public class EntraRegistrationController {
 
-    private final RegistrationService registrationService;
+    private final EntraRegistrationService entraRegistrationService;
 
     @PostMapping("/student")
     public BaseResponse<AccessTokenResponse> registerStudent(@AuthenticationPrincipal Jwt entraJwt, @RequestBody RegisterStudentRequest registerStudentRequest) {
-        String jwt = registrationService.registerStudentAndGetJwt(entraJwt, registerStudentRequest);
+        String jwt = entraRegistrationService.registerStudentAndGetJwt(entraJwt, registerStudentRequest);
         return BaseResponse.of(new AccessTokenResponse(jwt));
     }
 
     @PostMapping("/professor")
     public BaseResponse<AccessTokenResponse> registerProfessor(@AuthenticationPrincipal Jwt entraJwt, @RequestBody RegisterProfessorRequest registerProfessorRequest) {
-        String jwt = registrationService.registerProfessorAndGetJwt(entraJwt, registerProfessorRequest);
+        String jwt = entraRegistrationService.registerProfessorAndGetJwt(entraJwt, registerProfessorRequest);
         return BaseResponse.of(new AccessTokenResponse(jwt));
     }
 

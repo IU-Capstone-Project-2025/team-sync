@@ -34,11 +34,6 @@ public class AuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getRequestURI().startsWith("/entra/");
-    }
-
     private void authenticate(HttpServletRequest request) {
         String authHeaderValue = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authHeaderValue == null) {
@@ -63,4 +58,10 @@ public class AuthFilter extends OncePerRequestFilter {
             }
         }
     }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return request.getRequestURI().startsWith("/entra/");
+    }
+
 }

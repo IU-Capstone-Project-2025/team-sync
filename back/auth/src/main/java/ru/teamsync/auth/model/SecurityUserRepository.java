@@ -8,4 +8,5 @@ import java.util.Optional;
 @Repository
 public interface SecurityUserRepository extends JpaRepository<SecurityUser, Integer> {
     Optional<SecurityUser> findByEmail(String email);
+    boolean existsByEmail(String email);
 }

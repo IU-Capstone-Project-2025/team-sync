@@ -29,53 +29,16 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http,
-//                                           AuthFilter jwtAuthFilter,
-//                                           CustomAuthManager customAuthManager) throws Exception {
-//
-//        return http
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//                        .requestMatchers("/login/**").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.decoder(compositeDecoder())))
-//                .formLogin(AbstractHttpConfigurer::disable)
-//                .httpBasic(AbstractHttpConfigurer::disable)
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-//                .authenticationManager(customAuthManager)
-//                .build();
-//    }
-//
-//    @Bean
-//    public JwtDecoder compositeDecoder() {
-//
-//        String base64Secret = "c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0";
-//        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(base64Secret));
-//        NimbusJwtDecoder localDecoder = NimbusJwtDecoder.withSecretKey(key).build();
-//
-//        return token -> {
-//            try {
-//                return microsoftDecoder.decode(token);
-//            } catch (JwtException e) {
-//                // Not a Microsoft token, try local
-//                return localDecoder.decode(token);
-//            }
-//        };
-//    }
-
-    // 🔐 Chain 1 — для Microsoft токенов
     @Bean
     @Order(1)
     public SecurityFilterChain microsoftSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("/entra/**")
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/entra/login").authenticated()
-                        .anyRequest().permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         return http.build();
@@ -91,8 +54,9 @@ public class SecurityConfig {
         return http
                 .securityMatcher("/**")
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/login/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -103,24 +67,6 @@ public class SecurityConfig {
                 .authenticationManager(customAuthManager)
                 .build();
     }
-
-//    // 🔐 Chain 2 — для своих JWT токенов
-//    @Bean
-//    @Order(2)
-//    public SecurityFilterChain localJwtSecurityFilterChain(HttpSecurity http) throws Exception {
-//        SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(localSecret));
-//
-//        http
-//                .securityMatcher("/api/**")
-//                .authorizeHttpRequests(authz -> authz.anyRequest().authenticated())
-//                .oauth2ResourceServer(oauth2 -> oauth2
-//                        .jwt(jwt -> jwt
-//                                .decoder(NimbusJwtDecoder.withSecretKey(key).build())
-//                        )
-//                );
-//
-//        return http.build();
-//    }
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
@@ -135,18 +81,5 @@ public class SecurityConfig {
                         .allowedMethods("*");
             }
         };
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173/"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 }

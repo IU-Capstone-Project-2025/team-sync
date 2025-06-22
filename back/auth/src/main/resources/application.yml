@@ -13,3 +13,6 @@ spring:
     driver-class-name: org.postgresql.Driver
   web:
     allowed-origins: http://localhost:5173
+logging:
+  level:
+    org.springframework.security: DEBUG

@@ -2,8 +2,6 @@ package ru.teamsync.auth.services;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +17,7 @@ public class JwtService {
     Key key = Keys.hmacShaKeyFor(keyBytes);
     public final long expirationTime = 1000 * 60 * 60;
 
-    public String generateToken(String email) {
+    public String generateTokenWithEmail(String email) {
         return Jwts.builder()
                 .claim("email", email)
                 .issuer("teamsync")
