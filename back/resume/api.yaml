@@ -59,6 +59,12 @@ components:
           type: object
           description: Profile-specific fields depending on type
           properties:
+            name:
+              type: string
+            surname:
+              type: string
+            email:
+              type: string
             study_group:
               type: string
               description: only for students (required)
