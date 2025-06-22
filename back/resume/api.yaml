@@ -70,7 +70,8 @@ components:
               type: string
               description: only for students (required)
             tg_alias:
-              type: string (required only for students)
+              type: string
+              description: required only for students
             skills:
               type: array
               items:
@@ -156,15 +157,12 @@ components:
               type: object
               properties:
                 type:
-                  $ref: '#/components/schemas/ProfileType'
+                  type: string
+                  enum: [student, professor]
                 person:
                   $ref: '#/components/schemas/Person'
                 profile:
                   type: object
-
-    ProfileType:
-      type: string
-      enum: [student, professor]
 
     Person:
       type: object
@@ -285,6 +283,10 @@ paths:
       responses:
         '200':
           description: Profile updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
         '400':
           description: Invalid input
         '403':
@@ -329,9 +331,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PaginatedSkillResponse'
+                $ref: '#/components/schemas/PaginatedSkillResponse'
         '401':
           description: Unauthorized
         '403':
@@ -378,11 +378,10 @@ paths:
         '404':
           description: Skill not found
 
-  /profile/{person_id}/skills/{skill_id}:
     delete:
       tags: [Profile]
       summary: Remove multiple skills from a profile
-      description: Delete multiple skills from the profile by skill IDs.
+      description: Delete skills from the profile by skill IDs
       security:
         - bearerAuth: []
       parameters:
@@ -414,8 +413,7 @@ paths:
         '403':
           description: Forbidden - User not authorized to modify this profile
         '404':
-          description: Skill not found in profile
-
+          description: One or more skills not found in profile
 
   /profile/{person_id}/roles:
     get:
@@ -454,9 +452,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PaginatedRoleResponse'
+                $ref: '#/components/schemas/PaginatedRoleResponse'
         '401':
           description: Unauthorized
         '403':
@@ -502,12 +498,11 @@ paths:
           description: Forbidden - User not authorized to modify this profile
         '404':
           description: Role not found
-    
-  /profile/{person_id}/roles/{role_id}:
+
     delete:
       tags: [Profile]
       summary: Remove multiple roles from a profile
-      description: Delete multiple roles from the profile by role IDs.
+      description: Delete roles from the profile by role IDs
       security:
         - bearerAuth: []
       parameters:
@@ -539,4 +534,4 @@ paths:
         '403':
           description: Forbidden - User not authorized to modify this profile
         '404':
-          description: Role not found in profile
+          description: One or more roles not found in profile
