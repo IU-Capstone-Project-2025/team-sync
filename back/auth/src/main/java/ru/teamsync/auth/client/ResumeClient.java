@@ -7,7 +7,7 @@ import ru.teamsync.auth.client.dto.professor.ProfessorCreationRequest;
 import ru.teamsync.auth.client.dto.professor.ProfessorCreationResponse;
 import ru.teamsync.auth.client.dto.student.StudentCreationRequest;
 import ru.teamsync.auth.client.dto.student.StudentCreationResponse;
-import ru.teamsync.auth.controllers.respons.BaseResponse;
+import ru.teamsync.auth.controllers.response.BaseResponse;
 
 @HttpExchange(url = "/resume")
 public interface ResumeClient {

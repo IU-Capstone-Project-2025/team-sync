@@ -1,7 +1,7 @@
 package ru.teamsync.auth.client;
 
 
-import ru.teamsync.auth.controllers.respons.ErrorResponse;
+import ru.teamsync.auth.controllers.response.ErrorResponse;
 
 public class ResumeClientException extends RuntimeException {
 

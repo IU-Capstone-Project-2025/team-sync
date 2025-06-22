@@ -14,10 +14,10 @@ public class JwtService {
 
     private final JwtProperties jwtProperties;
 
-    public String generateTokenWithEmail(String email) {
+    public String generateTokenWithInternalId(int internalId) {
         return Jwts.builder()
-                .claim("email", email)
-                .issuer("teamsync")
+                .claim(jwtProperties.userIdClaim(), internalId)
+                .issuer(jwtProperties.issuer())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.expirationTimeMs()))
                 .signWith(jwtProperties.getSecurityKey())
@@ -35,7 +35,7 @@ public class JwtService {
 
     public boolean isTokenValid(String token) {
         try {
-            Jwts.parser().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parser().setSigningKey(jwtProperties.getSecurityKey()).build().parseClaimsJws(token);
             return true;
         } catch (JwtException e) {
             return false;

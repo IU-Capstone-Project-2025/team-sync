@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-import ru.teamsync.auth.controllers.respons.BaseResponse;
+import ru.teamsync.auth.controllers.response.BaseResponse;
 import ru.teamsync.auth.services.AuthConflictException;
 
 @RestControllerAdvice

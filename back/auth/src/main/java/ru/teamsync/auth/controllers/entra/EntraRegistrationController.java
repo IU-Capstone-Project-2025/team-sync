@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.teamsync.auth.controllers.request.RegisterProfessorRequest;
 import ru.teamsync.auth.controllers.request.RegisterStudentRequest;
-import ru.teamsync.auth.controllers.respons.AccessTokenResponse;
-import ru.teamsync.auth.controllers.respons.BaseResponse;
+import ru.teamsync.auth.controllers.response.AccessTokenResponse;
+import ru.teamsync.auth.controllers.response.BaseResponse;
 import ru.teamsync.auth.services.registration.EntraRegistrationService;
 
 @RestController

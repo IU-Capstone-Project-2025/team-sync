@@ -21,6 +21,11 @@ import ru.teamsync.auth.services.ResumeClientMapper;
 @RequiredArgsConstructor
 public class EntraRegistrationService implements RegistrationService {
 
+    private static final String EXTERNAL_ID_CLAIM = "oid";
+    private static final String EMAIL_CLAIM = "preferred_username";
+    private static final String NAME_SURNAME_CLAIM = "name";
+    private static final String NAME_SURNAME_DELIMITER = " ";
+
     private final ResumeClient resumeClient;
     private final SecurityUserRepository securityUserRepository;
     private final JwtService jwtService;
@@ -41,12 +46,12 @@ public class EntraRegistrationService implements RegistrationService {
 
             SecurityUser securityUser = new SecurityUser();
             securityUser.setEmail(person.getEmail());
-            securityUser.setExternalUserId(entraJwt.getClaimAsString("oid"));
+            securityUser.setExternalUserId(entraJwt.getClaimAsString(EXTERNAL_ID_CLAIM));
             securityUser.setInternalUserId(internalId);
             securityUser.setRole(Role.STUDENT);
             securityUserRepository.save(securityUser);
 
-            return jwtService.generateTokenWithEmail(person.getEmail());
+            return jwtService.generateTokenWithInternalId(internalId);
         } else {
             String errorMessage = response.getBody() == null ? "Failed to create professor, no response body" : response.getBody().error().toString();
             throw new ResumeClientException(errorMessage);
@@ -67,13 +72,13 @@ public class EntraRegistrationService implements RegistrationService {
 
             SecurityUser securityUser = new SecurityUser();
             securityUser.setEmail(person.getEmail());
-            securityUser.setExternalUserId(entraJwt.getClaimAsString("oid"));
+            securityUser.setExternalUserId(entraJwt.getClaimAsString(EXTERNAL_ID_CLAIM));
             securityUser.setInternalUserId(internalId);
             securityUser.setRole(Role.PROFESSOR);
 
             securityUserRepository.save(securityUser);
 
-            return jwtService.generateTokenWithEmail(person.getEmail());
+            return jwtService.generateTokenWithInternalId(internalId);
         } else {
             String errorMessage = response.getBody() == null ? "Failed to create professor, no response body" : response.getBody().error().toString();
             throw new ResumeClientException(errorMessage);
@@ -81,10 +86,10 @@ public class EntraRegistrationService implements RegistrationService {
     }
 
     private PersonCreationRequest buildPerson(Jwt entraJwt) {
-        String[] nameSurname = entraJwt.getClaimAsString("name").split(" ");
+        String[] nameSurname = entraJwt.getClaimAsString(NAME_SURNAME_CLAIM).split(NAME_SURNAME_DELIMITER);
         String name = nameSurname[0];
         String surname = nameSurname.length > 1 ? nameSurname[1] : "";
-        String email = entraJwt.getClaimAsString("preferred_username");
+        String email = entraJwt.getClaimAsString(EMAIL_CLAIM);
 
         return new PersonCreationRequest(name, surname, email);
     }

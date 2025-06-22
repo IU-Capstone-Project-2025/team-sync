@@ -1,22 +1,9 @@
 package ru.teamsync.auth.services.login;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import ru.teamsync.auth.model.SecurityUserRepository;
-import ru.teamsync.auth.services.JwtService;
+import org.springframework.security.oauth2.jwt.Jwt;
 
-@Service
-@RequiredArgsConstructor
-public class LoginService {
+public interface LoginService {
 
-    private final SecurityUserRepository securityUserRepository;
-    private final JwtService jwtService;
-    
-    public String generateJwtByEmail(String email) {
-        if (!securityUserRepository.existsByEmail(email)) {
-            throw UserIsNotRegisteredException.withEmail(email);
-        }
-        return jwtService.generateTokenWithEmail(email);
-    }
+    String generateInternalJwt(Jwt externalJwt);
 
 }
