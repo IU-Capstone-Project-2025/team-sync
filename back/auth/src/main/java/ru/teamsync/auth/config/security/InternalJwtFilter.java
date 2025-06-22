@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -19,12 +21,15 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class AuthFilter extends OncePerRequestFilter {
+public class InternalJwtFilter extends OncePerRequestFilter {
 
     private static final String AUTH_HEADER_PREFIX = "Bearer ";
 
     private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
+
+    @Value("${teamsync.security.skip-internal-jwt-filter-path-prefixes}")
+    private final List<String> skipFilterPrefixes;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -39,8 +44,10 @@ public class AuthFilter extends OncePerRequestFilter {
         if (authHeaderValue == null) {
             return;
         }
+
         String jwt = authHeaderValue.substring(AUTH_HEADER_PREFIX.length());
         String email = jwtService.extractEmail(jwt);
+
         if (email != null && !email.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
@@ -61,7 +68,8 @@ public class AuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getRequestURI().startsWith("/entra/");
+        return skipFilterPrefixes.stream()
+                .anyMatch(prefix -> request.getRequestURI().startsWith(prefix));
     }
 
 }

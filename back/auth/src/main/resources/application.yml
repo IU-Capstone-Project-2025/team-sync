@@ -11,8 +11,18 @@ spring:
     username: dev-user
     password: dev-psw
     driver-class-name: org.postgresql.Driver
-  web:
-    allowed-origins: http://localhost:5173
+
+teamsync:
+  security:
+    skip-internal-jwt-filter-path-prefixes:
+      - /entra
+    jwt:
+      base64key: ${JWT_KEY}
+      expiration-time-ms: 3600000 # 1 hour
+    cors-allowed-origins:
+      - http://localhost:5173
+      - http://localhost:8000
+
 logging:
   level:
     org.springframework.security: DEBUG
