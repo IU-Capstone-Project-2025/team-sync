@@ -14,16 +14,18 @@ spring:
 
 teamsync:
   security:
-    skip-internal-jwt-filter-path-prefixes:
-      - /entra
+    internal-jwt-filter:
+      skip-path-prefixes:
+        - /entra
     jwt:
       base64key: ${JWT_KEY}
       expiration-time-ms: 3600000 # 1 hour
       issuer: teamsync
       user-id-claim: user_id
-    cors-allowed-origins:
-      - http://localhost:5173
-      - http://localhost:8000
+    web:
+      cors-allowed-origins:
+        - http://localhost:5173
+        - http://localhost:8000
 
 logging:
   level:

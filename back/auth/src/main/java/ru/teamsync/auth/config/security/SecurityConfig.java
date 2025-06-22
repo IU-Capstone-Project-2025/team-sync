@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import ru.teamsync.auth.config.properties.SecurityWebProperties;
 
 @Configuration
 public class SecurityConfig {
@@ -57,13 +58,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    public WebMvcConfigurer corsConfigurer(@Value("${teamsync.security.cors-allowed-origins}") String[] corsAllowedOrigins) {
+    public WebMvcConfigurer corsConfigurer(SecurityWebProperties securityWebProperties) {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry
                         .addMapping("/**")
-                        .allowedOrigins(corsAllowedOrigins)
+                        .allowedOrigins(securityWebProperties.corsAllowedOrigins())
                         .allowCredentials(true)
                         .allowedHeaders("*")
                         .allowedMethods("*");

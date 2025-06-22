@@ -15,9 +15,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ru.teamsync.auth.config.properties.InternalJwtFilterProperties;
 import ru.teamsync.auth.services.JwtService;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -27,9 +29,7 @@ public class InternalJwtFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
-
-    @Value("${teamsync.security.skip-internal-jwt-filter-path-prefixes}")
-    private final List<String> skipFilterPrefixes;
+    private final InternalJwtFilterProperties internalJwtFilterProperties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -68,7 +68,7 @@ public class InternalJwtFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return skipFilterPrefixes.stream()
+        return internalJwtFilterProperties.skipPathPrefixes().stream()
                 .anyMatch(prefix -> request.getRequestURI().startsWith(prefix));
     }
 
