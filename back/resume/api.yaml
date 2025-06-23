@@ -247,6 +247,30 @@ components:
           nullable: true
 
 paths:
+  /profile:
+    post:
+      tags: [Profile]
+      summary: Create new profile
+      security:
+        -bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProfileRequest'
+      responses:
+        '201':
+          description: Profile created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Invalid input
+        '409':
+          description: Profile already exists
+
   /profile/{person_id}:
     get:
       tags: [Profile]
