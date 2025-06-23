@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import ru.teamsync.auth.config.properties.ClientProperties;
 
 @Configuration
-@EnableConfigurationProperties(ClientProperties.class)
+@EnableConfigurationProperties(ClientProperties.ResumeServiceClientProperties.class)
 public class ClientConfiguration {
 
     @Bean
