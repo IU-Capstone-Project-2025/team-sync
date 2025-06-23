@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: auth
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://login.microsoftonline.com/${TENANT_ID}/v2.0
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dev-db
+    username: dev-user
+    password: dev-psw
+    driver-class-name: org.postgresql.Driver
+
+teamsync:
+  security:
+    internal-jwt-filter:
+      skip-path-prefixes:
+        - /entra
+    jwt:
+      base64key: ${JWT_KEY}
+      expiration-time-ms: 3600000 # 1 hour
+      issuer: teamsync
+      user-id-claim: user_id
+    web:
+      cors-allowed-origins:
+        - http://localhost:5173
+        - http://localhost:8000
+  client:
+    resume:
+      api-url: bebebe
+
+logging:
+  level:
+    org.springframework.security: DEBUG
