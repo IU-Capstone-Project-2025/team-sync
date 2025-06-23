@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from api.endpoints.v1.initial_router import router
-from database.base_model import DBModel
+from api.endpoints.v1.airflow_router import router
+from database.postgres_model import DBModel
 from config.logging import setup_logging
 
 async def lifespan(app: FastAPI):    
