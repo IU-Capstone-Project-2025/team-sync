@@ -28,16 +28,16 @@ public class ProjectService {
         this.projectMapper = projectMapper;
     }
 
-    public void createProject(ProjectCreateRequest request) {
+    public void createProject(ProjectCreateRequest request, Long userId) {
         Project project = new Project();
-        project.setCourseName(request.getCourseName());
-        project.setTeamLeadId(request.getTeamLeadId());
-        project.setDescription(request.getDescription());
-        project.setProjectLink(request.getProjectLink());
-        project.setStatus(ProjectStatus.valueOf(request.getStatus().toUpperCase()));
+        project.setCourseName(request.courseName());
+        project.setTeamLeadId(userId);
+        project.setDescription(request.description());
+        project.setProjectLink(request.projectLink());
+        project.setStatus(ProjectStatus.valueOf(request.status().toUpperCase()));
 
-        project.setSkillIds(request.getSkills());
-        project.setRoleIds(request.getRoles());
+        project.setSkillIds(request.skills());
+        project.setRoleIds(request.roles());
 
         projectRepository.save(project);
     }
@@ -50,27 +50,24 @@ public class ProjectService {
             throw new AccessDeniedException("You cannot edit this project");
         }
 
-        if (request.getCourseName() != null)
-            project.setCourseName(request.getCourseName());
+        if (request.courseName() != null)
+            project.setCourseName(request.courseName());
 
-        if (request.getTeamLeadId() != null)
-            project.setTeamLeadId(request.getTeamLeadId());
+        if (request.description() != null)
+            project.setDescription(request.description());
 
-        if (request.getDescription() != null)
-            project.setDescription(request.getDescription());
+        if (request.projectLink() != null)
+            project.setProjectLink(request.projectLink());
 
-        if (request.getProjectLink() != null)
-            project.setProjectLink(request.getProjectLink());
+        if (request.status() != null)
+            project.setStatus(ProjectStatus.valueOf(request.status().toUpperCase()));
 
-        if (request.getStatus() != null)
-            project.setStatus(ProjectStatus.valueOf(request.getStatus().toUpperCase()));
-
-        if (request.getSkills() != null) {
-            project.setSkillIds(request.getSkills());
+        if (request.skills() != null) {
+            project.setSkillIds(request.skills());
         }
 
-        if (request.getRoles() != null) {
-            project.setRoleIds(request.getRoles());
+        if (request.roles() != null) {
+            project.setRoleIds(request.roles());
         }
 
         projectRepository.save(project);

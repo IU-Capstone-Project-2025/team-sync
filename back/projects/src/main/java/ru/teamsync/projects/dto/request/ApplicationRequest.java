@@ -1,5 +1,7 @@
 package ru.teamsync.projects.dto.request;
 
-public record ApplicationRequest() {
+import jakarta.validation.constraints.NotNull;
+
+public record ApplicationRequest(@NotNull Long projectId) {
 
 }

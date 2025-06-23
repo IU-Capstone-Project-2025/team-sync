@@ -21,6 +21,8 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    private Long memberId;
+    private Long projectId;
     private ApplicationStatus status;
     private LocalDateTime createdAt;
 }

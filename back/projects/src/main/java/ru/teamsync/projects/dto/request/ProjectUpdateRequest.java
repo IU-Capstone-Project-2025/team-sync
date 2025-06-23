@@ -7,9 +7,6 @@ public record ProjectUpdateRequest(
     @JsonProperty("course_name")
     String courseName,
 
-    @JsonProperty("team_lead_id")
-    Long teamLeadId,
-
     @JsonProperty("description")
     String description,
 
