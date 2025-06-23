@@ -9,3 +9,5 @@ class Config:
     REDIS_PORT = 6379
     REDIS_DB = 0
     REDIS_PASSWORD = "dev-psw"
+    BASE_COEFFICIENT = 0.5
+    DESCRIPTION_COEFFICIENT = 0.3
