@@ -2,29 +2,44 @@ package ru.teamsync.projects.service;
 
 import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
 import ru.teamsync.projects.dto.request.ApplicationRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.entity.Application;
 import ru.teamsync.projects.entity.ApplicationStatus;
+import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
+import ru.teamsync.projects.repository.ProjectRepository;
 
 @Service
 @AllArgsConstructor
 public class ApplicationService {
+    private final ProjectRepository projectRepository;
     private final ApplicationRepository applicationRepository;
     private final ApplicationMapper applicationMapper;
 
-    /*
-    public Page<ApplicationResponse> getApplicationsByProject(Long projectId, Pageable pageable) {
+    public Page<ApplicationResponse> getApplicationsByProject(
+            Long ownerId, 
+            Long projectId, 
+            Pageable pageable) throws NotFoundException, AccessDeniedException {
+
+        Project project = projectRepository.findById(projectId)
+            .orElseThrow(() -> new NotFoundException());
+
+        if (!project.getTeamLeadId().equals(ownerId)) {
+            throw new AccessDeniedException("You are not the team lead of this project");
+        }
+
         return applicationRepository.findAllByProjectId(projectId, pageable)
                 .map(applicationMapper::toDto);
     }
-    */
 
     public Page<ApplicationResponse> getApplicationsByMember(Long memberId, Pageable pageable) {
         return applicationRepository.findAllByMemberId(memberId, pageable)
