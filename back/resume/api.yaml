@@ -169,6 +169,14 @@ components:
                   $ref: '#/components/schemas/Person'
                 profile:
                   type: object
+                  required: [name, surname, email]
+                  properties:
+                    name:
+                      type: string
+                    surname:
+                      type: string
+                    email:
+                      type: string
 
     Person:
       type: object
@@ -179,9 +187,6 @@ components:
           type: string
         email:
           type: string
-        phone:
-          type: string
-          nullable: true
 
     Student:
       type: object
