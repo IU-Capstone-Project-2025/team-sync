@@ -39,7 +39,7 @@ public class ProjectController {
         Long userId = jwt.getClaim("internal_id");
         projectService.createProject(request, userId);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new BaseResponse<>(null, true, null));
+                .body(BaseResponse.of(null));
     }
 
     @GetMapping("/my")
@@ -50,7 +50,7 @@ public class ProjectController {
         
         Long userId = jwt.getClaim("internal_id");
         Page<ProjectResponse> myProjects = projectService.getProjectsByTeamLead(userId, pageable);
-        return new BaseResponse<>(myProjects, true, null);
+        return BaseResponse.of(myProjects);
     }
 
     @PutMapping("/{projectId}")
@@ -62,7 +62,7 @@ public class ProjectController {
         
         Long userId = jwt.getClaim("internal_id");
         projectService.updateProject(projectId, request, userId);
-        return ResponseEntity.ok(new BaseResponse<>(null, true, null));
+        return ResponseEntity.ok(BaseResponse.of(null));
     }
 
     @GetMapping
@@ -77,7 +77,7 @@ public class ProjectController {
         Page<ProjectResponse> projects = projectService.getProjects(
             skillIds, roleIds, courseName, status, pageable
         );
-        return new BaseResponse<>(projects, true, null);
+        return BaseResponse.of(projects);
     }
 
     @DeleteMapping("/{projectId}")
@@ -88,6 +88,6 @@ public class ProjectController {
         
         Long userId = jwt.getClaim("internal_id");
         projectService.deleteProject(projectId, userId);
-        return ResponseEntity.ok(new BaseResponse<>(null, true, null));
+        return ResponseEntity.ok(BaseResponse.of(null));
     }
 }

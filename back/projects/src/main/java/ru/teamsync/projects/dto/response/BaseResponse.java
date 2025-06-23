@@ -1,16 +1,19 @@
 package ru.teamsync.projects.dto.response;
 
 public record BaseResponse<T>(
-        T data,
+        ErrorResponse error,
         Boolean success,
-        ErrorResponse error
+        T data
 ) {
-
-    public static <T> BaseResponse<T> ok(T data) {
-        return new BaseResponse<>(data, true, null);
+    public static <T> BaseResponse<T> of(T data) {
+        return new BaseResponse<>(null, true, data);
     }
 
-    public static <T> BaseResponse<T> error(String code, String message) {
-        return new BaseResponse<>(null, false, new ErrorResponse(code, message));
+    public static <T> BaseResponse<T> withError(String code, String message) {
+        return new BaseResponse<>(new ErrorResponse(code, message), false, null);
+    }
+
+    public static <T> BaseResponse<T> withErrorMessage(String message) {
+        return withError(null, message);
     }
 }

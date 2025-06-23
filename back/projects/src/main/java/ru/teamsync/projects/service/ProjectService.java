@@ -9,14 +9,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import ru.teamsync.projects.dto.request.ProjectCreateRequest;
+import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
+import ru.teamsync.projects.dto.response.ProjectResponse;
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.mapper.ProjectMapper;
 import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.specification.ProjectSpecifications;
-import ru.teamsync.projects.dto.request.ProjectCreateRequest;
-import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
-import ru.teamsync.projects.dto.response.ProjectResponse;
 
 @Service
 public class ProjectService {
@@ -29,16 +29,7 @@ public class ProjectService {
     }
 
     public void createProject(ProjectCreateRequest request, Long userId) {
-        Project project = new Project();
-        project.setCourseName(request.courseName());
-        project.setTeamLeadId(userId);
-        project.setDescription(request.description());
-        project.setProjectLink(request.projectLink());
-        project.setStatus(ProjectStatus.valueOf(request.status().toUpperCase()));
-
-        project.setSkillIds(request.skills());
-        project.setRoleIds(request.roles());
-
+        Project project = projectMapper.toEntity(request, userId);
         projectRepository.save(project);
     }
 
@@ -50,26 +41,7 @@ public class ProjectService {
             throw new AccessDeniedException("You cannot edit this project");
         }
 
-        if (request.courseName() != null)
-            project.setCourseName(request.courseName());
-
-        if (request.description() != null)
-            project.setDescription(request.description());
-
-        if (request.projectLink() != null)
-            project.setProjectLink(request.projectLink());
-
-        if (request.status() != null)
-            project.setStatus(ProjectStatus.valueOf(request.status().toUpperCase()));
-
-        if (request.skills() != null) {
-            project.setSkillIds(request.skills());
-        }
-
-        if (request.roles() != null) {
-            project.setRoleIds(request.roles());
-        }
-
+        projectMapper.updateEntity(request, project);
         projectRepository.save(project);
     }
 
