@@ -1,20 +1,27 @@
 package ru.teamsync.projects.dto.request;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-@Data
-@Getter
-@Setter
-public class ProjectUpdateRequest {
-    private String courseName;
-    private Long teamLeadId;
-    private String description;
-    private String projectLink;
-    private String status;
-    private List<Long> skills;
-    private List<Long> roles;
-}
+public record ProjectUpdateRequest(
+    @JsonProperty("course_name")
+    String courseName,
+
+    @JsonProperty("team_lead_id")
+    Long teamLeadId,
+
+    @JsonProperty("description")
+    String description,
+
+    @JsonProperty("project_link")
+    String projectLink,
+
+    @JsonProperty("status")
+    String status,
+
+    @JsonProperty("skills")
+    List<Long> skills,
+
+    @JsonProperty("roles")
+    List<Long> roles
+) {}

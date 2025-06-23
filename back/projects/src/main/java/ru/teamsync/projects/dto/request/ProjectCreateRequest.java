@@ -1,32 +1,37 @@
 package ru.teamsync.projects.dto.request;
 
-import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Data;
-@Data
-@Builder
-public class ProjectCreateRequest {
-    @NotBlank
-    private String courseName;
 
+import java.util.List;
+
+public record ProjectCreateRequest(
+    @JsonProperty("course_name")
+    @NotBlank
+    String courseName,
+
+    @JsonProperty("team_lead_id")
     @NotNull
-    private Long teamLeadId;
+    Long teamLeadId,
 
+    @JsonProperty("description")
     @NotBlank
-    private String description;
+    String description,
 
-    private String projectLink;
+    @JsonProperty("project_link")
+    String projectLink,
 
+    @JsonProperty("status")
     @NotBlank
-    private String status;
+    String status,
 
+    @JsonProperty("skills")
     @NotEmpty
-    private List<Long> skills;
+    List<Long> skills,
 
+    @JsonProperty("roles")
     @NotEmpty
-    private List<Long> roles;
-}
+    List<Long> roles
+) {}

@@ -1,11 +1,9 @@
 package ru.teamsync.projects.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public record BaseResponse<T>(
-        @JsonProperty("data") T data,
-        @JsonProperty("success") boolean success,
-        @JsonProperty("error") ErrorResponse error
+        T data,
+        Boolean success,
+        ErrorResponse error
 ) {
 
     public static <T> BaseResponse<T> ok(T data) {
