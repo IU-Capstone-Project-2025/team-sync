@@ -14,7 +14,7 @@ import jakarta.validation.Valid;
 import ru.teamsync.projects.dto.request.ProjectCreateRequest;
 import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
 import ru.teamsync.projects.dto.response.BaseResponse;
-import ru.teamsync.projects.entity.Project;
+import ru.teamsync.projects.dto.response.ProjectResponse;
 import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.service.ProjectService;
 
@@ -28,43 +28,50 @@ public class ProjectController {
     }
 
     @PostMapping
+    //@PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public ResponseEntity<BaseResponse<Void>> createProject(@RequestBody @Valid ProjectCreateRequest request) {
         projectService.createProject(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponse<>(null, true, null));
     }
 
     @GetMapping("/my")
-    public BaseResponse<Page<Project>> getMyProjects(@RequestHeader("X-User-Id") Long userId, Pageable pageable) {
-        Page<Project> myProjects = projectService.getProjectsByTeamLead(userId, pageable);
-        return new BaseResponse<>(myProjects, true, null);
+    //@PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
+    public BaseResponse<Page<ProjectResponse>> getMyProjects(AuthenticationPrincipal UserDetailsImpl currentUser, Pageable pageable) {
+        Page<ProjectResponse> myProjects = projectService.getProjectsByTeamLead(currentUser.internalId().longValue(), pageable);
+        return BaseResponse.ok(myProjects);
     }
 
     @PutMapping("/{projectId}")
+    //@PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public ResponseEntity<BaseResponse<Void>> updateProject(
             @PathVariable Long projectId,
             @RequestBody @Valid ProjectUpdateRequest request,
-            @RequestHeader("X-User-Id") Long userId) throws NotFoundException, AccessDeniedException {
-        projectService.updateProject(projectId, request, userId);
+            @AuthenticationPrincipal UserDetailsImpl currentUser) throws NotFoundException, AccessDeniedException {
+
+        projectService.updateProject(projectId, request, currentUser.internalId().longValue());
         return ResponseEntity.ok(new BaseResponse<>(null, true, null));
     }
 
     @GetMapping
-    public BaseResponse<Page<Project>> getProjects(@RequestParam(required = false) List<Long> skillIds,
-                                     @RequestParam(required = false) List<Long> roleIds,
-                                     @RequestParam(required = false) String courseName,
-                                     @RequestParam(required = false) ProjectStatus status,
-                                     Pageable pageable) {
+    //@PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
+    public BaseResponse<Page<ProjectResponse>> getProjects(
+            @RequestParam(required = false) List<Long> skillIds,
+            @RequestParam(required = false) List<Long> roleIds,
+            @RequestParam(required = false) String courseName,
+            @RequestParam(required = false) ProjectStatus status,
+            Pageable pageable) {
 
-        Page<Project> projects = projectService.getProjects(skillIds, roleIds, courseName, status, pageable);
-        return new BaseResponse<>(projects,true, null);
+        Page<ProjectResponse> projects = projectService.getProjects(skillIds, roleIds, courseName, status, pageable);
+        return BaseResponse.ok(projects);
     }
 
-    @DeleteMapping("/{projectId}") 
+    @DeleteMapping("/{projectId}")
+    //@PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public ResponseEntity<BaseResponse<Void>> deleteProject(
             @PathVariable Long projectId,
-            @RequestHeader("X-User-Id") Long userId) throws NotFoundException {
-        
-        projectService.deleteProject(projectId, userId);
+            @AuthenticationPrincipal UserDetailsImpl currentUser) throws NotFoundException {
+
+        projectService.deleteProject(projectId, currentUser.internalId().longValue());
         return ResponseEntity.ok(new BaseResponse<>(null, true, null));
     }
 }

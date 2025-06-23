@@ -11,17 +11,21 @@ import org.springframework.stereotype.Service;
 
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.ProjectStatus;
+import ru.teamsync.projects.mapper.ProjectMapper;
 import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.specification.ProjectSpecifications;
 import ru.teamsync.projects.dto.request.ProjectCreateRequest;
 import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
+import ru.teamsync.projects.dto.response.ProjectResponse;
 
 @Service
 public class ProjectService {
     private final ProjectRepository projectRepository;
+    private final ProjectMapper projectMapper;
 
-    public ProjectService(ProjectRepository projectRepository) {
+    public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper) {
         this.projectRepository = projectRepository;
+        this.projectMapper = projectMapper;
     }
 
     public void createProject(ProjectCreateRequest request) {
@@ -72,39 +76,41 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public Page<Project> getProjects(List<Long> skillIds, List<Long> roleIds, String courseName, ProjectStatus status, Pageable pageable) {
+    public Page<ProjectResponse> getProjects(List<Long> skillIds, List<Long> roleIds, String courseName, ProjectStatus status, Pageable pageable) {
         boolean hasFilters = (skillIds != null && !skillIds.isEmpty()) ||
-                           (roleIds != null && !roleIds.isEmpty()) ||
-                           (courseName != null && !courseName.isEmpty()) ||
-                           (status != null);
+                             (roleIds != null && !roleIds.isEmpty()) ||
+                             (courseName != null && !courseName.isEmpty()) ||
+                             (status != null);
+
+        Page<Project> projects;
 
         if (!hasFilters) {
-            return projectRepository.findAll(pageable);
-        }
-        
-        Specification<Project> spec = (root, query, cb) -> cb.conjunction();
+            projects = projectRepository.findAll(pageable);
+        } else {
+            Specification<Project> spec = (root, query, cb) -> cb.conjunction();
 
-        if (courseName != null && !courseName.isEmpty()) {
-            spec = spec.and(ProjectSpecifications.hasCourseName(courseName));
+            if (courseName != null && !courseName.isEmpty()) {
+                spec = spec.and(ProjectSpecifications.hasCourseName(courseName));
+            }
+            if (skillIds != null && !skillIds.isEmpty()) {
+                spec = spec.and(ProjectSpecifications.hasSkillIds(skillIds));
+            }
+            if (roleIds != null && !roleIds.isEmpty()) {
+                spec = spec.and(ProjectSpecifications.hasRoleIds(roleIds));
+            }
+            if (status != null) {
+                spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), status));
+            }
+
+            projects = projectRepository.findAll(spec, pageable);
         }
 
-        if (skillIds != null && !skillIds.isEmpty()) {
-            spec = spec.and(ProjectSpecifications.hasSkillIds(skillIds));
-        }
-
-        if (roleIds != null && !roleIds.isEmpty()) {
-            spec = spec.and(ProjectSpecifications.hasRoleIds(roleIds));
-        }
-
-        if (status != null) {
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), status));
-        }
-
-        return projectRepository.findAll(spec, pageable);
+        return projects.map(projectMapper::toDto);
     }
 
-    public Page<Project> getProjectsByTeamLead(Long teamLeadId, Pageable pageable) {
-        return projectRepository.findAllByTeamLeadId(teamLeadId, pageable);
+    public Page<ProjectResponse> getProjectsByTeamLead(Long teamLeadId, Pageable pageable) {
+        return projectRepository.findAllByTeamLeadId(teamLeadId, pageable)
+                .map(projectMapper::toDto);
     }
 
     public void deleteProject(Long projectId, Long currentUserId) throws NotFoundException, SecurityException {

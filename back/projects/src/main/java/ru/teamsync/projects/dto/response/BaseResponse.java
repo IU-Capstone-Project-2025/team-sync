@@ -1,22 +1,18 @@
 package ru.teamsync.projects.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class BaseResponse<T> {
-    private T data;
-    private boolean success;
-    private ErrorResponse error;
+public record BaseResponse<T>(
+        @JsonProperty("data") T data,
+        @JsonProperty("success") boolean success,
+        @JsonProperty("error") ErrorResponse error
+) {
 
     public static <T> BaseResponse<T> ok(T data) {
         return new BaseResponse<>(data, true, null);
     }
 
-    public static <T> BaseResponse<T> error(String code, String text) {
-        return new BaseResponse<>(null, false, new ErrorResponse(code, text));
+    public static <T> BaseResponse<T> error(String code, String message) {
+        return new BaseResponse<>(null, false, new ErrorResponse(code, message));
     }
 }
