@@ -29,3 +29,9 @@
   --accent-color-2: #FFC100;
 }
 
+form>p {
+  font-family: 'Inter';
+  font-size: 18px;
+  color: var(--secondary-color);
+}
+
