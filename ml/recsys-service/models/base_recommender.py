@@ -11,6 +11,11 @@ class Recommender(ABC):
         self.logger.info(f"Initialized {self.model_name} recommender with DB and Redis models.")
     
     @abstractmethod
-    def calculate_scores(self, user_id):
-        """Calculate scores for project recommendations for a given user."""
+    def calculate_scores(self, user_id, project_ids=None):
+        """Calculate scores for project recommendations for a given user.
+        
+        Args:
+            user_id: The ID of the user for whom recommendations are being calculated.
+            project_ids: Optional list of project IDs to filter recommendations.
+        """
         pass
