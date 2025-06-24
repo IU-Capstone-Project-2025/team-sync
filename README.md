@@ -22,8 +22,24 @@ Default ports and sample endpoints
 | --- | --- | --- | --- |
 | frontent | 80 | `/` | `curl 'http://localhost'` or `curl 'http://localhost:80'` |
 | backend | 8080 | `/hello` | `curl 'http://localhost:8080/hello'` |
+| backend-projects | 8081 | `/skill` | `curl 'http://localhost:8081/skill'` |
 | ml-search | 8001 | `/api/searh` | `curl 'http://localhost:8001/api/search'` |
 | ml-recsys | 8000 | `/api/recsys` | `curl 'http://localhost:8000/api/recsys'` |
+
+Backend-projects service have a dummy endpoint, that returns a skill entity:  
+```js
+{
+  "error": null,
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Java",
+      "description": "Cool tea 🤌🏻"
+    }
+  ]
+}
+```
 
 ## Tech Stack
 

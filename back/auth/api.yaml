@@ -1,0 +1,95 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /entra/registration/student:
+    post:
+      tags:
+        - entra-registration-controller
+      operationId: registerStudent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterStudentRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseAccessTokenResponse'
+  /entra/registration/professor:
+    post:
+      tags:
+        - entra-registration-controller
+      operationId: registerProfessor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterProfessorRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseAccessTokenResponse'
+  /entra/login:
+    get:
+      tags:
+        - entra-login-controller
+      operationId: login
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseAccessTokenResponse'
+components:
+  schemas:
+    RegisterStudentRequest:
+      type: object
+      properties:
+        study_group:
+          type: string
+        description:
+          type: string
+        github_alias:
+          type: string
+        tg_alias:
+          type: string
+    AccessTokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+    BaseResponseAccessTokenResponse:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponse'
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/AccessTokenResponse'
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    RegisterProfessorRequest:
+      type: object
+      properties:
+        tg_alias:
+          type: string

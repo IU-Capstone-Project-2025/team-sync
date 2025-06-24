@@ -1,1 +1,4 @@
 # actual .gitignore is located at the front/, back/ and ml/
+airflow/logs/
+airflow/plugins/
+__pycache__/

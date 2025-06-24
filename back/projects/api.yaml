@@ -1,0 +1,598 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8081
+    description: Generated server url
+paths:
+  /projects/{projectId}:
+    put:
+      tags:
+        - project-controller
+      operationId: updateProject
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectUpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseVoid'
+    delete:
+      tags:
+        - project-controller
+      operationId: deleteProject
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseVoid'
+  /projects:
+    get:
+      tags:
+        - project-controller
+      operationId: getProjects
+      parameters:
+        - name: skillIds
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        - name: roleIds
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: integer
+              format: int64
+        - name: courseName
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - DRAFT
+              - OPEN
+              - IN_PROGRESS
+              - COMPLETE
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponsePageProjectResponse'
+    post:
+      tags:
+        - project-controller
+      operationId: createProject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProjectCreateRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseVoid'
+  /applications:
+    post:
+      tags:
+        - application-controller
+      operationId: createApplication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseVoid'
+  /skills:
+    get:
+      tags:
+        - skill-controller
+      operationId: getSkills
+      parameters:
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponsePageSkill'
+  /roles:
+    get:
+      tags:
+        - role-controller
+      operationId: getRoles
+      parameters:
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponsePageRole'
+  /projects/my:
+    get:
+      tags:
+        - project-controller
+      operationId: getMyProjects
+      parameters:
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponsePageProjectResponse'
+  /applications/project/{projectId}:
+    get:
+      tags:
+        - application-controller
+      operationId: getApplicationsByProject
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponsePageApplicationResponse'
+  /applications/my:
+    get:
+      tags:
+        - application-controller
+      operationId: getApplicationsByStudent
+      parameters:
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Pageable'
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponsePageApplicationResponse'
+components:
+  schemas:
+    ProjectUpdateRequest:
+      type: object
+      properties:
+        course_name:
+          type: string
+        description:
+          type: string
+        project_link:
+          type: string
+        status:
+          type: string
+        skills:
+          type: array
+          items:
+            type: integer
+            format: int64
+        roles:
+          type: array
+          items:
+            type: integer
+            format: int64
+    BaseResponseVoid:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponse'
+        success:
+          type: boolean
+        data:
+          type: object
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+    ProjectCreateRequest:
+      required:
+        - course_name
+        - description
+        - roles
+        - skills
+        - status
+      type: object
+      properties:
+        course_name:
+          type: string
+        description:
+          type: string
+        project_link:
+          type: string
+        status:
+          type: string
+        skills:
+          type: array
+          items:
+            type: integer
+            format: int64
+        roles:
+          type: array
+          items:
+            type: integer
+            format: int64
+    ApplicationRequest:
+      required:
+        - projectId
+      type: object
+      properties:
+        projectId:
+          type: integer
+          format: int64
+    Pageable:
+      type: object
+      properties:
+        page:
+          minimum: 0
+          type: integer
+          format: int32
+        size:
+          minimum: 1
+          type: integer
+          format: int32
+        sort:
+          type: array
+          items:
+            type: string
+    BaseResponsePageSkill:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponse'
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/PageSkill'
+    PageSkill:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Skill'
+        number:
+          type: integer
+          format: int32
+        sort:
+          type: array
+          items:
+            $ref: '#/components/schemas/SortObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    PageableObject:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          format: int32
+        unpaged:
+          type: boolean
+        paged:
+          type: boolean
+        pageSize:
+          type: integer
+          format: int32
+        offset:
+          type: integer
+          format: int64
+        sort:
+          type: array
+          items:
+            $ref: '#/components/schemas/SortObject'
+    Skill:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+    SortObject:
+      type: object
+      properties:
+        direction:
+          type: string
+        nullHandling:
+          type: string
+        ascending:
+          type: boolean
+        property:
+          type: string
+        ignoreCase:
+          type: boolean
+    BaseResponsePageRole:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponse'
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/PageRole'
+    PageRole:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        number:
+          type: integer
+          format: int32
+        sort:
+          type: array
+          items:
+            $ref: '#/components/schemas/SortObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+    BaseResponsePageProjectResponse:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponse'
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/PageProjectResponse'
+    PageProjectResponse:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProjectResponse'
+        number:
+          type: integer
+          format: int32
+        sort:
+          type: array
+          items:
+            $ref: '#/components/schemas/SortObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    ProjectResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        courseName:
+          type: string
+        teamLeadId:
+          type: integer
+          format: int64
+        description:
+          type: string
+        projectLink:
+          type: string
+        status:
+          type: string
+          enum:
+            - DRAFT
+            - OPEN
+            - IN_PROGRESS
+            - COMPLETE
+        skillIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+        roleIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+    ApplicationResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        memberId:
+          type: integer
+          format: int64
+        projectId:
+          type: integer
+          format: int64
+        status:
+          type: string
+          enum:
+            - PENDING
+            - APPROVED
+            - REJECTED
+        createdAt:
+          type: string
+          format: date-time
+    BaseResponsePageApplicationResponse:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorResponse'
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/PageApplicationResponse'
+    PageApplicationResponse:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationResponse'
+        number:
+          type: integer
+          format: int32
+        sort:
+          type: array
+          items:
+            $ref: '#/components/schemas/SortObject'
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
