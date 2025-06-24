@@ -2,15 +2,22 @@ version: '3.8'
 
 services:
 
-  backend-main:
-    build: ./back/main
+  backend-auth:
+    build: ./back/auth
     ports: 
       - "8080:8080"
+    environment:
+      - TENANT_ID=8b33a0fd-354e-48f9-b6fa-b85f0b6e3e55
+      - JWT_KEY=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0
+    depends_on:
+      - postgres
   
   backend-projects:
     build: ./back/projects
     ports: 
       - "8081:8080"
+    depends_on:
+      - postgres
 
   backend-recommendation:
     build: ./back/recommendation
@@ -20,8 +27,6 @@ services:
       
   frontend:
     build: ./front
-    ports:
-      - "80:80"
   
   ml-recsys:
     build: ./ml/recsys-service
@@ -32,6 +37,17 @@ services:
     build: ./ml/search-service
     ports: 
       - "8001:8000"
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - backend-projects
+      - backend-auth
 
   postgres:
     image: postgres:16
