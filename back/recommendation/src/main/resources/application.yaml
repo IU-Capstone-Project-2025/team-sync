@@ -1,8 +1,9 @@
 spring:
   application:
-    name:
-      recommendation
-  redis:
-    host: localhost
-    port: 6379
-    password: dev-keydb-psw
+    name: recommendation
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: dev-keydb-psw
+      username: default

@@ -30,7 +30,7 @@ ext {
 
 dependencies {
 	implementation 'io.grpc:grpc-services'
-	implementation 'org.springframework.grpc:spring-grpc-server-web-spring-boot-starter'
+//	implementation 'org.springframework.grpc:spring-grpc-server-web-spring-boot-starter'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -44,6 +44,7 @@ dependencies {
 	implementation 'net.devh:grpc-server-spring-boot-starter:2.15.0.RELEASE'
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
 }
 
 dependencyManagement {
