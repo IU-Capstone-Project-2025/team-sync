@@ -8,9 +8,8 @@ export default function HomeHeader(){
   const navigate = useNavigate();
   return (
     <div className="bg-(--header-footer-color) ">
-      <div className='flex flex-row justify-between w-full p-10 pl-15'>
-            <svg className = "cursor-pointer" onClick={() => navigate("/")} 
-            xmlns="http://www.w3.org/2000/svg" width="166" height="71" viewBox="0 0 166 71" fill="none">
+      <div className='flex flex-row justify-between w-full h-[10%] p-10 pl-15'>
+            <svg className = "cursor-pointer" onClick={() => navigate('/home')} xmlns="http://www.w3.org/2000/svg" width="166" height="71" viewBox="0 0 166 71" fill="none">
               <path d="M89.8662 4.88852V9.53262H82.3228V27.9344H76.288V9.53262H68.7095V4.88852H89.8662Z" fill="#FFC100"/>
               <path d="M93.3158 27.9344V4.88852H111.35V9.53262H99.3506V14.2116H108.894V18.5764H99.3506V23.2903H111.806V27.9344H93.3158Z" fill="#FFC100"/>
               <path d="M136.501 27.9344H130.291L128.677 22.7316H120.748L119.099 27.9344H113.029L121.169 4.88852H128.397L136.501 27.9344ZM121.871 18.6462H127.555L124.713 9.32311L121.871 18.6462Z" fill="#FFC100"/>
@@ -23,8 +22,8 @@ export default function HomeHeader(){
               <path d="M41.4324 24.9514C41.4324 15.6525 33.9584 8.11429 24.7388 8.11429C15.5191 8.11429 8.04513 15.6525 8.04513 24.9514C8.04513 34.2503 15.5191 41.7886 24.7388 41.7886V49.9029C11.0759 49.9029 0 38.7317 0 24.9514C0 11.1711 11.0759 0 24.7388 0C38.4016 0 49.4776 11.1711 49.4776 24.9514C49.4776 38.7317 38.4016 49.9029 24.7388 49.9029V41.7886C33.9584 41.7886 41.4324 34.2503 41.4324 24.9514Z" fill="#FFC100"/>
             </svg>
             <span className='flex flex-row justify-end items-center space-x-6'>
-              <NavButton text = "My responses" link = "placeholder"/>
-              <NavButton text = "My projects" link = "placeholder"/>
+              <NavButton text = "My responses" link = "/responses"/>
+              <NavButton text = "My projects" link = "/projects"/>
               <FavoriteBorderIcon sx={{ fontSize: 30 }} className="text-[color:var(--secondary-color)]" />
               <NotificationsNoneIcon sx={{ fontSize: 30 }} className="text-[color:var(--secondary-color)]"/>
               <Account name = "Name Surname"/>

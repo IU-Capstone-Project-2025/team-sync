@@ -1,7 +1,18 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SplashHeader from '../components/splashHeader'
 import Footer from '../components/footer';
+import { useIsAuthenticated } from '@azure/msal-react';
+import { useNavigate } from 'react-router-dom';
 export default function SplashScreen() {
+  const isAuthenticated = useIsAuthenticated();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/home');
+    }
+  }, [isAuthenticated, navigate]);
+  
   return(
     <div className='flex flex-col justify-between h-screen'>
       <SplashHeader/>
