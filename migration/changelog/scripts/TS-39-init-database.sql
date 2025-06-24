@@ -27,7 +27,7 @@ CREATE TABLE professor (
 
 CREATE TABLE project (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(64) NOT NULL;
+    name VARCHAR(64) NOT NULL,
     course_name VARCHAR(32) NOT NULL,
     team_lead_id INTEGER NOT NULL REFERENCES person(id),
     description TEXT NOT NULL,
