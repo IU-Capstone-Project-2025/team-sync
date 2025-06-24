@@ -10,9 +10,9 @@ export default function HomeScreen(){
           <p className="font-[Inter] text-(--primary-color) text-xl pb-5">
             All projects
           </p>
-          <h2 className="font-[Manrope] text-(--secondary-color) text-5xl font-bold">
+          <h1 className="font-[Manrope] text-(--secondary-color) text-5xl font-bold">
             Projects
-          </h2>
+          </h1>
           <div className="flex flex-row">
             <HomeFilter/>
             <p className="font-[Inter] text-lg ml-15 mt-5 text-(--primary-color)">
