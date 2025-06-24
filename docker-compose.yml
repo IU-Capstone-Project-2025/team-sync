@@ -104,25 +104,6 @@ services:
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
 
-  airflow-webserver:
-    image: apache/airflow:2.9.0
-    container_name: airflow_web
-    restart: unless-stopped
-    environment:
-      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
-      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow-user:airflow-psw@airflow-postgres/airflow-db
-      - AIRFLOW__WEBSERVER__WEB_SERVER_PORT=8082
-    command: webserver
-    ports:
-      - "8082:8080"
-    volumes:
-      - ./airflow/dags:/opt/airflow/dags
-      - ./airflow/logs:/opt/airflow/logs
-      - ./airflow/plugins:/opt/airflow/plugins
-    depends_on:
-      - airflow-postgres
-      - airflow-init
-
   airflow-scheduler:
     image: apache/airflow:2.9.0
     container_name: airflow_scheduler
