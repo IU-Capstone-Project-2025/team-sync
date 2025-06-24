@@ -31,6 +31,6 @@ public interface ProjectMapper {
     @Mapping(source = "skills", target = "skillIds")
     @Mapping(source = "roles", target = "roleIds")
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "teamLeadId", ignore = true)
+    @Mapping(target = "teamLeadId", ignore = true) 
     void updateEntity(ProjectUpdateRequest request, @MappingTarget Project project);
 }
