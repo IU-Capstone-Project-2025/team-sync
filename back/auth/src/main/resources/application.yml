@@ -7,10 +7,14 @@ spring:
         jwt:
           issuer-uri: https://login.microsoftonline.com/${TENANT_ID}/v2.0
   datasource:
-    url: jdbc:postgresql://localhost:5432/dev-db
+    url: jdbc:postgresql://postgres_db:5432/dev-db
     username: dev-user
     password: dev-psw
     driver-class-name: org.postgresql.Driver
+
+server:
+  servlet:
+    context-path: /auth/api/v1
 
 teamsync:
   security:

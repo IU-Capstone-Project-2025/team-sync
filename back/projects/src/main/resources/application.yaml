@@ -7,3 +7,11 @@ spring:
     username: dev-user
     password: dev-psw
     driver-class-name: org.postgresql.Driver
+
+server:
+  servlet:
+    context-path: /projects/api/v1
+
+logging:
+  level:
+    org.springframework.security: DEBUG
