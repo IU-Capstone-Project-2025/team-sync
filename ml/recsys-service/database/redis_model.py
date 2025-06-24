@@ -23,12 +23,35 @@ class RedisModel:
                 if max_retries == 0:
                     raise ConnectionError("Failed to connect to Redis after multiple attempts.")
 
-    def set(self, key, value):
+    async def set(self, key, value):
         """Set a key-value pair in Redis."""
         # Key - user_id
         # Value - [{"project_id": 123, "score": 0.95}, {"project_id": 456, "score": 0.88}]
         self.logger.info(f"Setting key: {key}")
         json_value = json.dumps(value)
-        self.client.delete(key)
-        self.client.set(key, value)
+        await self.client.delete(key)
+        await self.client.set(key, json_value)
         self.logger.info(f"Value set for key: {key}")
+
+    async def get(self, key):
+        """Get a value by key from Redis."""
+        self.logger.info(f"Getting value for key: {key}")
+        value = await self.client.get(key)
+        if value is None:
+            self.logger.warning(f"No value found for key: {key}")
+            return None
+        try:
+            return json.loads(value)
+        except json.JSONDecodeError as e:
+            self.logger.error(f"Error decoding JSON for key {key}: {e}")
+            return None
+        
+    async def check_connection(self):
+        """Check if the Redis connection is alive."""
+        try:
+            await self.client.ping()
+            self.logger.info("Redis connection is healthy.")
+            return True
+        except redis.ConnectionError as e:
+            self.logger.error(f"Redis connection error: {e}")
+            return False

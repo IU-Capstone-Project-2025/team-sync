@@ -8,8 +8,8 @@ async def health_check():
 
 @router.post("/recommendations")
 async def trigger_recommendation(request: Request):
-    db = request.app.state.db
     logger = request.app.state.logger
     logger.info("Triggering recommendation job")
-    
+    await request.app.state.merger.iterate_all_users()
+    logger.info("Recommendation job triggered successfully")
     return {"status": "Recommendation job triggered successfully"}
