@@ -1,0 +1,15 @@
+Role,Description
+Backend Developer,"Designs and implements server-side logic, databases, and APIs to power web and mobile applications."
+Frontend Developer,Builds and maintains the user interfaces and user experiences of web and mobile applications using client-side technologies.
+Fullstack Developer,"Works on both frontend and backend development, creating complete applications from user interface to server and database integration."
+Mobile Developer,"Develops applications for mobile platforms such as iOS and Android, focusing on performance and user experience."
+ML Engineer,"Designs, builds, and deploys machine learning models and systems for various business and research applications."
+Data Engineer,"Constructs and maintains scalable data pipelines and architectures, ensuring reliable data flow and storage for analytics and machine learning."
+DevOps Engineer,"Automates infrastructure, manages deployment pipelines, and ensures system reliability, scalability, and security."
+QA Engineer,"Develops and executes tests, identifies bugs, and ensures the quality, reliability, and performance of software products."
+Game Developer,"Designs, programs, and tests interactive games for computers, consoles, and mobile devices."
+Security Engineer,"Protects systems and data by identifying vulnerabilities, implementing security measures, and responding to security incidents."
+UI/UX Designer,"Designs attractive, user-friendly interfaces and ensures a seamless and intuitive user experience."
+Product Manager,"Defines product vision, gathers requirements, prioritizes features, and coordinates teams to deliver successful products."
+System Analyst,Analyzes business processes and technical requirements to design effective software solutions.
+Business Analyst,"Identifies business needs, analyzes processes, and recommends solutions to improve efficiency and achieve organizational goals."

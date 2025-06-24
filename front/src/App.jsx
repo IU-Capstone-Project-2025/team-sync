@@ -1,17 +1,31 @@
-import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useState, useEffect } from 'react'
+import { BrowserRouter, Routes, Route, useNavigate} from 'react-router-dom';
 import './App.css'
 import SplashScreen from './pages/splashScreen'
-import SplashHeader from './components/splashHeader'
 import HomeScreen from './pages/homeScreen'
+import ProjectScreen from "./pages/projectScreen"
+import { useIsAuthenticated, useMsal } from '@azure/msal-react';
 function App() {
+  const isAuthenticated = useIsAuthenticated();
+  const { inProgress } = useMsal();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (inProgress !== "none") return;
+    if (isAuthenticated) {
+      navigate("/home");
+    }
+    else {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path = "/" element = {<SplashScreen />} />
-        <Route path = "/home" element = {<HomeScreen />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path = "/" element = {<SplashScreen />} />
+      <Route path = "/home" element = {<HomeScreen />} />
+      <Route path = "/projects" element = {<ProjectScreen />} />
+      {/*<Route path = "/create_project" element = {<CreateProjectScreen/>} /> */}
+    </Routes>
   )
 }
 

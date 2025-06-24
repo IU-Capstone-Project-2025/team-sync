@@ -32,7 +32,7 @@ CREATE TABLE project (
     team_lead_id INTEGER NOT NULL REFERENCES person(id),
     description TEXT NOT NULL,
     project_link TEXT,
-    status VARCHAR(16) NOT NULL
+    status VARCHAR(32) NOT NULL
 );
 
 CREATE TABLE project_member (
@@ -43,7 +43,7 @@ CREATE TABLE project_member (
 CREATE TABLE application (
     student_id INTEGER REFERENCES student(id),
     project_id INTEGER REFERENCES project(id) ON DELETE CASCADE,
-    status VARCHAR(16) NOT NULL, 
+    status VARCHAR(32) NOT NULL, 
     created_at TIMESTAMP
 );
 
@@ -55,7 +55,7 @@ CREATE TABLE student_favourite_project (
 
 CREATE TABLE skill (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(16) UNIQUE NOT NULL,
+    name VARCHAR(32) UNIQUE NOT NULL,
     description TEXT
 );
 
@@ -66,7 +66,7 @@ CREATE TABLE student_skill (
 
 CREATE TABLE role (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(16) Unique NOT NULL,
+    name VARCHAR(32) Unique NOT NULL,
     description TEXT
 );
 
