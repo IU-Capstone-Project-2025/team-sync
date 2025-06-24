@@ -5,13 +5,11 @@ import SplashScreen from './pages/splashScreen'
 import HomeScreen from './pages/homeScreen'
 import ProjectScreen from "./pages/projectScreen"
 import CreateProjectScreen from './pages/createProjectScreen';
-
 import { useIsAuthenticated, useMsal } from '@azure/msal-react';
 function App() {
   const isAuthenticated = useIsAuthenticated();
   const { inProgress } = useMsal();
   const navigate = useNavigate();
-
   return (
     <Routes>
       <Route path = "/" element = {<SplashScreen />} />
