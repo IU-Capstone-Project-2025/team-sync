@@ -89,36 +89,36 @@ components:
                 type: integer
               description: only for students
 
-    UpdateProfileRequest:
+    UpdateStudentProfileRequest:
       type: object
-      description: Request body for updating an existing profile
+      description: Request body for updating student profile
       properties:
-        profile:
-          type: object
-          description: Fields to update in the profile (depends on profile type)
-          properties:
-            study_group:
-              type: string
-              description: only for students
-            description:
-              type: string
-              nullable: true
-              description: only for students
-            github_alias:
-              type: string
-              description: only for students
-            tg_alias:
-              type: string
-            skills:
-              type: array
-              items:
-                type: integer
-              description: only for students
-            roles:
-              type: array
-              items:
-                type: integer
-              description: only for students
+        study_group:
+          type: string
+          example: "CS-101"
+        description:
+          type: string
+          nullable: true
+        github_alias:
+          type: string
+        tg_alias:
+          type: string
+        skills:
+          type: array
+          items:
+            type: integer
+        roles:
+          type: array
+          items:
+            type: integer
+
+    UpdateProfessorProfileRequest:
+      type: object
+      description: Request body for updating professor profile
+      properties:
+        tg_alias:
+          type: string
+          nullable: true
 
     PaginatedRoleResponse:
       type: object
@@ -168,18 +168,44 @@ components:
                 person:
                   $ref: '#/components/schemas/Person'
                 profile:
-                  type: object
-                  required: [name, surname, email]
-                  properties:
-                    name:
-                      type: string
-                    surname:
-                      type: string
-                    email:
-                      type: string
+                  oneOf:
+                    - $ref: '#/components/schemas/StudentProfile'
+                    - $ref: '#/components/schemas/ProfessorProfile'
+    StudentProfile:
+      allOf:
+        - $ref: '#/components/schemas/Person'
+        - type: object
+          properties:
+            study_group:
+              type: string
+            description:
+              type: string
+              nullable: true
+            github_alias:
+              type: string
+            tg_alias:
+              type: string
+            skills:
+              type: array
+              items:
+                type: integer
+            roles:
+              type: array
+              items:
+                type: integer
+
+    ProfessorProfile:
+      allOf:
+        - $ref: '#/components/schemas/Person'
+        - type: object
+          properties:
+            tg_alias:
+              type: string
+              nullable: true
 
     Person:
       type: object
+      required: [name, surname, email]
       properties:
         id:
           type: integer
@@ -296,40 +322,8 @@ paths:
           description: Unauthorized
         '404':
           description: Profile not found
-
-    put:
-      tags: [Profile]
-      summary: Update profile by ID
-      description: Updates profile information
-      security:
-        - bearerAuth: []
-      parameters:
-        - in: path
-          name: person_id
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateProfileRequest'
-      responses:
-        '200':
-          description: Profile updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BaseResponse'
-        '400':
-          description: Invalid input
-        '403':
-          description: Forbidden
-        '404':
-          description: Profile not found
           
-  /profile/{person_id}/skills:
+  /profile/student/{person_id}/skills:
     get:
       tags: [Profile]
       summary: Get skills of a profile
@@ -374,10 +368,10 @@ paths:
         '404':
           description: Profile not found
 
-    put:
+    post:
       tags: [Profile]
-      summary: Set skills for a profile
-      description: Replace or add multiple skills to user profile
+      summary: Add skills to a profile
+      description: Adds new skills to the existing set of user's profile skills
       security:
         - bearerAuth: []
       parameters:
@@ -450,7 +444,73 @@ paths:
         '404':
           description: One or more skills not found in profile
 
-  /profile/{person_id}/roles:
+  /profile/student/{person_id}:
+    put:
+      tags: [Profile]
+      summary: Update student profile by id
+      description: Updates student profile information
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStudentProfileRequest'
+      responses:
+        '200':
+          description: Student profile updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Invalid input
+        '403':
+          description: Forbidden
+        '404':
+          description: Profile not found
+
+  /profile/professor/{person_id}:
+    put:
+      tags: [Profile]
+      summary: Update prodessor profile by id
+      description: Updates professor profile information
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: person_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfessorProfileRequest'
+      responses:
+        '200':
+          description: Professor profile updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Invalid input
+        '403':
+          description: Forbidden
+        '404':
+          description: Profile not found
+
+  /profile/student/{person_id}/roles:
     get:
       tags: [Profile]
       summary: Get roles of a profile
@@ -495,10 +555,10 @@ paths:
         '404':
           description: Profile not found
       
-    put:
+    post:
       tags: [Profile]
-      summary: Set roles for a profile
-      description: Replace or add multiple roles to user profile
+      summary: Add roles to a profile
+      description: Add multiple roles to user profile
       security:
         - bearerAuth: []
       parameters:
