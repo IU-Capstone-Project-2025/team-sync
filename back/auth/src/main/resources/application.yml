@@ -12,6 +12,10 @@ spring:
     password: dev-psw
     driver-class-name: org.postgresql.Driver
 
+server:
+  servlet:
+    context-path: /auth/api/v1
+
 teamsync:
   security:
     internal-jwt-filter:

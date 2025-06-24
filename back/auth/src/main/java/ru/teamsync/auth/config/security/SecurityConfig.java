@@ -18,6 +18,9 @@ import ru.teamsync.auth.config.properties.SecurityWebProperties;
 @Configuration
 public class SecurityConfig {
 
+    @Value("${server.servlet.context-path:}")
+    private String contextPath;
+
     @Bean
     @Order(1)
     public SecurityFilterChain microsoftSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -41,6 +44,7 @@ public class SecurityConfig {
     public SecurityFilterChain internalSecurityFilterChain(HttpSecurity http,
                                                            InternalJwtFilter jwtInternalJwtFilter) throws Exception {
 
+        System.out.println("Context Path: " + contextPath);
         return http
                 .securityMatcher("/**")
                 .authorizeHttpRequests(auth -> auth
