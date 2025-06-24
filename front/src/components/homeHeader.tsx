@@ -3,11 +3,16 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import Account from "./homeAccount";
 import { useNavigate } from "react-router-dom";
+import { useMsal } from "@azure/msal-react"
 
 export default function HomeHeader(){
   const navigate = useNavigate();
+  const {accounts} = useMsal();
+  const account = accounts[0];
+  const fullName = account?.name;
+
   return (
-    <div className="bg-(--header-footer-color) ">
+    <div className="flex-0 bg-(--header-footer-color) ">
       <div className='flex flex-row justify-between w-full h-[10%] p-10 pl-15'>
             <svg className = "cursor-pointer" onClick={() => navigate('/home')} xmlns="http://www.w3.org/2000/svg" width="166" height="71" viewBox="0 0 166 71" fill="none">
               <path d="M89.8662 4.88852V9.53262H82.3228V27.9344H76.288V9.53262H68.7095V4.88852H89.8662Z" fill="#FFC100"/>
@@ -26,7 +31,7 @@ export default function HomeHeader(){
               <NavButton text = "My projects" link = "/projects"/>
               <FavoriteBorderIcon sx={{ fontSize: 30 }} className="text-[color:var(--secondary-color)]" />
               <NotificationsNoneIcon sx={{ fontSize: 30 }} className="text-[color:var(--secondary-color)]"/>
-              <Account name = "Name Surname"/>
+              <Account name ={fullName}/>
             </span>
           </div>
     </div>

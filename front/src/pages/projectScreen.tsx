@@ -9,13 +9,13 @@ export default function ProjectScreen() {
   return (
     <div className="flex flex-col min-h-screen">
       <HomeHeader />
-      <div className="flex flex-col flex-1"> {/* This fills the space between header and footer */}
+      <div className="flex flex-col flex-1"> 
         <div className="flex flex-col px-18">
           <div className="flex flex-row justify-start items-center py-5"> 
             <ArrowBackIosIcon sx={{ fontSize: 24 }} className="text-[color:var(--secondary-color)]"/>
-            <p className="font-[Inter] text-(--primary-color) text-xl">
+            <h2 className="font-[Inter] text-(--primary-color) text-xl">
               All projects
-            </p>
+            </h2>
           </div>
           <div className="flex flex-row gap-4">
             <Pill type="Active" number={0}/>
