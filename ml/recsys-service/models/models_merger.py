@@ -11,12 +11,15 @@ class ModelsMerger:
         self.models.append(model)
         self.logger.info(f"Added model: {model.model_name} to the merger.")
 
-    def merge_scores_for_user(self, user_id, project_ids=[]):
+    def merge_scores_for_user(self, user_id, project_ids=None):
         """Merge scores from all models for a given user."""
         self.logger.info(f"Merging scores for user {user_id}.")
         if not self.models:
             self.logger.warning("No models available for merging scores.")
             return {}
+        
+        if project_ids is None:
+            project_ids = []
         
         # Value - [{"project_id": 123, "score": 0.95}, {"project_id": 456, "score": 0.88}]
         result = []
