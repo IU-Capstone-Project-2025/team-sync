@@ -19,3 +19,8 @@ class Recommender(ABC):
             project_ids: Optional list of project IDs to filter recommendations.
         """
         pass
+
+    @abstractmethod
+    def save_data_for_calculation(self, project_ids=None):
+        """Save data needed for score calculation to Redis."""
+        pass

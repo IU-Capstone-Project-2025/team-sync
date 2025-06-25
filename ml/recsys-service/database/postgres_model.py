@@ -73,6 +73,31 @@ class DBModel:
             self.logger.error(f"Error fetching IDs from table {table_name}: {e}")
             return []
 
+    def fetch_description(self, table, id):
+        """Fetches the description for a given project."""
+        if not self.connection:
+            raise ConnectionError("Database connection is not established.")
+        
+        try:
+            with self.connection.cursor() as cursor:
+                query = sql.SQL("SELECT description FROM {} WHERE id = %s").format(
+                    sql.Identifier(table)
+                )
+                cursor.execute(query, (id,))
+                result = cursor.fetchone()
+                return result[0] if result else None
+        except psycopg2.Error as e:
+            self.logger.error(f"Error fetching description for {table} with ID {id}: {e}")
+            return None
+
+    def get_user_description(self, user_id):
+        """Fetches the description for a given user."""
+        return self.fetch_description("student", user_id)
+
+    def get_project_description(self, project_id):
+        """Fetches the description for a given project."""
+        return self.fetch_description("project", project_id)
+
     def get_user_skills(self, user_id): # [(1, 1), (1, 42), (1, 43)]
         """Returns list of tuples with all skills for a given user."""
         return self.fetch_skills("student_skill", user_id)
