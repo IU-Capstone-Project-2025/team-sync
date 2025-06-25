@@ -1,6 +1,6 @@
 export default function HomeFilter(){
   return (
-    <div className="bg-(--header-footer-color) rounded-2xl p-4 mt-5 min-w-90">
+    <div className="bg-(--header-footer-color) rounded-2xl p-4 mt-5 min-w-90 max-h-100">
       <div className="mb-5">
         <h3 className="font-[Inter] text-(--secondary-color) font-bold text-xl">
           Courses
