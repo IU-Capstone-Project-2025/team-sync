@@ -5,6 +5,7 @@ from config.logging import setup_logging
 from api.endpoints.v1.test_router import router as test_router
 from database.redis_model import RedisModel
 from models.models_merger import ModelsMerger
+from models.tag_based import TagBasedRecommender
 from models.description_based import DescriptionBasedRecommender
 
 async def lifespan(app: FastAPI):    
@@ -20,9 +21,15 @@ async def lifespan(app: FastAPI):
     logger.info("Initializing recommendation models...")
     app.state.merger = ModelsMerger(logger, app.state.db, app.state.redis)
     app.state.merger.add_model(
+        TagBasedRecommender(
+            DBModel=app.state.db,
+            logger=logger,
+            model_name="tag_based"
+        )
+    )
+    app.state.merger.add_model(
         DescriptionBasedRecommender(
             DBModel=app.state.db,
-            RedisModel=app.state.redis,
             logger=logger,
             model_name="description_based"
         )
