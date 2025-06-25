@@ -42,7 +42,7 @@ class TagBasedRecommender(Recommender):
         recommendations = []
         for i, score in zip(indices, normalized_scores):
             recommendations.append((project_ids[i], score))
-        recommendations.sort(key=lambda x: x[0])  # если нужно отсортировать по ключам
+        recommendations.sort(key=lambda x: x[0])  # if you need to sort by project ids
 
         self.logger.info(f"Calculated tag-based scores for user {user_id}")
         return recommendations  # [(0, 0.14), (1, 0.2)]

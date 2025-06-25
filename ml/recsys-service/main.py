@@ -5,6 +5,7 @@ from config.logging import setup_logging
 from api.endpoints.v1.test_router import router as test_router
 from database.redis_model import RedisModel
 from models.models_merger import ModelsMerger
+from models.tag_based import TagBasedRecommender
 from models.description_based import DescriptionBasedRecommender
 
 async def lifespan(app: FastAPI):    
