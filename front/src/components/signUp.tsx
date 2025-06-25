@@ -22,7 +22,7 @@ export default function SignUpButton(){
     });
 
     const token = response.accessToken;
-    const res = await fetch("http://localhost:8080/me", {
+    const res = await fetch("http://localhost:8080/entra/login", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
