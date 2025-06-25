@@ -98,13 +98,13 @@ class DBModel:
         """Fetches the description for a given project."""
         return self.fetch_description("project", project_id)
 
-    def get_user_skills(self, user_id): # [(1, 1), (1, 42), (1, 43)]
-        """Returns list of tuples with all skills for a given user."""
-        return self.fetch_skills("student_skill", user_id)
-    
-    def get_project_skills(self, project_id): # [(1, 4), (1, 64), (1, 65)]
-        """Returns list of tuples with all skills for a given project."""
-        return self.fetch_skills("project_skill", project_id)
+    def get_user_skills(self, user_id):  # [1, 2, 78]
+        """Returns list with all skills for a given user."""
+        return [skill[1] for skill in self.fetch_skills("student_skill", user_id)]
+
+    def get_project_skills(self, project_id):  # [4, 64, 65]
+        """Returns list with all skills for a given project."""
+        return [skill[1] for skill in self.fetch_skills("project_skill", project_id)]
 
     def get_all_skills(self):
         """Returns list of tuples with all skills in the database."""

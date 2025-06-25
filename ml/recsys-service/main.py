@@ -20,6 +20,14 @@ async def lifespan(app: FastAPI):
     logger.info("Initializing recommendation models...")
     app.state.merger = ModelsMerger(logger, app.state.db, app.state.redis)
     app.state.merger.add_model(
+        TagBasedRecommender(
+            DBModel=app.state.db,
+            RedisModel=app.state.redis,
+            logger=logger,
+            model_name="tag_based"
+        )
+    )
+    app.state.merger.add_model(
         DescriptionBasedRecommender(
             DBModel=app.state.db,
             RedisModel=app.state.redis,
