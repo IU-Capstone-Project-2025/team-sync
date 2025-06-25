@@ -90,3 +90,11 @@ async def get_project_description(project_id: int, request: Request):
     if not description:
         return {"status": "No description found for the project", "project_id": project_id}
     return {"status": "Project description retrieved successfully", "project_id": project_id, "description": description}
+
+@router.get("/redis/get_range/{user_id}/{start}/{end}")
+async def get_redis_range(user_id: int, start: int, end: int, request: Request):
+    redis = request.app.state.redis
+    values = await redis.get_range(user_id, start, end)
+    if not values:
+        return {"status": "No values found in Redis", "user_id": user_id, "start": start, "end": end}
+    return {"status": "Values retrieved from Redis", "user_id": user_id, "start": start, "end": end, "values": values}
