@@ -6,6 +6,7 @@ import ru.teamsync.projects.entity.ProjectStatus;
 
 public record ProjectResponse(
     Long id,
+    String name,
     String courseName,
     Long teamLeadId,
     String description,
