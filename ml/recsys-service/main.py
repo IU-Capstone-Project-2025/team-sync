@@ -23,7 +23,6 @@ async def lifespan(app: FastAPI):
     app.state.merger.add_model(
         TagBasedRecommender(
             DBModel=app.state.db,
-            RedisModel=app.state.redis,
             logger=logger,
             model_name="tag_based"
         )
@@ -31,7 +30,6 @@ async def lifespan(app: FastAPI):
     app.state.merger.add_model(
         DescriptionBasedRecommender(
             DBModel=app.state.db,
-            RedisModel=app.state.redis,
             logger=logger,
             model_name="description_based"
         )

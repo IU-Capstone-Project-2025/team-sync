@@ -46,3 +46,7 @@ class TagBasedRecommender(Recommender):
 
         self.logger.info(f"Calculated tag-based scores for user {user_id}")
         return recommendations  # [0.14, 0.1, 0.2, 0.15]
+    
+    def save_data_for_calculation(self, project_ids=None):
+        """Save data needed for score calculation."""
+        pass

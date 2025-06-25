@@ -54,7 +54,8 @@ class DBModel:
                         sql.Identifier(table_name)
                     )
                 cursor.execute(query, (id,))
-                return cursor.fetchall()
+
+                return [i[0] for i in cursor.fetchall()]
         except psycopg2.Error as e:
             self.logger.error(f"Error fetching skills for user {id}: {e}")
             return []
