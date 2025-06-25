@@ -28,10 +28,10 @@ services:
   frontend:
     build: ./front
   
-  ml-recsys:
-    build: ./ml/recsys-service
-    ports: 
-      - "8000:8000"
+  # ml-recsys:
+    # build: ./ml/recsys-service
+    # ports: 
+    #   - "8000:8000"
   
   ml-search:
     build: ./ml/search-service

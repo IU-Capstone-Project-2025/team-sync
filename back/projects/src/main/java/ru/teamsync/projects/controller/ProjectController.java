@@ -31,7 +31,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
+  //  @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public ResponseEntity<BaseResponse<Void>> createProject(
             @RequestBody @Valid ProjectCreateRequest request,
             @AuthenticationPrincipal Jwt jwt) {
@@ -43,7 +43,7 @@ public class ProjectController {
     }
 
     @GetMapping("/my")
-    @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
+  //  @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public BaseResponse<Page<ProjectResponse>> getMyProjects(
             @AuthenticationPrincipal Jwt jwt,
             Pageable pageable) {
@@ -54,7 +54,7 @@ public class ProjectController {
     }
 
     @PutMapping("/{projectId}")
-    @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
+   // @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public ResponseEntity<BaseResponse<Void>> updateProject(
             @PathVariable Long projectId,
             @RequestBody @Valid ProjectUpdateRequest request,
@@ -66,7 +66,7 @@ public class ProjectController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
+  //  @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public BaseResponse<Page<ProjectResponse>> getProjects(
             @RequestParam(required = false) List<Long> skillIds,
             @RequestParam(required = false) List<Long> roleIds,
@@ -81,7 +81,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{projectId}")
-    @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
+  //  @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public ResponseEntity<BaseResponse<Void>> deleteProject(
             @PathVariable Long projectId,
             @AuthenticationPrincipal Jwt jwt) throws SecurityException, NotFoundException {

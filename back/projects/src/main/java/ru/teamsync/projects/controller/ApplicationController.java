@@ -29,7 +29,7 @@ public class ApplicationController {
     private final ApplicationService applicationService;
 
     @GetMapping("/project/{projectId}")
-    @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
+    //  @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public BaseResponse<Page<ApplicationResponse>> getApplicationsByProject(
             @PathVariable Long projectId, 
             @AuthenticationPrincipal Jwt jwt, 
@@ -40,7 +40,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/my")
-    @PreAuthorize("hasAnyAuthority('STUDENT')")
+ //   @PreAuthorize("hasAnyAuthority('STUDENT')")
     public BaseResponse<Page<ApplicationResponse>> getApplicationsByStudent(
             @AuthenticationPrincipal Jwt jwt, 
             Pageable pageable) {
@@ -49,7 +49,7 @@ public class ApplicationController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('STUDENT')")
+ //   @PreAuthorize("hasAnyAuthority('STUDENT')")
     public ResponseEntity<BaseResponse<Void>> createApplication(
             @AuthenticationPrincipal Jwt jwt,
             @RequestBody ApplicationRequest request) {
