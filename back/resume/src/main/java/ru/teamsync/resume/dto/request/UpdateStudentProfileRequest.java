@@ -1,12 +1,14 @@
 package ru.teamsync.resume.dto.request;
 
+import ru.teamsync.resume.entity.StudyGroup;
+
 import java.util.List;
 
 public record UpdateStudentProfileRequest(
-    String study_group,
+    StudyGroup studyGroup,
     String description,
-    String github_alias,
-    String tg_alias,
+    String githubAlias,
+    String tgAlias,
     List<Long> skills,
     List<Long> roles
 ) {}

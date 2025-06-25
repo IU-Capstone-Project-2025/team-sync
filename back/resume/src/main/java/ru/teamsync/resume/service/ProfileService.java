@@ -4,6 +4,8 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
+import ru.teamsync.resume.dto.request.UpdateProfessorProfileRequest;
+import ru.teamsync.resume.dto.request.UpdateStudentProfileRequest;
 import ru.teamsync.resume.dto.response.ProfileResponse;
 import ru.teamsync.resume.mapper.PersonMapper;
 import ru.teamsync.resume.mapper.ProfessorMapper;
@@ -49,6 +51,22 @@ public class ProfileService {
         } else {
             throw new NotFoundException();
         }
+    }
+
+    public void updateStudentProfile(Long personId, UpdateStudentProfileRequest request) throws NotFoundException {
+        var student = studentRepository.findByPersonId(personId)
+            .orElseThrow(() -> new NotFoundException());
+
+        studentMapper.updateStudent(request, student);
+        studentRepository.save(student);
+    }
+
+    public void updateProfessorProfile(Long personId, UpdateProfessorProfileRequest request) throws NotFoundException {
+        var professor = professorRepository.findByPersonId(personId)
+            .orElseThrow(() -> new NotFoundException());
+
+        professorMapper.updateProfessor(request, professor);
+        professorRepository.save(professor);
     }
 
 }

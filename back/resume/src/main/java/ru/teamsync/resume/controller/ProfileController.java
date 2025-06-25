@@ -12,6 +12,12 @@ import lombok.AllArgsConstructor;
 import ru.teamsync.resume.dto.response.BaseResponse;
 import ru.teamsync.resume.dto.response.ProfileResponse;
 import ru.teamsync.resume.service.ProfileService;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import ru.teamsync.resume.dto.request.UpdateProfessorProfileRequest;
+import ru.teamsync.resume.dto.request.UpdateStudentProfileRequest;
+
 
 @RestController
 @AllArgsConstructor
@@ -19,7 +25,7 @@ import ru.teamsync.resume.service.ProfileService;
 public class ProfileController {
     private final ProfileService profileService;
 
-    @GetMapping("/{person_id}")
+    @GetMapping("/{personId}")
     public ResponseEntity<BaseResponse<ProfileResponse>> getProfile(@PathVariable Long personId) throws NotFoundException {
         try {
             ProfileResponse response = profileService.getProfile(personId);
@@ -28,5 +34,23 @@ public class ProfileController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(BaseResponse.withErrorMessage(e.getMessage()));
         }
+    }
+
+    @PutMapping("/student/{personId}")
+    public ResponseEntity<BaseResponse<Void>> updateStudentProfile(
+            @PathVariable Long personId, 
+            @RequestBody UpdateStudentProfileRequest request) throws NotFoundException {
+
+        profileService.updateStudentProfile(personId, request);
+        return ResponseEntity.ok(BaseResponse.of(null));
+    }
+
+    @PutMapping("/professor/{personId}")
+    public ResponseEntity<BaseResponse<Void>> updateProfessorProfile(
+            @PathVariable Long personId, 
+            @RequestBody UpdateProfessorProfileRequest request) throws NotFoundException {
+
+        profileService.updateProfessorProfile(personId, request);
+        return ResponseEntity.ok(BaseResponse.of(null));
     }
 }
