@@ -9,6 +9,7 @@ import ru.teamsync.resume.dto.request.UpdateStudentProfileRequest;
 import ru.teamsync.resume.dto.response.ProfileResponse;
 import ru.teamsync.resume.mapper.PersonMapper;
 import ru.teamsync.resume.mapper.ProfessorMapper;
+import org.springframework.security.access.AccessDeniedException;
 import ru.teamsync.resume.mapper.StudentMapper;
 import ru.teamsync.resume.repository.PersonRepository;
 import ru.teamsync.resume.repository.ProfessorRepository;
