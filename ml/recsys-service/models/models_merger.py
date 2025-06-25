@@ -54,6 +54,7 @@ class ModelsMerger:
 
         for user_id in user_ids:
             value = self.merge_scores_for_user(user_id, project_ids)
+            value.sort(key=lambda x: x["score"], reverse=True)
             # self.logger.info(f"Merging scores for user {user_id}: {value}")
             await self.redis.set(user_id, value)
             self.logger.info(f"Merged scores for user {user_id}.")
