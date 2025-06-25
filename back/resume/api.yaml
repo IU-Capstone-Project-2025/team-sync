@@ -172,44 +172,42 @@ components:
                     - $ref: '#/components/schemas/StudentProfile'
                     - $ref: '#/components/schemas/ProfessorProfile'
     StudentProfile:
-      allOf:
-        - $ref: '#/components/schemas/Person'
-        - type: object
-          properties:
-            study_group:
-              type: string
-            description:
-              type: string
-              nullable: true
-            github_alias:
-              type: string
-            tg_alias:
-              type: string
-            skills:
-              type: array
-              items:
-                type: integer
-            roles:
-              type: array
-              items:
-                type: integer
+      type: object
+      properties:
+        study_group:
+          type: string
+        description:
+          type: string
+          nullable: true
+        github_alias:
+          type: string
+        tg_alias:
+          type: string
+        skills:
+          type: array
+          items:
+            type: integer
+        roles:
+          type: array
+          items:
+            type: integer
 
     ProfessorProfile:
-      allOf:
-        - $ref: '#/components/schemas/Person'
-        - type: object
-          properties:
-            tg_alias:
-              type: string
-              nullable: true
+      type: object
+      properties:
+        tg_alias:
+          type: string
+          nullable: true
 
     Person:
       type: object
-      required: [name, surname, email]
+      required: [id, name, surname, email]
       properties:
         id:
           type: integer
         name:
+          type: string
+        surname:
           type: string
         email:
           type: string

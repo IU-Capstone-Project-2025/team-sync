@@ -234,6 +234,8 @@ components:
     ProjectUpdateRequest:
       type: object
       properties:
+        name:
+          type: string
         course_name:
           type: string
         description:
@@ -272,11 +274,14 @@ components:
       required:
         - course_name
         - description
+        - name
         - roles
         - skills
         - status
       type: object
       properties:
+        name:
+          type: string
         course_name:
           type: string
         description:
@@ -336,11 +341,11 @@ components:
         totalElements:
           type: integer
           format: int64
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
         numberOfElements:
           type: integer
           format: int32
-        pageable:
-          $ref: '#/components/schemas/PageableObject'
         size:
           type: integer
           format: int32
@@ -422,11 +427,11 @@ components:
         totalElements:
           type: integer
           format: int64
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
         numberOfElements:
           type: integer
           format: int32
-        pageable:
-          $ref: '#/components/schemas/PageableObject'
         size:
           type: integer
           format: int32
@@ -475,11 +480,11 @@ components:
         totalElements:
           type: integer
           format: int64
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
         numberOfElements:
           type: integer
           format: int32
-        pageable:
-          $ref: '#/components/schemas/PageableObject'
         size:
           type: integer
           format: int32
@@ -506,6 +511,8 @@ components:
         id:
           type: integer
           format: int64
+        name:
+          type: string
         courseName:
           type: string
         teamLeadId:
@@ -571,11 +578,11 @@ components:
         totalElements:
           type: integer
           format: int64
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
         numberOfElements:
           type: integer
           format: int32
-        pageable:
-          $ref: '#/components/schemas/PageableObject'
         size:
           type: integer
           format: int32

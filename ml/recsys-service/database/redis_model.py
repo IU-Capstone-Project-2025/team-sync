@@ -33,6 +33,19 @@ class RedisModel:
         await self.client.set(key, json_value)
         self.logger.info(f"Value set for key: {key}")
 
+    async def set_list(self, key, value_list):
+        """Set a list of values for a key in Redis."""
+        self.logger.info(f"Setting list for key: {key}")
+        await self.client.delete(key)
+        for item in value_list:
+            await self.client.rpush(key, json.dumps(item))
+
+    async def get_range(self, key, start, end):
+        """Get a range of values from a list in Redis."""
+        self.logger.info(f"Getting range from key: {key}, start: {start}, end: {end}")
+        items = await self.client.lrange(key, start, end)
+        return [json.loads(item) for item in items]
+
     async def get(self, key):
         """Get a value by key from Redis."""
         self.logger.info(f"Getting value for key: {key}")

@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public record ProjectUpdateRequest(
+    @JsonProperty("name")
+    String name,
+
     @JsonProperty("course_name")
     String courseName,
 

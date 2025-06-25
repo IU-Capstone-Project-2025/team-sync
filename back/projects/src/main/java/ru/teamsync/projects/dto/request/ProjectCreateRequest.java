@@ -1,12 +1,17 @@
 package ru.teamsync.projects.dto.request;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
-import java.util.List;
-
 public record ProjectCreateRequest(
+    @JsonProperty("name")
+    @NotBlank
+    String name,
+
     @JsonProperty("course_name")
     @NotBlank
     String courseName,

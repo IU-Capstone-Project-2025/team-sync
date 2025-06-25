@@ -2,3 +2,7 @@ uvicorn==0.30.1
 fastapi==0.111.0
 psycopg2-binary==2.9.9
 redis==4.6.0
+sentence_transformers==2.2.2
+huggingface_hub==0.16.4
+faiss-cpu==1.7.2
+numpy==1.26.4
