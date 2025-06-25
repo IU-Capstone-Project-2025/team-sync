@@ -5,8 +5,8 @@ from config.config import Config
 
 
 class TagBasedRecommender(Recommender):
-    def __init__(self, DBModel, RedisModel, logger, model_name):
-        super().__init__(DBModel, RedisModel, logger, model_name)
+    def __init__(self, DBModel, logger, model_name):
+        super().__init__(DBModel, logger, model_name)
         self.coefficient = Config.TAG_COEFFICIENT
         self.logger.info(f"Initialized {self.model_name} tag-based recommender.")
 
@@ -42,7 +42,7 @@ class TagBasedRecommender(Recommender):
         recommendations = []
         for i, score in zip(indices, normalized_scores):
             recommendations.append((project_ids[i], score))
-        recommendations.sort(key=lambda x: x[0])  # if you need to sort by project ids
+        recommendations = [i[1] for i in sorted(recommendations, key=lambda x: x[0])]
 
         self.logger.info(f"Calculated tag-based scores for user {user_id}")
-        return recommendations  # [(0, 0.14), (1, 0.2)]
+        return recommendations  # [0.14, 0.1, 0.2, 0.15]

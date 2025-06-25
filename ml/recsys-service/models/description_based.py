@@ -5,8 +5,8 @@ from sentence_transformers import SentenceTransformer
 import numpy as np
 
 class DescriptionBasedRecommender(Recommender):
-    def __init__(self, DBModel, RedisModel, logger, model_name):
-        super().__init__(DBModel, RedisModel, logger, model_name)
+    def __init__(self, DBModel, logger, model_name):
+        super().__init__(DBModel, logger, model_name)
         self.coefficient = Config.DESCRIPTION_COEFFICIENT
         self.sbert = SentenceTransformer(Config.DESCRIPTION_MODEL_NAME)
         self.embeddings = []
@@ -39,7 +39,7 @@ class DescriptionBasedRecommender(Recommender):
         return recommendations
 
     def save_data_for_calculation(self, project_ids=None):
-        """Save project descriptions to Redis for scoring."""
+        """Save project descriptions for scoring."""
         if not project_ids:
             self.logger.warning("No projects available for saving descriptions.")
             return
