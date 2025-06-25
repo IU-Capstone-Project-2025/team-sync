@@ -55,4 +55,4 @@ class DescriptionBasedRecommender(Recommender):
         # self.index = faiss.IndexFlatIP(self.sbert.get_sentence_embedding_dimension())
         # faiss.normalize_L2(np.array(result))
         # self.index.add(np.array(result))
-        self.logger.info(f"Saved project descriptions in FAISS index for {len(project_ids)} projects.")
+        # self.logger.info(f"Saved project descriptions in FAISS index for {len(project_ids)} projects.")
