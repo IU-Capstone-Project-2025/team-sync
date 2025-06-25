@@ -7,7 +7,7 @@ spring:
         jwt:
           issuer-uri: https://login.microsoftonline.com/${TENANT_ID}/v2.0
   datasource:
-    url: jdbc:postgresql://postgres_db:5432/dev-db
+    url: jdbc:postgresql://localhost:5432/dev-db
     username: dev-user
     password: dev-psw
     driver-class-name: org.postgresql.Driver
@@ -20,7 +20,7 @@ teamsync:
   security:
     internal-jwt-filter:
       skip-path-prefixes:
-        - /entra
+        - /auth/api/v1/entra
     jwt:
       base64key: ${JWT_KEY}
       expiration-time-ms: 3600000 # 1 hour
