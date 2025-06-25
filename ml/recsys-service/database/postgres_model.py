@@ -46,11 +46,11 @@ class DBModel:
         try:
             with self.connection.cursor() as cursor:
                 if table_name == "student_skill":
-                    query = sql.SQL("SELECT * FROM {} WHERE student_id = %s").format(
+                    query = sql.SQL("SELECT skill_id FROM {} WHERE student_id = %s").format(
                         sql.Identifier(table_name)
                     )
                 else:
-                    query = sql.SQL("SELECT * FROM {} WHERE project_id = %s").format(
+                    query = sql.SQL("SELECT skill_id FROM {} WHERE project_id = %s").format(
                         sql.Identifier(table_name)
                     )
                 cursor.execute(query, (id,))
@@ -100,11 +100,11 @@ class DBModel:
 
     def get_user_skills(self, user_id):  # [1, 2, 78]
         """Returns list with all skills for a given user."""
-        return [skill[1] for skill in self.fetch_skills("student_skill", user_id)]
+        return self.fetch_skills("student_skill", user_id)
 
     def get_project_skills(self, project_id):  # [4, 64, 65]
         """Returns list with all skills for a given project."""
-        return [skill[1] for skill in self.fetch_skills("project_skill", project_id)]
+        return self.fetch_skills("project_skill", project_id)
 
     def get_all_skills(self):
         """Returns list of tuples with all skills in the database."""
