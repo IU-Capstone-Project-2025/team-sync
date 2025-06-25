@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.3'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'com.google.protobuf' version '0.9.4'
 }
 
 group = 'ru.teamsync'
@@ -41,7 +42,31 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testImplementation 'org.postgresql:postgresql:42.7.3'
+
+	implementation 'io.grpc:grpc-netty-shaded:1.64.0'
+	implementation 'io.grpc:grpc-protobuf:1.64.0'
+	implementation 'io.grpc:grpc-stub:1.64.0'
 }
+
+protobuf {
+	protoc {
+		artifact = 'com.google.protobuf:protoc'
+	}
+	plugins {
+		grpc {
+			artifact = 'io.grpc:protoc-gen-grpc-java'
+		}
+	}
+	generateProtoTasks {
+		all()*.plugins {
+			grpc {
+				option 'jakarta_omit'
+				option '@generated=omit'
+			}
+		}
+	}
+}
+
 
 tasks.named('test') {
 	useJUnitPlatform()
