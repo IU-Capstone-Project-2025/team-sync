@@ -9,6 +9,7 @@ import ru.teamsync.recommendation.model.ProjectScore;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
 @Log4j2
 public class UserProjectService {
@@ -19,16 +20,15 @@ public class UserProjectService {
         this.listOps = redisTemplate.opsForList();
     }
 
-    public List<ProjectScore> getProjectScores(int userId) {
-        return List.of();
+    public List<ProjectScore> getProjectScores(int userId, int start, int end) {
+        String key = String.valueOf(userId);
+        log.info("Fetching project scores for user: {}", key);
+        List<Object> rawList = listOps.range(key, 0, -1);
+        log.info("Got {} objects", rawList == null ? 0 : rawList.size());
 
-//        String key = String.valueOf(userId);
-//        log.info("Fetching project scores for user: {}", key);
-//        List<Object> rawList = listOps.range(key, 0, -1);
-//
-//        return rawList.stream()
-//                .map(obj -> (ProjectScore) obj)
-//                .collect(Collectors.toList());
+        return rawList.stream()
+                .map(obj -> (ProjectScore) obj)
+                .collect(Collectors.toList());
     }
 
 }

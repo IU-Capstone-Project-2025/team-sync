@@ -3,6 +3,7 @@ package ru.teamsync.projects.controller;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,22 +21,22 @@ import ru.teamsync.projects.dto.response.BaseResponse;
 import ru.teamsync.projects.dto.response.ProjectResponse;
 import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.service.ProjectService;
+import ru.teamsync.projects.service.RecommendationsService;
 
 @RestController
 @RequestMapping("/projects")
+@RequiredArgsConstructor
 public class ProjectController {
-    private final ProjectService projectService;
 
-    public ProjectController(ProjectService projectService) {
-        this.projectService = projectService;
-    }
+    private final ProjectService projectService;
+    private final RecommendationsService recommendationsService;
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public ResponseEntity<BaseResponse<Void>> createProject(
             @RequestBody @Valid ProjectCreateRequest request,
             @AuthenticationPrincipal Jwt jwt) {
-        
+
         Long userId = jwt.getClaim("internal_id");
         projectService.createProject(request, userId);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -47,10 +48,19 @@ public class ProjectController {
     public BaseResponse<Page<ProjectResponse>> getMyProjects(
             @AuthenticationPrincipal Jwt jwt,
             Pageable pageable) {
-        
+
         Long userId = jwt.getClaim("internal_id");
         Page<ProjectResponse> myProjects = projectService.getProjectsByTeamLead(userId, pageable);
         return BaseResponse.of(myProjects);
+    }
+
+    @GetMapping("/my/recommendations")
+    public BaseResponse<List<ProjectResponse>> getMyProjectRecommendations(
+            @AuthenticationPrincipal Jwt jwt,
+            Pageable pageable) {
+        Integer userId = jwt.getClaim("internal_id");
+        List<ProjectResponse> recommendedProjects = recommendationsService.getProjectsForUser(userId, pageable);
+        return BaseResponse.of(recommendedProjects);
     }
 
     @PutMapping("/{projectId}")
@@ -59,7 +69,7 @@ public class ProjectController {
             @PathVariable Long projectId,
             @RequestBody @Valid ProjectUpdateRequest request,
             @AuthenticationPrincipal Jwt jwt) throws AccessDeniedException, NotFoundException {
-        
+
         Long userId = jwt.getClaim("internal_id");
         projectService.updateProject(projectId, request, userId);
         return ResponseEntity.ok(BaseResponse.of(null));
@@ -73,9 +83,9 @@ public class ProjectController {
             @RequestParam(required = false) String courseName,
             @RequestParam(required = false) ProjectStatus status,
             Pageable pageable) {
-        
+
         Page<ProjectResponse> projects = projectService.getProjects(
-            skillIds, roleIds, courseName, status, pageable
+                skillIds, roleIds, courseName, status, pageable
         );
         return BaseResponse.of(projects);
     }
@@ -85,7 +95,7 @@ public class ProjectController {
     public ResponseEntity<BaseResponse<Void>> deleteProject(
             @PathVariable Long projectId,
             @AuthenticationPrincipal Jwt jwt) throws SecurityException, NotFoundException {
-        
+
         Long userId = jwt.getClaim("internal_id");
         projectService.deleteProject(projectId, userId);
         return ResponseEntity.ok(BaseResponse.of(null));

@@ -22,10 +22,9 @@ public class ProjectsRecommendationServiceGrpcImpl extends ProjectsRecommendatio
     public void fetchRecommendation(ProjectsRecommendationsRequest request, StreamObserver<ProjectsRecommendationsResponse> responseObserver) {
         log.info("Got fetchRecommendation request: {}", request);
 
-        int userId = request.getUserId();
         ProjectsRecommendationsResponse.Builder responseBuilder = ProjectsRecommendationsResponse.newBuilder();
 
-        var projectScores = userProjectService.getProjectScores(userId);
+        var projectScores = userProjectService.getProjectScores(request.getUserId(), request.getReadStart(), request.getReadStart() + request.getAmount());
         projectScores.stream().map(projectScore -> {
             return RecommendationProto.ProjectScore.newBuilder()
                     .setProjectId(projectScore.getProjectId())
