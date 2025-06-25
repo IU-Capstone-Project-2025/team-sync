@@ -12,6 +12,15 @@ server:
   servlet:
     context-path: /projects/api/v1
 
+teamsync:
+  security:
+    jwt:
+      base64key: ${JWT_KEY}
+      expiration-time-ms: 3600000 # 1 hour
+      issuer: teamsync
+      user-id-claim: user_id
+
+
 logging:
   level:
     org.springframework.security: DEBUG
