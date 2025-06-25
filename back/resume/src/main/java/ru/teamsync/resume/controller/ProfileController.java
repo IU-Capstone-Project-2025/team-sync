@@ -1,5 +1,6 @@
 package ru.teamsync.resume.controller;
 
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties.Jwt;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,8 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @GetMapping("/{personId}")
-    public ResponseEntity<BaseResponse<ProfileResponse>> getProfile(@PathVariable Long personId) throws NotFoundException {
+    public ResponseEntity<BaseResponse<ProfileResponse>> getProfile(
+        @PathVariable Long personId) throws NotFoundException {
         try {
             ProfileResponse response = profileService.getProfile(personId);
             return ResponseEntity.ok(BaseResponse.of(response));
@@ -39,18 +41,22 @@ public class ProfileController {
     @PutMapping("/student/{personId}")
     public ResponseEntity<BaseResponse<Void>> updateStudentProfile(
             @PathVariable Long personId, 
-            @RequestBody UpdateStudentProfileRequest request) throws NotFoundException {
+            @RequestBody UpdateStudentProfileRequest request,
+            @AuthenticationPrincipal Jwt jwt) throws NotFoundException, AccessDeniedException {
 
-        profileService.updateStudentProfile(personId, request);
+        Long currentUserId = jwt.getClaim("internal_id");
+        profileService.updateStudentProfile(personId, request, currentUserId);
         return ResponseEntity.ok(BaseResponse.of(null));
     }
 
     @PutMapping("/professor/{personId}")
     public ResponseEntity<BaseResponse<Void>> updateProfessorProfile(
             @PathVariable Long personId, 
-            @RequestBody UpdateProfessorProfileRequest request) throws NotFoundException {
+            @RequestBody UpdateProfessorProfileRequest request,
+            @AuthenticationPrincipal Jwt jwt) throws NotFoundException, AccessDeniedException {
 
-        profileService.updateProfessorProfile(personId, request);
+        Long currentUserId = jwt.getClaim("internal_id");
+        profileService.updateProfessorProfile(personId, request, currentUserId);
         return ResponseEntity.ok(BaseResponse.of(null));
     }
 }

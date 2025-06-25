@@ -53,7 +53,10 @@ public class ProfileService {
         }
     }
 
-    public void updateStudentProfile(Long personId, UpdateStudentProfileRequest request) throws NotFoundException {
+    public void updateStudentProfile(Long personId, UpdateStudentProfileRequest request, Long currentUserId) throws NotFoundException, AccessDeniedException {
+        if (!personId.equals(currentUserId)) {
+            throw new AccessDeniedException("You can only modify your own profile");
+        }
         var student = studentRepository.findByPersonId(personId)
             .orElseThrow(() -> new NotFoundException());
 
@@ -61,7 +64,10 @@ public class ProfileService {
         studentRepository.save(student);
     }
 
-    public void updateProfessorProfile(Long personId, UpdateProfessorProfileRequest request) throws NotFoundException {
+    public void updateProfessorProfile(Long personId, UpdateProfessorProfileRequest request, Long currentUserId) throws NotFoundException, AccessDeniedException {
+        if (!personId.equals(currentUserId)) {
+            throw new AccessDeniedException("You can only modify your own profile");
+        }
         var professor = professorRepository.findByPersonId(personId)
             .orElseThrow(() -> new NotFoundException());
 
