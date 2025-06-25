@@ -8,6 +8,10 @@ plugins {
 group = 'ru.teamsync'
 version = '0.0.1-SNAPSHOT'
 
+ext {
+	set('springGrpcVersion', "0.8.0")
+}
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
@@ -46,6 +50,12 @@ dependencies {
 	implementation 'io.grpc:grpc-netty-shaded:1.64.0'
 	implementation 'io.grpc:grpc-protobuf:1.64.0'
 	implementation 'io.grpc:grpc-stub:1.64.0'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.grpc:spring-grpc-dependencies:${springGrpcVersion}"
+	}
 }
 
 protobuf {

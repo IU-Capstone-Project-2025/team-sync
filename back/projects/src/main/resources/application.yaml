@@ -12,6 +12,12 @@ server:
   servlet:
     context-path: /projects/api/v1
 
+teamsync:
+  client:
+    recommendations:
+      host: localhost
+      port: 9090
+
 logging:
   level:
     org.springframework.security: DEBUG
