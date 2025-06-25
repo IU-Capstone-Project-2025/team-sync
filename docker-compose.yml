@@ -96,6 +96,12 @@ services:
     volumes:
       - airflow_pgdata:/var/lib/postgresql/data
 
+  airflow-log-init:
+    image: busybox
+    command: sh -c "mkdir -p /opt/airflow/logs/scheduler && chmod -R 777 /opt/airflow/logs"
+    volumes:
+      - ./airflow/logs:/opt/airflow/logs
+
   airflow-init:
     image: apache/airflow:2.9.0
     container_name: airflow_init
@@ -125,6 +131,7 @@ services:
     depends_on:
       - airflow-postgres
       - airflow-init
+      - airflow-log-init
 
 volumes:
   pgdata:
