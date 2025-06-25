@@ -58,3 +58,35 @@ async def get_redis_value(key: str, request: Request):
     if value is None:
         return {"status": "Key not found in Redis", "key": key}
     return {"status": "Value retrieved from Redis", "key": key, "value": value}
+
+@router.get("/postgres/get_projects")
+async def get_projects(request: Request):
+    db = request.app.state.db
+    projects = db.get_all_projects()
+    if not projects:
+        return {"status": "No projects found in the database"}
+    return {"status": "Projects retrieved successfully", "projects": projects}
+
+@router.get("/postgres/get_students")
+async def get_students(request: Request):
+    db = request.app.state.db
+    students = db.get_all_students()
+    if not students:
+        return {"status": "No students found in the database"}
+    return {"status": "Students retrieved successfully", "students": students}
+
+@router.get("/postgres/get_student_description/{user_id}")
+async def get_student_description(user_id: int, request: Request):
+    db = request.app.state.db
+    description = db.get_user_description(user_id)
+    if not description:
+        return {"status": "No description found for the user", "user_id": user_id}
+    return {"status": "User description retrieved successfully", "user_id": user_id, "description": description}
+
+@router.get("/postgres/get_project_description/{project_id}")
+async def get_project_description(project_id: int, request: Request):
+    db = request.app.state.db
+    description = db.get_project_description(project_id)
+    if not description:
+        return {"status": "No description found for the project", "project_id": project_id}
+    return {"status": "Project description retrieved successfully", "project_id": project_id, "description": description}

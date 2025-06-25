@@ -1,23 +1,58 @@
 from models.base_recommender import Recommender
 from config.config import Config
+from sentence_transformers import SentenceTransformer
+# import faiss
+import numpy as np
 
 class DescriptionBasedRecommender(Recommender):
     def __init__(self, DBModel, RedisModel, logger, model_name):
         super().__init__(DBModel, RedisModel, logger, model_name)
         self.coefficient = Config.DESCRIPTION_COEFFICIENT
+        self.sbert = SentenceTransformer(Config.DESCRIPTION_MODEL_NAME)
+        self.embeddings = []
+        # self.index = faiss.IndexFlatIP(self.sbert.get_sentence_embedding_dimension())
         self.logger.info(f"Initialized {self.model_name} description-based recommender.")
 
     def calculate_scores(self, user_id, project_ids=None):
         """Get project recommendations based on project descriptions."""
         self.logger.info(f"Fetching recommendations for user {user_id}.")
-
         if not project_ids:
             self.logger.warning("No projects available for recommendations.")
             return []
         recommendations = []
-        for project_id in project_ids:
-            score = 1
+        user_description = self.db.get_user_description(user_id)
+        for index, project_id in enumerate(project_ids):
+            score = 0
             # TODO: Implement actual description-based scoring logic
+            if not user_description:
+                recommendations.append(score)
+                self.logger.warning(f"No description found for user {user_id}.")
+                continue
+            embedding = self.sbert.encode(user_description, convert_to_tensor=True)
+            if self.embeddings:
+                # cosine similarity calculation
+                score = np.dot(self.embeddings[index], embedding.cpu().numpy()) / (np.linalg.norm(self.embeddings[index]) * np.linalg.norm(embedding.cpu().numpy()))
+            else:
+                self.logger.warning(f"No embeddings available for project {project_id}.")
             recommendations.append(score)
         self.logger.info(f"Calculated description-based scores for user {user_id}")
         return recommendations
+
+    def save_data_for_calculation(self, project_ids=None):
+        """Save project descriptions to Redis for scoring."""
+        if not project_ids:
+            self.logger.warning("No projects available for saving descriptions.")
+            return
+        self.logger.info(f"Saving project descriptions for {len(project_ids)} projects.")
+        # result = []
+        self.embeddings = []
+        for project in project_ids:
+            project_description = self.db.get_project_description(project)
+            if project_description:
+                embedding = self.sbert.encode(project_description, convert_to_tensor=True)
+                self.embeddings.append(embedding.cpu().numpy())
+                # result.append(embedding.cpu().numpy())
+        # self.index = faiss.IndexFlatIP(self.sbert.get_sentence_embedding_dimension())
+        # faiss.normalize_L2(np.array(result))
+        # self.index.add(np.array(result))
+        self.logger.info(f"Saved project descriptions in FAISS index for {len(project_ids)} projects.")

@@ -48,8 +48,12 @@ class ModelsMerger:
             self.logger.warning("No user IDs found in the database.")
             return
 
+        for model in self.models:
+            model.save_data_for_calculation(project_ids=project_ids)
+            self.logger.info(f"Saved data for calculation for model: {model.model_name}.")
+
         for user_id in user_ids:
             value = self.merge_scores_for_user(user_id, project_ids)
-            self.logger.info(f"Merging scores for user {user_id}: {value}")
+            # self.logger.info(f"Merging scores for user {user_id}: {value}")
             await self.redis.set(user_id, value)
             self.logger.info(f"Merged scores for user {user_id}.")
