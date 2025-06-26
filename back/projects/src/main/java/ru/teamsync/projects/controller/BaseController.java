@@ -17,7 +17,7 @@ public class BaseController {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<BaseResponse<Void>> handleNotFound(Exception ex) {
+    public ResponseEntity<BaseResponse<Void>> handleAnyException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(BaseResponse.withErrorMessage(ex.getMessage()));
     }
