@@ -156,7 +156,7 @@ const Listbox = styled('ul')(({ theme }) => ({
   },
 }));
 
-export default function CustomizedHook({ arr, onChange }: { arr: string[], onChange: (val: string[]) => void }) {
+export default function CustomizedHook({ arr, onChange }: { arr: { id: number; name: string; }[], onChange: (val: number[]) => void }) {
   const {
     getRootProps,
     getInputLabelProps,
@@ -170,21 +170,21 @@ export default function CustomizedHook({ arr, onChange }: { arr: string[], onCha
     setAnchorEl,
   } = useAutocomplete({
     id: 'customized-hook',
-    defaultValue: [arr[0]],
+    defaultValue: [],
     multiple: true,
     options: arr,
-    getOptionLabel: (option) => option,
+    getOptionLabel: (option) => option.name,
   });
 
   React.useEffect(() => {
-    onChange(value);
+    onChange(value.map((v: { id: number; name: string }) => v.id));
   }, [value, onChange]);
 
   return (
     <Root>
       <div {...getRootProps()}>
         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
-          {value.map((option: string, index: number) => {
+          {value.map((v: {id : number; name: string}) => v.name).map((option: string, index: number) => {
             const { key, ...tagProps } = getTagProps({ index });
             return <StyledTag key={key} {...tagProps} label={option} />;
           })}
@@ -197,7 +197,7 @@ export default function CustomizedHook({ arr, onChange }: { arr: string[], onCha
             const { key, ...optionProps } = getOptionProps({ option, index });
             return (
               <li key={key} {...optionProps}>
-                <span>{option}</span>
+                <span>{option.name}</span>
                 <CheckIcon fontSize="small" />
               </li>
             );

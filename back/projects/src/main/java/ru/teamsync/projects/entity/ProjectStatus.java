@@ -5,5 +5,5 @@ public enum ProjectStatus {
     OPEN,
     IN_PROGRESS,
     COMPLETE,
-    ACTIVE
+    active
 }
