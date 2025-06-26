@@ -14,9 +14,7 @@ import ru.teamsync.auth.config.security.userdetails.Role;
 public class SecurityUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "security_user_id_gen")
-    @SequenceGenerator(name = "security_user_id_gen", sequenceName = "security_user_id_seq", allocationSize = 1, schema = "security")
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
     @Column(name = "internal_user_id", unique = true)

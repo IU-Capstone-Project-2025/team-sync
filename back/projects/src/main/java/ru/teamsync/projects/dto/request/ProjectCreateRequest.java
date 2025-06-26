@@ -28,10 +28,8 @@ public record ProjectCreateRequest(
     String status,
 
     @JsonProperty("skills")
-    @NotEmpty
     List<Long> skills,
 
     @JsonProperty("roles")
-    @NotEmpty
     List<Long> roles
 ) {}
