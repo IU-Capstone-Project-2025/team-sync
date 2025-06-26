@@ -11,6 +11,16 @@ services:
       - JWT_KEY=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0
     depends_on:
       - postgres
+
+  backend-resume:
+    build: ./back/resume
+    ports:
+      - "8085:8080"
+    environment:
+      - TENANT_ID=8b33a0fd-354e-48f9-b6fa-b85f0b6e3e55
+      - JWT_KEY=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0
+    depends_on:
+      - postgres
   
   backend-projects:
     build: ./back/projects

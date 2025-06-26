@@ -1,9 +1,19 @@
 spring:
   application:
-    name: projects
+    name: resume
 
   datasource:
     url: jdbc:postgresql://postgres_db:5432/dev-db
     username: dev-user
     password: dev-psw
     driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8080
+  servlet:
+    context-path: /resume/api/v1

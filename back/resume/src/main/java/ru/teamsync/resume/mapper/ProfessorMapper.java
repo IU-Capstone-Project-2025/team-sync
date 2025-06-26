@@ -10,10 +10,11 @@ import ru.teamsync.resume.entity.Professor;
 
 @Mapper(componentModel = "spring")
 public interface ProfessorMapper {
+    @Mapping(target = "tgAlias", source = "tgAlias")
     ProfessorProfileResponse toResponse(Professor professor);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "person", ignore = true)
+    @Mapping(target = "personId", ignore = true)
     @Mapping(target = "tgAlias", source = "request.tgAlias")
     void updateProfessor(UpdateProfessorProfileRequest request, @MappingTarget Professor professor);
 }

@@ -11,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,9 +38,8 @@ public class Student {
     private String githubAlias;
     private String tgAlias;
 
-    @OneToOne
-    @JoinColumn(name = "person_id", nullable = false)
-    private Person person;
+    @Column(name = "person_id", nullable = false)
+    private Long personId;
 
     @ElementCollection
     @CollectionTable(
