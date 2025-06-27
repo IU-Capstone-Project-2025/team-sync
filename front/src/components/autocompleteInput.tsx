@@ -155,7 +155,6 @@ const Listbox = styled('ul')(({ theme }) => ({
     },
   },
 }));
-
 export default function CustomizedHook({ arr, onChange }: { arr: { id: number; name: string; }[], onChange: (val: number[]) => void }) {
   const {
     getRootProps,

@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../authConfig";
 import { useNavigate } from "react-router-dom";
-import { IPublicClientApplication, AccountInfo } from "@azure/msal-browser";
 
 
 async function getSkills({instance, accounts} : {instance: IPublicClientApplication, accounts: AccountInfo[]}) {
