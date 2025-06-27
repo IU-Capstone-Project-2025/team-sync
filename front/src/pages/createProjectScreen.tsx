@@ -7,20 +7,10 @@ import { loginRequest } from "../authConfig";
 import { useNavigate } from "react-router-dom";
 
 
-async function getSkills({instance, accounts} : {instance: IPublicClientApplication, accounts: AccountInfo[]}) {
-  const account = accounts[0];
-  const response = await instance.acquireTokenSilent({
-    ...loginRequest,
-    account,
-  });
-  const token = response.accessToken;
+async function getSkills() {
   const skillsUrl = "http://localhost/projects/api/v1/skills";
   try {
-    const response = await fetch(skillsUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
+    const response = await fetch(skillsUrl);
     if (!response.ok) {
       throw new Error('Response error: ' + response.status.toString());
     }
@@ -32,20 +22,10 @@ async function getSkills({instance, accounts} : {instance: IPublicClientApplicat
   }
 }
 
-async function getRoles({instance, accounts} : {instance: IPublicClientApplication, accounts: AccountInfo[]}) {
-  const account = accounts[0];
-  const response = await instance.acquireTokenSilent({
-    ...loginRequest,
-    account,
-  });
-  const token = response.accessToken;
+async function getRoles() {
   const rolesUrl = "http://localhost/projects/api/v1/roles";
   try {
-    const response = await fetch(rolesUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
-    });
+    const response = await fetch(rolesUrl);
     if (!response.ok) {
       throw new Error('Response error: ' + response.status.toString());
     }
@@ -53,13 +33,11 @@ async function getRoles({instance, accounts} : {instance: IPublicClientApplicati
     return json.data.content.map((role) => ({ id: role.id, name: role.name }));
   }
   catch (error) {
-    console.log(token);
     console.error(error.message);
   }
 }
 
 export default function CreateProjectScreen() {
-  const { instance, accounts } = useMsal();
   const [roles, setRoles] = useState<{id: number, name: string}[]>([]);
   const [skills, setSkills] = useState<{id: number, name: string}[]>([]);
   const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
@@ -67,9 +45,9 @@ export default function CreateProjectScreen() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getRoles({instance, accounts}).then(setRoles);
-    getSkills({instance, accounts}).then(setSkills);
-  }, [instance, accounts]);
+    getRoles().then(setRoles);
+    getSkills().then(setSkills);
+  }, []);
 
   async function createProject(event) {
     event.preventDefault();
