@@ -65,9 +65,12 @@ public class ProjectController {
     @GetMapping("/my/recommendations")
     public BaseResponse<List<ProjectResponse>> getMyProjectRecommendations(
             @AuthenticationPrincipal Jwt jwt,
+            @RequestHeader("Authorization") String bearerToken,
             Pageable pageable) {
-        Integer userId = jwt.getClaim("internal_id");
-        List<ProjectResponse> recommendedProjects = recommendationsService.getProjectsForUser(userId, pageable);
+        String token = bearerToken.substring("Bearer ".length());
+
+        Long internalId = jwtService.extractUserId(token);
+        List<ProjectResponse> recommendedProjects = recommendationsService.getProjectsForUser(Math.toIntExact(internalId), pageable);
         return BaseResponse.of(recommendedProjects);
     }
 
