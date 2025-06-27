@@ -26,7 +26,7 @@ Default ports and sample endpoints
 | backend-resume | - | - | - |
 | backend-recommendation | 8083 | only gRPC | only gRPC |
 | ml-search | 8001 | `/api/searh` | `curl 'http://localhost:8001/api/search'` |
-| ml-recsys | 8000 | `/api/recsys` | `curl 'http://localhost:8000/api/recsys'` |
+| ml-recsys | 8000 | `/api/v1/airflow` | `curl 'http://localhost:8000/api/v1/airflow'` |
 
 ## Tech Stack
 
