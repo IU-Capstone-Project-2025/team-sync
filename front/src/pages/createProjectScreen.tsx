@@ -32,7 +32,6 @@ async function getRoles() {
     return json.data.content.map((role) => ({ id: role.id, name: role.name }));
   }
   catch (error) {
-    console.log(token);
     console.error(error.message);
   }
 }
