@@ -6,7 +6,6 @@ import { useMsal } from "@azure/msal-react";
 import { loginRequest } from "../authConfig";
 import { useNavigate } from "react-router-dom";
 
-
 async function getSkills() {
   const skillsUrl = "http://localhost/projects/api/v1/skills";
   try {
@@ -33,6 +32,7 @@ async function getRoles() {
     return json.data.content.map((role) => ({ id: role.id, name: role.name }));
   }
   catch (error) {
+    console.log(token);
     console.error(error.message);
   }
 }
