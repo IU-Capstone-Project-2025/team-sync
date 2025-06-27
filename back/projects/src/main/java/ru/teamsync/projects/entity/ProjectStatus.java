@@ -4,5 +4,6 @@ public enum ProjectStatus {
     DRAFT,
     OPEN,
     IN_PROGRESS,
-    COMPLETE
+    COMPLETE,
+    active
 }
