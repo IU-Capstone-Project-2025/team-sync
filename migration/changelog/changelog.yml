@@ -26,3 +26,21 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ;   
+  - changeSet:
+      id: 4
+      author: Stepan Dementev
+      changes:
+        - sqlFile:
+            path: scripts/TS-116-update-project-statuses.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ;   
+  - changeSet:
+      id: 5
+      author: Stepan Dementev
+      changes:
+        - sqlFile:
+            path: scripts/TS-117-add-project-roles.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ;   

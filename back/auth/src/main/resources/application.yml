@@ -20,7 +20,7 @@ teamsync:
   security:
     internal-jwt-filter:
       skip-path-prefixes:
-        - /entra
+        - /auth/api/v1/entra
     jwt:
       base64key: ${JWT_KEY}
       expiration-time-ms: 3600000 # 1 hour

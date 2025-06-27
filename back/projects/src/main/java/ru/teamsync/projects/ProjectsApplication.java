@@ -3,11 +3,12 @@ package ru.teamsync.projects;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import ru.teamsync.projects.config.properties.RecommendationServiceProperties;
+import ru.teamsync.projects.config.properties.JwtProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties({
-        RecommendationServiceProperties.class
+        RecommendationServiceProperties.class,
+        JwtProperties.class
 })
 public class ProjectsApplication {
 

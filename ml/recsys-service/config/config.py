@@ -10,5 +10,6 @@ class Config:
     REDIS_DB = 0
     REDIS_PASSWORD = "dev-keydb-psw"
     BASE_COEFFICIENT = 0.5
+    TAG_COEFFICIENT = 0.3
     DESCRIPTION_COEFFICIENT = 0.3
     DESCRIPTION_MODEL_NAME = "all-MiniLM-L6-v2"
