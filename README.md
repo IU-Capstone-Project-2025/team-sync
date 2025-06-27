@@ -21,8 +21,8 @@ Default ports and sample endpoints
 | **Service** | **Port** | **Sample endpoint** | **localhost curl** |
 | --- | --- | --- | --- |
 | frontent | 80 | `/` | `curl 'http://localhost'` or `curl 'http://localhost:80'` |                              
-| backend-projects | 80 | `/projects/api/v1/swagger-ui/index.html` | `curl '/projects/api/v1/swagger-ui/index.html'` |
-| backend-auth | 80 | `/auth/api/v1/swagger-ui/index.html` | `curl '/auth/api/v1/swagger-ui/index.html'` |
+| backend-projects | 80 | `/projects/api/v1/swagger-ui/index.html` | `curl 'http://localhost:80/projects/api/v1/swagger-ui/index.html'` |
+| backend-auth | 80 | `/auth/api/v1/swagger-ui/index.html` | `curl 'http://localhost:80/auth/api/v1/swagger-ui/index.html'` |
 | backend-resume | - | - | - |
 | backend-recommendation | 8083 | only gRPC | only gRPC |
 | ml-search | 8001 | `/api/searh` | `curl 'http://localhost:8001/api/search'` |
