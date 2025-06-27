@@ -12,7 +12,7 @@
 git clone https://github.com/IU-Capstone-Project-2025/team-sync
 cd team-sync
 
-# Build and start containers via docker-compose (try to turn on VPN, if you can't download some dependencies)
+# Build and start containers via docker-compose (try to turn on/off VPN, if you can't download some dependencies)
 docker-compose up --build
 ```
 
@@ -20,26 +20,13 @@ docker-compose up --build
 Default ports and sample endpoints
 | **Service** | **Port** | **Sample endpoint** | **localhost curl** |
 | --- | --- | --- | --- |
-| frontent | 80 | `/` | `curl 'http://localhost'` or `curl 'http://localhost:80'` |
-| backend | 8080 | `/hello` | `curl 'http://localhost:8080/hello'` |
-| backend-projects | 8081 | `/skill` | `curl 'http://localhost:8081/skill'` |
+| frontent | 80 | `/` | `curl 'http://localhost'` or `curl 'http://localhost:80'` |                              
+| backend-projects | 80 | `/projects/api/v1/swagger-ui/index.html` | `curl '/projects/api/v1/swagger-ui/index.html'` |
+| backend-auth | 80 | `/auth/api/v1/swagger-ui/index.html` | `curl '/auth/api/v1/swagger-ui/index.html'` |
+| backend-resume | - | - | - |
+| backend-recommendation | 8083 | only gRPC | only gRPC |
 | ml-search | 8001 | `/api/searh` | `curl 'http://localhost:8001/api/search'` |
 | ml-recsys | 8000 | `/api/recsys` | `curl 'http://localhost:8000/api/recsys'` |
-
-Backend-projects service have a dummy endpoint, that returns a skill entity:  
-```js
-{
-  "error": null,
-  "success": true,
-  "data": [
-    {
-      "id": 1,
-      "name": "Java",
-      "description": "Cool tea 🤌🏻"
-    }
-  ]
-}
-```
 
 ## Tech Stack
 
