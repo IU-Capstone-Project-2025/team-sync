@@ -2,16 +2,13 @@ package ru.teamsync.recommendation.service.grpc;
 
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
-import net.devh.boot.grpc.server.service.GrpcService;
 import ru.teamsync.grpc.ProjectsRecommendationsGrpc;
 import ru.teamsync.grpc.RecommendationProto;
 import ru.teamsync.grpc.RecommendationProto.ProjectsRecommendationsRequest;
 import ru.teamsync.grpc.RecommendationProto.ProjectsRecommendationsResponse;
 import ru.teamsync.recommendation.service.UserProjectService;
 
-@GrpcService
 @Log4j2
 @RequiredArgsConstructor
 public class ProjectsRecommendationServiceGrpcImpl extends ProjectsRecommendationsGrpc.ProjectsRecommendationsImplBase {
@@ -32,6 +29,7 @@ public class ProjectsRecommendationServiceGrpcImpl extends ProjectsRecommendatio
                     .build();
         }).forEach(responseBuilder::addProjectScores);
 
+        log.info("Returning {} objects", projectScores.size());
         responseObserver.onNext(responseBuilder.build());
         responseObserver.onCompleted();
     }
