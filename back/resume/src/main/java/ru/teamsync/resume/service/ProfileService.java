@@ -7,15 +7,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
+import ru.teamsync.resume.dto.request.ProfessorCreationRequest;
+import ru.teamsync.resume.dto.request.StudentCreationRequest;
 import ru.teamsync.resume.dto.request.UpdateProfessorProfileRequest;
 import ru.teamsync.resume.dto.request.UpdateStudentProfileRequest;
+import ru.teamsync.resume.dto.response.ProfessorCreationResponse;
 import ru.teamsync.resume.dto.response.ProfileResponse;
 import ru.teamsync.resume.dto.response.RoleResponse;
 import ru.teamsync.resume.dto.response.SkillResponse;
+import ru.teamsync.resume.dto.response.StudentCreationResponse;
+import ru.teamsync.resume.entity.Person;
 import ru.teamsync.resume.entity.Professor;
 import ru.teamsync.resume.entity.Student;
+import ru.teamsync.resume.entity.StudyGroup;
 import ru.teamsync.resume.mapper.PersonMapper;
 import ru.teamsync.resume.mapper.ProfessorMapper;
 import ru.teamsync.resume.mapper.StudentMapper;
@@ -24,6 +31,7 @@ import ru.teamsync.resume.repository.ProfessorRepository;
 import ru.teamsync.resume.repository.RoleRepository;
 import ru.teamsync.resume.repository.SkillRepository;
 import ru.teamsync.resume.repository.StudentRepository;
+import ru.teamsync.resume.repository.StudyGroupRepository;
 
 @Service
 @AllArgsConstructor
@@ -36,6 +44,7 @@ public class ProfileService {
     private final StudentRepository studentRepository;
     private final SkillRepository skillRepository;
     private final RoleRepository roleRepository;
+    private final StudyGroupRepository studyGroupRepository;
 
     private final PersonMapper personMapper;
     private final StudentMapper studentMapper;
@@ -112,6 +121,52 @@ public class ProfileService {
 
         var rolesPage = roleRepository.findByIdIn(roleIds, pageable);
         return rolesPage.map(role -> new RoleResponse(role.getId(), role.getName(), role.getDescription()));
+    }
+
+    @Transactional
+    public StudentCreationResponse createStudentProfile(StudentCreationRequest request) {
+        Person person = Person.builder()
+                .name(request.getPerson().getName())
+                .surname(request.getPerson().getSurname())
+                .email(request.getPerson().getEmail())
+                .build();
+
+        personRepository.save(person);
+
+        StudyGroup studyGroup = studyGroupRepository.findByName(request.getStudyGroup())
+                .orElseThrow(() -> new RuntimeException("Study group not found: " + request.getStudyGroup()));
+
+        Student student = Student.builder()
+                .personId(person.getId())
+                .studyGroup(studyGroup)
+                .description(request.getDescription())
+                .githubAlias(request.getGithubAlias())
+                .tgAlias(request.getTgAlias())
+                .build();
+
+        studentRepository.save(student);
+
+        return new StudentCreationResponse(student.getId());
+    }
+
+    @Transactional
+    public ProfessorCreationResponse createProfessorProfile(ProfessorCreationRequest request) {
+        Person person = Person.builder()
+                .name(request.getPerson().getName())
+                .surname(request.getPerson().getSurname())
+                .email(request.getPerson().getEmail())
+                .build();
+
+        personRepository.save(person);
+
+        Professor professor = Professor.builder()
+            .personId(person.getId())
+            .tgAlias(request.getTgAlias())
+            .build();
+
+        professorRepository.save(professor);
+
+        return new ProfessorCreationResponse(professor.getId());
     }
 
 }
