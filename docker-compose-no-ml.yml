@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+
+  backend-auth:
+    build: ./back/auth
+    ports: 
+      - "8084:8080"
+    environment:
+      - TENANT_ID=8b33a0fd-354e-48f9-b6fa-b85f0b6e3e55
+      - JWT_KEY=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0
+    depends_on:
+      - postgres
+  
+  backend-projects:
+    build: ./back/projects
+    environment:
+      - TENANT_ID=8b33a0fd-354e-48f9-b6fa-b85f0b6e3e55
+      - JWT_KEY=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0
+    ports: 
+      - "8081:8080"
+    depends_on:
+      - postgres
+
+  backend-recommendation:
+    build: ./back/recommendation
+    ports: 
+      - "8082:8080"
+      - "8083:9090"
+      
+  frontend:
+    build: ./front
+    ports: 
+      - "3000:80"
+
+  postgres:
+    image: postgres:16
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: dev-db
+      POSTGRES_USER: dev-user
+      POSTGRES_PASSWORD: dev-psw
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:9.4.0
+    container_name: pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+  liquibase:
+    image: liquibase/liquibase:4.32.0
+    container_name: liquibase
+    volumes:
+      - ./migration:/migration
+    working_dir: /migration
+    depends_on:
+      - postgres
+    command: >
+      --defaultsFile=liquibase.properties
+      update
+
+volumes:
+  pgdata:
+  pgadmin_data:
+    
