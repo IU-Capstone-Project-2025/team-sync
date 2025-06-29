@@ -5,6 +5,7 @@ public record BaseResponse<T>(
         Boolean success,
         T data
 ) {
+    
     public static <T> BaseResponse<T> of(T data) {
         return new BaseResponse<>(null, true, data);
     }
