@@ -38,8 +38,9 @@ public class Student {
     private String githubAlias;
     private String tgAlias;
 
-    @Column(name = "person_id", nullable = false)
-    private Long personId;
+    @ManyToOne
+    @JoinColumn(name = "person_id", nullable = false)
+    private Person person;
 
     @ElementCollection
     @CollectionTable(

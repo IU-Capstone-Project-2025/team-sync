@@ -10,7 +10,7 @@ import ru.teamsync.auth.client.dto.student.StudentCreationRequest;
 import ru.teamsync.auth.client.dto.student.StudentCreationResponse;
 import ru.teamsync.auth.controllers.response.BaseResponse;
 
-@HttpExchange(url = "/resume/api/v1")
+@HttpExchange
 public interface ResumeClient {
 
     @PostExchange("/student")

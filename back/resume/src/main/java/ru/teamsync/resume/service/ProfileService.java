@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
+import ru.teamsync.resume.dto.StudyGroupNotFoundException;
 import ru.teamsync.resume.dto.request.ProfessorCreationRequest;
 import ru.teamsync.resume.dto.request.StudentCreationRequest;
 import ru.teamsync.resume.dto.request.UpdateProfessorProfileRequest;
@@ -134,10 +135,10 @@ public class ProfileService {
         personRepository.save(person);
 
         StudyGroup studyGroup = studyGroupRepository.findByName(request.getStudyGroup())
-                .orElseThrow(() -> new RuntimeException("Study group not found: " + request.getStudyGroup()));
+                .orElseThrow(() -> new StudyGroupNotFoundException(request.getStudyGroup()));
 
         Student student = Student.builder()
-                .personId(person.getId())
+                .person(person)
                 .studyGroup(studyGroup)
                 .description(request.getDescription())
                 .githubAlias(request.getGithubAlias())
@@ -160,7 +161,7 @@ public class ProfileService {
         personRepository.save(person);
 
         Professor professor = Professor.builder()
-            .personId(person.getId())
+            .person(person)
             .tgAlias(request.getTgAlias())
             .build();
 
