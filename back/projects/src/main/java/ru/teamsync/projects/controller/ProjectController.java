@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +30,6 @@ public class ProjectController {
     private final JwtService jwtService;
 
     @PostMapping
-  //  @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public ResponseEntity<BaseResponse<Void>> createProject(
             @RequestBody @Valid ProjectCreateRequest request,
             @AuthenticationPrincipal Jwt jwt,
@@ -46,7 +44,6 @@ public class ProjectController {
     }
 
     @GetMapping("/my")
-  //  @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public BaseResponse<Page<ProjectResponse>> getMyProjects(
             @AuthenticationPrincipal Jwt jwt,
             Pageable pageable,
