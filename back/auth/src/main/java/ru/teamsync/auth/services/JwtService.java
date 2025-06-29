@@ -43,10 +43,9 @@ public class JwtService {
         }
     }
 
-    @PostConstruct
+    /*@PostConstruct
     public void printTestToken() {
         String token = generateTokenWithInternalId(123);
         System.out.println("Internal test token: " + token);
-    }
-
+    } */
 }
