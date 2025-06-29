@@ -1,5 +1,6 @@
 package ru.teamsync.projects.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +14,7 @@ import ru.teamsync.projects.service.RoleService;
 
 @RestController
 @RequestMapping("/roles")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RoleController {
     private final RoleService roleService;
 
