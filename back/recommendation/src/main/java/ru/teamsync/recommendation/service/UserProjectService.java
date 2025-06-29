@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.teamsync.recommendation.model.ProjectScore;
 
 import java.util.List;
-import java.util.stream.Collectors;
+//import java.util.stream.Collectors;
 
 @Service
 @Log4j2

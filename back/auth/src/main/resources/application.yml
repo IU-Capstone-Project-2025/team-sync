@@ -32,8 +32,15 @@ teamsync:
         - http://localhost:8000
   client:
     resume:
-      api-url: bebebe
+      api-url: http://localhost/resume/api/v1
 
 logging:
   level:
     org.springframework.security: DEBUG
+  file:
+    max-history: 3
+    max-size: 10MB
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      total-size-cap: 100MB

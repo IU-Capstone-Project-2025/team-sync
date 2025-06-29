@@ -1,10 +1,11 @@
 package ru.teamsync.auth.services.registration;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import ru.teamsync.auth.client.ResumeClient;
 import ru.teamsync.auth.client.ResumeClientException;
 import ru.teamsync.auth.client.dto.PersonCreationRequest;
@@ -13,8 +14,6 @@ import ru.teamsync.auth.client.dto.student.StudentCreationRequest;
 import ru.teamsync.auth.config.security.userdetails.Role;
 import ru.teamsync.auth.controllers.request.RegisterProfessorRequest;
 import ru.teamsync.auth.controllers.request.RegisterStudentRequest;
-import ru.teamsync.auth.model.Person;
-import ru.teamsync.auth.model.PersonRepository;
 import ru.teamsync.auth.model.SecurityUser;
 import ru.teamsync.auth.model.SecurityUserRepository;
 import ru.teamsync.auth.services.JwtService;
@@ -34,7 +33,6 @@ public class EntraRegistrationService implements RegistrationService {
     private final SecurityUserRepository securityUserRepository;
     private final JwtService jwtService;
     private final ResumeClientMapper resumeClientMapper;
-    private final PersonRepository personRepository;
 
     @Transactional
     @Override
@@ -45,27 +43,23 @@ public class EntraRegistrationService implements RegistrationService {
         StudentCreationRequest studentCreationRequest = resumeClientMapper.toStudentCreationRequest(person, registerStudentRequest);
 
         var response = resumeClient.createStudent(studentCreationRequest);
-        Person p = new Person();
-        p.setName(person.getName());
-        p.setSurname(person.getSurname());
-        p.setEmail(person.getEmail());
-        long id = personRepository.save(p).getId();
-        log.info("Got id {}", id);
-//        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-            Integer internalId = Math.toIntExact(id);
-        log.info("Got id {}", internalId);
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            Integer internalId = response.getBody().data().id(); 
+            log.info("Got id {}", internalId);
+
             SecurityUser securityUser = new SecurityUser();
             securityUser.setEmail(person.getEmail());
             securityUser.setExternalUserId(entraJwt.getClaimAsString(EXTERNAL_ID_CLAIM));
             securityUser.setInternalUserId(internalId);
             securityUser.setRole(Role.STUDENT);
+
             securityUserRepository.save(securityUser);
 
             return jwtService.generateTokenWithInternalId(internalId);
-//        } else {
-//            String errorMessage = response.getBody() == null ? "Failed to create professor, no response body" : response.getBody().error().toString();
-//            throw new ResumeClientException(errorMessage);
-//        }
+        } else {
+            String errorMessage = response.getBody() == null ? "Failed to create student, no response body" : response.getBody().error().toString();
+            throw new ResumeClientException(errorMessage);
+        }
     }
 
     @Transactional
@@ -76,17 +70,9 @@ public class EntraRegistrationService implements RegistrationService {
 
         ProfessorCreationRequest professorCreationRequest = resumeClientMapper.toProfessorCreationRequest(person, registerProfessorRequest);
         var response = resumeClient.createProfessor(professorCreationRequest);
-        Person p = new Person();
-        p.setName(person.getName());
-        p.setSurname(person.getSurname());
-        p.setEmail(person.getEmail());
-        long id = personRepository.save(p).getId();
-        log.info("Got id {}", id);
-//        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-        Integer internalId = Math.toIntExact(id);
-        log.info("Got id {}", internalId);
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-            //Integer internalId = response.getBody().data().id();
+            Integer internalId = response.getBody().data().id(); 
+            log.info("Got id {}", internalId);
 
             SecurityUser securityUser = new SecurityUser();
             securityUser.setEmail(person.getEmail());
