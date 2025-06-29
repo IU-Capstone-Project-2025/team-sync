@@ -7,6 +7,7 @@ spring:
     username: dev-user
     password: dev-psw
 server:
+  address: 0.0.0.0
   port: 8080
   servlet:
     context-path: /resume/api/v1
