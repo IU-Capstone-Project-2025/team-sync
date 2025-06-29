@@ -65,6 +65,7 @@ public class InternalJwtFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        logger.debug("Request URI: " + request.getRequestURI() + ", skip prefixes: " + internalJwtFilterProperties.skipPathPrefixes());
         return internalJwtFilterProperties.skipPathPrefixes().stream()
                 .anyMatch(prefix -> request.getRequestURI().startsWith(prefix));
     }

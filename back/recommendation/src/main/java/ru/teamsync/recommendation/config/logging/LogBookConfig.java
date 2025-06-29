@@ -1,9 +1,8 @@
-package ru.teamsync.projects.config;
+package ru.teamsync.recommendation.config.logging;
 
 import org.zalando.logbook.Logbook;
 import org.zalando.logbook.core.DefaultCorrelationId;
 import org.zalando.logbook.core.DefaultHttpLogFormatter;
-import org.zalando.logbook.core.DefaultHttpLogWriter;
 import org.zalando.logbook.core.DefaultSink;
 import org.zalando.logbook.core.DefaultStrategy;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +16,7 @@ public class LogBookConfig {
         return Logbook.builder()
                 .sink(new DefaultSink(
                         new DefaultHttpLogFormatter(),
-                        new DefaultHttpLogWriter()
+                        new LogbackHttpLogWriter()
                 ))
                 .strategy(new DefaultStrategy())
                 .correlationId(new DefaultCorrelationId())

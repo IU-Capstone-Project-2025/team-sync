@@ -2,6 +2,7 @@ package ru.teamsync.auth.services;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.teamsync.auth.config.properties.JwtProperties;
@@ -40,6 +41,12 @@ public class JwtService {
         } catch (JwtException e) {
             return false;
         }
+    }
+
+    @PostConstruct
+    public void printTestToken() {
+        String token = generateTokenWithInternalId(123);
+        System.out.println("Internal test token: " + token);
     }
 
 }
