@@ -7,7 +7,7 @@ import org.zalando.logbook.HttpLogWriter;
 import org.zalando.logbook.Precorrelation;
 
 public class LogbackHttpLogWriter implements HttpLogWriter {
-    private static final Logger log = LoggerFactory.getLogger("org.zalango.logbook");
+    private static final Logger log = LoggerFactory.getLogger("org.zalando.logbook");
 
     @Override
     public void write(Precorrelation precorrelation, String request) {
