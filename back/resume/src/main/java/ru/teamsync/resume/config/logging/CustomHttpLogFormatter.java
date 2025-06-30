@@ -15,7 +15,7 @@ public class CustomHttpLogFormatter implements HttpLogFormatter {
 
     @Override
     public String format(Precorrelation precorrelation, HttpRequest request) throws IOException {
-        return String.format("""
+        return "\n" + String.format("""
                              === Request ===
                              Method: %s
                              Path: %s
@@ -33,7 +33,7 @@ public class CustomHttpLogFormatter implements HttpLogFormatter {
 
     @Override
     public String format(Correlation correlation, HttpResponse response) throws IOException {
-        return String.format("""
+        return "\n" + String.format("""
                              === Response ===
                              Status: %s
                              Headers:
