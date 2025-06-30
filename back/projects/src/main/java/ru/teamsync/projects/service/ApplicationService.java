@@ -17,6 +17,8 @@ import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
+import ru.teamsync.projects.service.exception.ProjectNotFoundException;
+import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 
 @Service
 @AllArgsConstructor
@@ -26,15 +28,15 @@ public class ApplicationService {
     private final ApplicationMapper applicationMapper;
 
     public Page<ApplicationResponse> getApplicationsByProject(
-            Long ownerId, 
-            Long projectId, 
-            Pageable pageable) throws NotFoundException, AccessDeniedException {
+            Long ownerId,
+            Long projectId,
+            Pageable pageable) {
 
         Project project = projectRepository.findById(projectId)
-            .orElseThrow(() -> new NotFoundException());
+                .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
 
         if (!project.getTeamLeadId().equals(ownerId)) {
-            throw new AccessDeniedException("You are not the team lead of this project");
+            throw new ResourceAccessDeniedException("You have no access to this project as you are not teamlead");
         }
 
         return applicationRepository.findAllByProjectId(projectId, pageable)
