@@ -22,7 +22,7 @@ import java.util.List;
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 @Log4j2
-public class IntegrationEnvironment {
+public abstract class IntegrationEnvironment {
 
     private final static List<String> TABLES = List.of(
             "person",
