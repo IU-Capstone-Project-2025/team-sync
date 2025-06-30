@@ -19,6 +19,7 @@ import ru.teamsync.projects.service.ApplicationService;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.when;
 public class ApplicationServiceTest {
 
     private ApplicationService applicationService;
+
     private ProjectRepository projectRepositoryMock;
     private ApplicationRepository applicationRepositoryMock;
     private ApplicationMapper applicationMapperMock;
@@ -43,13 +45,12 @@ public class ApplicationServiceTest {
     }
 
     @Test
-    public void should_throwAccessDenied_when_notTeamLeadGettingApplications() throws ChangeSetPersister.NotFoundException {
+    public void should_throwAccessDenied_when_notTeamLeadGetsApplications() throws ChangeSetPersister.NotFoundException {
         //Arrange
         Project project = new Project();
         project.setTeamLeadId(123L);
-        Page<Project> page = new PageImpl(List.of(project));
 
-        when(projectRepositoryMock.findAllByTeamLeadId(any(), any())).thenReturn(page);
+        when(projectRepositoryMock.findById(2L)).thenReturn(Optional.of(project));
 
         //Act, Assert
         assertThatThrownBy(
@@ -58,7 +59,7 @@ public class ApplicationServiceTest {
     }
 
     @Test
-    public void should_setStatusPending_when_savingNewApplication() {
+    public void should_setStatusPending_when_saveNewApplication() {
         //Arrange
         ApplicationRequest applicationRequest = new ApplicationRequest(123L);
 
