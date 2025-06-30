@@ -23,7 +23,8 @@ public class StudentProfileController {
 
     private final ProfileService profileService;
 
-    @PutMapping("/student/{personId}")
+    /*
+     * @PutMapping("/{personId}")
     public ResponseEntity<BaseResponse<Void>> updateStudentProfile(
             @PathVariable Long personId, 
             @RequestBody UpdateStudentProfileRequest request,
@@ -33,6 +34,7 @@ public class StudentProfileController {
         profileService.updateStudentProfile(personId, request, currentUserId);
         return ResponseEntity.ok(BaseResponse.of(null));
     }
+     */
 
     @GetMapping("/{personId}/skills")
     public ResponseEntity<BaseResponse<Page<SkillResponse>>> getStudentSkills(

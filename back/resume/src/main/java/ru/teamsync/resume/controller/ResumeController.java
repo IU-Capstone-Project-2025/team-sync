@@ -15,7 +15,7 @@ import ru.teamsync.resume.dto.response.StudentCreationResponse;
 import ru.teamsync.resume.service.ProfileService;
 
 @RestController
-@RequestMapping("/resume/api/v1")
+@RequestMapping
 @RequiredArgsConstructor
 public class ResumeController {
     private final ProfileService profileService;
