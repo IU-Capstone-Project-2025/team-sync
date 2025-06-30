@@ -2,14 +2,17 @@ import HomeHeader from "../components/homeHeader";
 import Footer from "../components/footer";
 import CustomizedHook from "../components/autocompleteInput";
 import { useEffect, useState } from "react";
-import { useMsal } from "@azure/msal-react";
-import { loginRequest } from "../authConfig";
 import { useNavigate } from "react-router-dom";
 
-async function getSkills() {
-  const skillsUrl = "http://localhost/projects/api/v1/skills";
+async function getSkills(token) {
+  const skillsUrl = "/projects/api/v1/skills";
   try {
-    const response = await fetch(skillsUrl);
+    const response = await fetch(skillsUrl, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
     if (!response.ok) {
       throw new Error('Response error: ' + response.status.toString());
     }
@@ -21,10 +24,15 @@ async function getSkills() {
   }
 }
 
-async function getRoles() {
-  const rolesUrl = "http://localhost/projects/api/v1/roles";
+async function getRoles(token) {
+  const rolesUrl = "/projects/api/v1/roles";
   try {
-    const response = await fetch(rolesUrl);
+    const response = await fetch(rolesUrl, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
     if (!response.ok) {
       throw new Error('Response error: ' + response.status.toString());
     }
@@ -42,16 +50,18 @@ export default function CreateProjectScreen() {
   const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
   const [selectedSkills, setSelectedSkills] = useState<number[]>([]);
   const navigate = useNavigate();
-
   useEffect(() => {
-    getRoles().then(setRoles);
-    getSkills().then(setSkills);
-  }, []);
+    const token = localStorage.getItem("backendToken");
+    if (token){
+      getSkills(token).then(setSkills);
+      getRoles(token).then(setRoles);
+    }
+   }, []);
 
   async function createProject(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
-    const projectUrl = "http://localhost/projects/api/v1/projects";
+    const projectUrl = "/projects/api/v1/projects";
     if (selectedSkills.length === 0 || selectedRoles.length === 0){
       console.error("Skills or roles empty");
       return;

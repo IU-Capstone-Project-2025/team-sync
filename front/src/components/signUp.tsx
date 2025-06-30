@@ -1,8 +1,6 @@
-import { useNavigate } from 'react-router-dom';
 import {useMsal} from "@azure/msal-react"
 import {loginRequest} from "../authConfig"
 export default function SignUpButton(){
-  const navigate = useNavigate();
   const {instance, accounts}  = useMsal();
   const handleLogin = async () => {
     try {
@@ -13,14 +11,6 @@ export default function SignUpButton(){
     handleCallApi();
   };
   const handleCallApi = async () => {
-    const account = accounts[0];
-    if (!account) return;
-    const response = await instance.acquireTokenSilent({
-      ...loginRequest,
-      account,
-    });
-
-    const token = response.accessToken;
     const registrationData = {
       study_group: "string",
       description: "string",
@@ -28,11 +18,8 @@ export default function SignUpButton(){
       tg_alias: "string"
     };
 
-    const res = await fetch("http://localhost/auth/api/v1/entra/login", {
+    const res = await fetch("/auth/api/v1/entra/login", {
       method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-      },
       body: JSON.stringify(registrationData)
     });
     const data = await res.text();

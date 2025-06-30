@@ -1,18 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import SplashHeader from '../components/splashHeader'
 import Footer from '../components/footer';
 import { useIsAuthenticated, useMsal } from '@azure/msal-react';
 import { useNavigate } from 'react-router-dom';
-import { AccountInfo, IPublicClientApplication } from '@azure/msal-browser';
-import { loginRequest } from '../authConfig';
 
-async function login({instance, accounts} : {instance: IPublicClientApplication, accounts: AccountInfo[]}) {
-  const account = accounts[0];
-  const response = await instance.acquireTokenSilent({
-    ...loginRequest,
-    account,
-  });
-  const token = response.accessToken;
+async function login() {
   const registrationData = {
     study_group: "string",
     description: "string",
@@ -21,10 +13,9 @@ async function login({instance, accounts} : {instance: IPublicClientApplication,
   };
 
   try {
-    const res = await fetch("http://localhost/auth/api/v1/entra/login", {
+    const res = await fetch("/auth/api/v1/entra/login", {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       },
     });
@@ -35,10 +26,9 @@ async function login({instance, accounts} : {instance: IPublicClientApplication,
       console.log(loginResult.data.access_token);
     } else if (res.status === 409) {
       console.log("trying to register");
-      const regRes = await fetch("http://localhost/auth/api/v1/entra/registration/student", {
+      const regRes = await fetch("/auth/api/v1/entra/registration/student", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(registrationData)
@@ -61,13 +51,12 @@ async function login({instance, accounts} : {instance: IPublicClientApplication,
 export default function SplashScreen() {
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
-  const { instance, accounts } = useMsal();
   useEffect(() => {
     localStorage.clear();
   });
   useEffect(() => {
     if (isAuthenticated) {
-      login({instance, accounts});
+      login();
       navigate('/home');
     }
   }, [isAuthenticated, navigate]);
