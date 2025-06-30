@@ -1,9 +1,0 @@
-spring:
-  liquibase:
-    enabled: true
-    change-log: file:../../../../liquibase/changelog/changelog.yml
-jwt:
-  base64key: ${TEST_JWT_KEY}
-  expiration-time-ms: 3600000
-  issuer: teamsync
-  user-id-claim: user_id

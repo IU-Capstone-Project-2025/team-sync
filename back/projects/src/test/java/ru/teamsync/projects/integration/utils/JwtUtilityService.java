@@ -8,7 +8,7 @@ import ru.teamsync.projects.config.properties.JwtProperties;
 import java.util.Date;
 
 @Service
-public class UtilJwtService {
+public class JwtUtilityService {
 
     @Autowired
     private JwtProperties jwtProperties;

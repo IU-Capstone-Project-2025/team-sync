@@ -27,7 +27,6 @@ public class ApplicationController {
     public BaseResponse<Page<ApplicationResponse>> getApplicationsByProject(
             @PathVariable Long projectId,
             Pageable pageable) {
-
         long userId = securityContextService.getCurrentUserId();
         return BaseResponse.of(applicationService.getApplicationsByProject(userId, projectId, pageable));
     }

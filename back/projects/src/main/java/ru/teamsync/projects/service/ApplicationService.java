@@ -2,10 +2,8 @@ package ru.teamsync.projects.service;
 
 import java.time.LocalDateTime;
 
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -44,13 +42,13 @@ public class ApplicationService {
     }
 
     public Page<ApplicationResponse> getApplicationsByMember(Long memberId, Pageable pageable) {
-        return applicationRepository.findAllByMemberId(memberId, pageable)
+        return applicationRepository.findAllByStudentId(memberId, pageable)
                 .map(applicationMapper::toDto);
     }
 
-    public void createApplication(Long memberId, ApplicationRequest request) {
+    public void createApplication(Long studentId, ApplicationRequest request) {
         Application application = new Application();
-        application.setMemberId(memberId);
+        application.setStudentId(studentId);
         application.setId(request.projectId());
         application.setStatus(ApplicationStatus.PENDING);
         application.setCreatedAt(LocalDateTime.now());

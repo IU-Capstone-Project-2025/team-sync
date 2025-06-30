@@ -6,7 +6,7 @@ import ru.teamsync.projects.entity.ApplicationStatus;
 
 public record ApplicationResponse(
     Long id,
-    Long memberId,
+    Long studentId,
     Long projectId,
     ApplicationStatus status,
     LocalDateTime createdAt

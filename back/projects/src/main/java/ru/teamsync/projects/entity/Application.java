@@ -13,13 +13,23 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "application")
 public class Application {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    private Long memberId;
+
+    @Column(name = "student_id")
+    private Long studentId;
+
+    @Column(name = "project_id")
     private Long projectId;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 }

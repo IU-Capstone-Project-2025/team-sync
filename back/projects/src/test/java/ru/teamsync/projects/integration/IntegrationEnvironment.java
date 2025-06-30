@@ -2,7 +2,6 @@ package ru.teamsync.projects.integration;
 
 import groovy.util.logging.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,16 +10,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
+import ru.teamsync.projects.integration.utils.JwtUtilityService;
+import ru.teamsync.projects.integration.utils.StudentUtilityService;
 
 import java.util.List;
 
 @SpringBootTest
-@TestPropertySource(locations = "classpath:application-integration.yml")
+@TestPropertySource(locations = "classpath:application-test.yaml")
 @AutoConfigureMockMvc
-@ActiveProfiles("integration")
+@ActiveProfiles("test")
 @Log4j2
 public class IntegrationEnvironment {
 
@@ -52,6 +52,12 @@ public class IntegrationEnvironment {
 
     @Autowired
     protected JdbcClient jdbcClient;
+
+    @Autowired
+    protected JwtUtilityService jwtUtilityService;
+
+    @Autowired
+    protected StudentUtilityService studentUtilityService;
 
     static {
         try {
