@@ -34,6 +34,9 @@ import ru.teamsync.resume.repository.SkillRepository;
 import ru.teamsync.resume.repository.StudentRepository;
 import ru.teamsync.resume.repository.StudyGroupRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 @AllArgsConstructor
 public class ProfileService {
@@ -133,6 +136,7 @@ public class ProfileService {
                 .build();
 
         personRepository.save(person);
+        log.info("Incoming studyGroup: {}", request.getStudyGroup());
 
         StudyGroup studyGroup = studyGroupRepository.findByName(request.getStudyGroup())
                 .orElseThrow(() -> new StudyGroupNotFoundException(request.getStudyGroup()));

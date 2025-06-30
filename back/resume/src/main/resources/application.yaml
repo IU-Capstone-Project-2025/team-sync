@@ -11,3 +11,9 @@ server:
   port: 8080
   servlet:
     context-path: /resume/api/v1
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    root: INFO
+    ru.teamsync.resume: INFO
