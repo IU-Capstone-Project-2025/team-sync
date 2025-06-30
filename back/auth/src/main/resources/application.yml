@@ -32,7 +32,7 @@ teamsync:
         - http://localhost:8000
   client:
     resume:
-      api-url: http://localhost/resume/api/v1
+      api-url: http://nginx/resume/api/v1
 
 logging:
   level:

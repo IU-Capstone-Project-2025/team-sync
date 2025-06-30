@@ -1,6 +1,7 @@
 package ru.teamsync.auth.client;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
@@ -14,9 +15,9 @@ import ru.teamsync.auth.controllers.response.BaseResponse;
 public interface ResumeClient {
 
     @PostExchange("/student")
-    ResponseEntity<BaseResponse<StudentCreationResponse>> createStudent(StudentCreationRequest request);
+    ResponseEntity<BaseResponse<StudentCreationResponse>> createStudent(@RequestBody StudentCreationRequest request);
 
     @PostExchange("/professor")
-    ResponseEntity<BaseResponse<ProfessorCreationResponse>> createProfessor(ProfessorCreationRequest request);
+    ResponseEntity<BaseResponse<ProfessorCreationResponse>> createProfessor(@RequestBody ProfessorCreationRequest request);
 
 }
