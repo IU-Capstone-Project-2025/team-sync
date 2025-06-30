@@ -2,3 +2,4 @@
 airflow/logs/
 airflow/plugins/
 __pycache__/
+.env
