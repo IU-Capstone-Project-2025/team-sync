@@ -2,10 +2,8 @@ package ru.teamsync.projects.service;
 
 import java.time.LocalDateTime;
 
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -17,6 +15,8 @@ import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
+import ru.teamsync.projects.service.exception.ProjectNotFoundException;
+import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 
 @Service
 @AllArgsConstructor
@@ -26,15 +26,15 @@ public class ApplicationService {
     private final ApplicationMapper applicationMapper;
 
     public Page<ApplicationResponse> getApplicationsByProject(
-            Long ownerId, 
-            Long projectId, 
-            Pageable pageable) throws NotFoundException, AccessDeniedException {
+            Long ownerId,
+            Long projectId,
+            Pageable pageable) {
 
         Project project = projectRepository.findById(projectId)
-            .orElseThrow(() -> new NotFoundException());
+                .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
 
         if (!project.getTeamLeadId().equals(ownerId)) {
-            throw new AccessDeniedException("You are not the team lead of this project");
+            throw new ResourceAccessDeniedException("You have no access to this project as you are not teamlead");
         }
 
         return applicationRepository.findAllByProjectId(projectId, pageable)
@@ -42,13 +42,13 @@ public class ApplicationService {
     }
 
     public Page<ApplicationResponse> getApplicationsByMember(Long memberId, Pageable pageable) {
-        return applicationRepository.findAllByMemberId(memberId, pageable)
+        return applicationRepository.findAllByStudentId(memberId, pageable)
                 .map(applicationMapper::toDto);
     }
 
-    public void createApplication(Long memberId, ApplicationRequest request) {
+    public void createApplication(Long studentId, ApplicationRequest request) {
         Application application = new Application();
-        application.setMemberId(memberId);
+        application.setStudentId(studentId);
         application.setId(request.projectId());
         application.setStatus(ApplicationStatus.PENDING);
         application.setCreatedAt(LocalDateTime.now());

@@ -26,8 +26,7 @@ public class ApplicationController {
     @GetMapping("/project/{projectId}")
     public BaseResponse<Page<ApplicationResponse>> getApplicationsByProject(
             @PathVariable Long projectId,
-            Pageable pageable) throws NotFoundException, AccessDeniedException {
-
+            Pageable pageable) {
         long userId = securityContextService.getCurrentUserId();
         return BaseResponse.of(applicationService.getApplicationsByProject(userId, projectId, pageable));
     }
