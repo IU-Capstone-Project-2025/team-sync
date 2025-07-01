@@ -16,6 +16,7 @@ jobs:
           java-version: 21
       - name: Run Coverage
         run: |
+          cd back/projects
           chmod +x gradlew
           ./gradlew jacocoTestReport
 
