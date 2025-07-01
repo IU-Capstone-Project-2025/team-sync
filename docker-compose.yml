@@ -21,16 +21,16 @@ services:
     volumes:
       - ./logs:/app/logs
     environment:
-      - TENANT_ID=8b33a0fd-354e-48f9-b6fa-b85f0b6e3e55
-      - JWT_KEY=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0
+      - TENANT_ID=${TENANT_ID}
+      - JWT_KEY=${JWT_KEY}
     depends_on:
       - postgres
   
   backend-projects:
     build: ./back/projects
     environment:
-      - TENANT_ID=8b33a0fd-354e-48f9-b6fa-b85f0b6e3e55
-      - JWT_KEY=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0
+      - TENANT_ID=${TENANT_ID}
+      - JWT_KEY=${JWT_KEY}
     ports: 
       - "8081:8080"
     volumes:
@@ -75,9 +75,9 @@ services:
     container_name: postgres_db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: dev-db
-      POSTGRES_USER: dev-user
-      POSTGRES_PASSWORD: dev-psw
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -88,8 +88,8 @@ services:
     container_name: pgadmin
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_USER}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
     ports:
       - "5050:80"
     volumes:
@@ -117,7 +117,7 @@ services:
     volumes:
       - keydb_data:/data
     environment:
-      - KEYDB_PASSWORD=dev-keydb-psw
+      - KEYDB_PASSWORD=${KEY_DB_PASSWORD}
     restart: unless-stopped
 
   airflow-postgres:
@@ -125,9 +125,9 @@ services:
     container_name: airflow_postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: airflow-db
-      POSTGRES_USER: airflow-user
-      POSTGRES_PASSWORD: airflow-psw
+      POSTGRES_DB: 
+      POSTGRES_USER: 
+      POSTGRES_PASSWORD: 
     ports:
       - "5433:5432"
     volumes:
