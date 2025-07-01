@@ -3,13 +3,13 @@ package ru.teamsync.resume.integration;
 import groovy.util.logging.Log4j2;
 import ru.teamsync.resume.integration.utils.JwtUtilityService;
 import ru.teamsync.resume.integration.utils.StudentUtilityService;
+import ru.teamsync.resume.integration.utils.ProfessorUtilityService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.context.ActiveProfiles;
@@ -17,17 +17,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-import liquibase.Contexts;
-import liquibase.Liquibase;
-import liquibase.LabelExpression;
-import liquibase.database.DatabaseFactory;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.resource.ClassLoaderResourceAccessor;
-
-import javax.sql.DataSource;
-import com.zaxxer.hikari.HikariDataSource;
-
-import java.sql.DriverManager;
 import java.util.List;
 
 
@@ -71,6 +60,9 @@ public abstract class IntegrationEnvironment {
 
     @Autowired
     protected StudentUtilityService studentUtilityService;
+
+    @Autowired
+    protected ProfessorUtilityService professorUtilityService;
 
     static {
         try {

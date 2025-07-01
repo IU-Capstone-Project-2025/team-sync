@@ -9,6 +9,7 @@ import ru.teamsync.resume.entity.Student;
 import ru.teamsync.resume.mapper.PersonMapper;
 import ru.teamsync.resume.mapper.StudentMapper;
 import ru.teamsync.resume.repository.PersonRepository;
+import ru.teamsync.resume.repository.ProfessorRepository;
 import ru.teamsync.resume.repository.StudentRepository;
 import ru.teamsync.resume.service.ProfileService;
 import ru.teamsync.resume.service.exception.NotFoundException;
@@ -23,6 +24,7 @@ public class ProfileServiceTest {
     private ProfileService profileService;
 
     private PersonRepository personRepository;
+    private ProfessorRepository professorRepository;
     private StudentRepository studentRepository;
     private PersonMapper personMapper;
     private StudentMapper studentMapper;
@@ -34,7 +36,7 @@ public class ProfileServiceTest {
         personMapper = Mockito.mock(PersonMapper.class);
         studentMapper = Mockito.mock(StudentMapper.class);
 
-        profileService = new ProfileService(personRepository, null, studentRepository, null, null, personMapper, studentMapper, null);
+        profileService = new ProfileService(personRepository, professorRepository, studentRepository, null, null, personMapper, studentMapper, null);
     }
 
     @Test
