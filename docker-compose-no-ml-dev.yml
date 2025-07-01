@@ -1,72 +1,69 @@
 version: '3.8'
 
 services:
-  backend-auth:
+  backend-auth-dev:
     build: ./back/auth
     ports: 
-      - "8084:8080"
+      - "9000:8080"
     environment:
       - TENANT_ID=${TENANT_ID}
-      - JWT_KEY=${JWT_KEY}
+      - JWT_KEY=${JWT_KEY_TEST}
     depends_on:
-      - postgres
+      - postgres-dev
   
-  backend-projects:
+  backend-projects-dev:
     build: ./back/projects
     environment:
       - TENANT_ID=${TENANT_ID}
-      - JWT_KEY=${JWT_KEY}
+      - JWT_KEY=${JWT_KEY_TEST}
     ports: 
-      - "8081:8080"
+      - "9001:8080"
     depends_on:
-      - postgres
+      - postgres-dev
 
-  backend-recommendation:
+  backend-recommendation-dev:
     build: ./back/recommendation
     ports: 
-      - "8082:8080"
-      - "8083:9090"
+      - "9002:8080"
+      - "9003:9090"
       
-  frontend:
+  frontend-dev:
     build: ./front
     ports: 
-      - "3000:80"
+      - "9004:80"
 
-  postgres:
+  postgres-dev:
     image: postgres:16
-    container_name: postgres_db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME_TEST}
+      POSTGRES_USER: ${DB_USER_TEST}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "5432:5432"
+      - "9006:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  pgadmin:
+  pgadmin-dev:
     image: dpage/pgadmin4:9.4.0
-    container_name: pgadmin
     restart: unless-stopped
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_USER}
-      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
+      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_USER_TEST}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD_TEST}
     ports:
-      - "5050:80"
+      - "9007:80"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     depends_on:
-      - postgres
+      - postgres-dev
 
-  liquibase:
+  liquibase-dev:
     image: liquibase/liquibase:4.32.0
-    container_name: liquibase
     volumes:
       - ./migration:/migration
     working_dir: /migration
     depends_on:
-      - postgres
+      - postgres-dev
     command: >
       --defaultsFile=liquibase.properties
       update
