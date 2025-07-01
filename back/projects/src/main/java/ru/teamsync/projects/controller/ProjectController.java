@@ -20,87 +20,61 @@ import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
 import ru.teamsync.projects.dto.response.BaseResponse;
 import ru.teamsync.projects.dto.response.ProjectResponse;
 import ru.teamsync.projects.entity.ProjectStatus;
-import ru.teamsync.projects.service.JwtService;
 import ru.teamsync.projects.service.ProjectService;
+import ru.teamsync.projects.service.SecurityContextService;
 
 @RestController
 @RequestMapping("/projects")
 @RequiredArgsConstructor
 public class ProjectController {
+
     private final ProjectService projectService;
-    private final JwtService jwtService;
+    private final SecurityContextService securityContextService;
 
     @PostMapping
-  //  @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public ResponseEntity<BaseResponse<Void>> createProject(
-            @RequestBody @Valid ProjectCreateRequest request,
-            @AuthenticationPrincipal Jwt jwt,
-            @RequestHeader("Authorization") String bearerToken) {
-
-        String token = bearerToken.substring("Bearer ".length());
-
-        Long internalId = jwtService.extractUserId(token);
-        projectService.createProject(request, internalId);
+            @RequestBody @Valid ProjectCreateRequest request) {
+        long userId = securityContextService.getCurrentUserId();
+        projectService.createProject(request, userId);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(BaseResponse.of(null));
     }
 
     @GetMapping("/my")
-  //  @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public BaseResponse<Page<ProjectResponse>> getMyProjects(
-            @AuthenticationPrincipal Jwt jwt,
-            Pageable pageable,
-            @RequestHeader("Authorization") String bearerToken) {
-
-        String token = bearerToken.substring("Bearer ".length());
-
-        Long internalId = jwtService.extractUserId(token);
-        Page<ProjectResponse> myProjects = projectService.getProjectsByTeamLead(internalId, pageable);
+            Pageable pageable) {
+        long userId = securityContextService.getCurrentUserId();
+        Page<ProjectResponse> myProjects = projectService.getProjectsByTeamLead(userId, pageable);
         return BaseResponse.of(myProjects);
     }
 
     @PutMapping("/{projectId}")
-   // @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public ResponseEntity<BaseResponse<Void>> updateProject(
             @PathVariable Long projectId,
-            @RequestBody @Valid ProjectUpdateRequest request,
-            @AuthenticationPrincipal Jwt jwt,
-            @RequestHeader("Authorization") String bearerToken) throws AccessDeniedException, NotFoundException {
-
-        String token = bearerToken.substring("Bearer ".length());
-
-        Long internalId = jwtService.extractUserId(token);
-        projectService.updateProject(projectId, request, internalId);
+            @RequestBody @Valid ProjectUpdateRequest request) throws AccessDeniedException, NotFoundException {
+        long userId = securityContextService.getCurrentUserId();
+        projectService.updateProject(projectId, request, userId);
         return ResponseEntity.ok(BaseResponse.of(null));
     }
 
     @GetMapping
-  //  @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public BaseResponse<Page<ProjectResponse>> getProjects(
             @RequestParam(required = false) List<Long> skillIds,
             @RequestParam(required = false) List<Long> roleIds,
             @RequestParam(required = false) String courseName,
             @RequestParam(required = false) ProjectStatus status,
-            Pageable pageable,
-            @RequestHeader("Authorization") String bearerToken) {
-        
+            Pageable pageable) {
         Page<ProjectResponse> projects = projectService.getProjects(
-            skillIds, roleIds, courseName, status, pageable
+                skillIds, roleIds, courseName, status, pageable
         );
         return BaseResponse.of(projects);
     }
 
     @DeleteMapping("/{projectId}")
-  //  @PreAuthorize("hasAnyAuthority('PROFESSOR', 'STUDENT')")
     public ResponseEntity<BaseResponse<Void>> deleteProject(
-            @PathVariable Long projectId,
-            @AuthenticationPrincipal Jwt jwt,
-            @RequestHeader("Authorization") String bearerToken) throws SecurityException, NotFoundException {
-
-        String token = bearerToken.substring("Bearer ".length());
-
-        Long internalId = jwtService.extractUserId(token);
-        projectService.deleteProject(projectId, internalId);
+            @PathVariable Long projectId) throws SecurityException, NotFoundException {
+        long userId = securityContextService.getCurrentUserId();
+        projectService.deleteProject(projectId, userId);
         return ResponseEntity.ok(BaseResponse.of(null));
     }
 }
