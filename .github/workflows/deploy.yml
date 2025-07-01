@@ -9,4 +9,4 @@ jobs:
     steps:
       - name: Test step
         run: |
-          echo "This is a test step"
+          echo "This is a test step "
