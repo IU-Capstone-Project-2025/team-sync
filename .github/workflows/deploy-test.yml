@@ -17,4 +17,4 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no githubci@shqcore.ru "cd test && ./deploy.sh ${{ github.ref_name }}"
+          ssh -o StrictHostKeyChecking=no githubci@shqcore.ru "whoami && cd test && ./deploy.sh ${{ github.ref_name }}"
