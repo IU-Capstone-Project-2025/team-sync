@@ -1,9 +1,8 @@
-package ru.teamsync.auth.client.dto.professor;
+package ru.teamsync.resume.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
-import ru.teamsync.auth.client.dto.PersonCreationRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
