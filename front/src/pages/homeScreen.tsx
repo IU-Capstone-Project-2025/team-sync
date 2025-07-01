@@ -54,9 +54,7 @@ async function getProjects(token: string) {
   }
 }
 function getRoleNames(roleIds: number[] = [], allRoles: {id: number, name: string}[] = []) {
-  return Array.isArray(roleIds)
-    ? roleIds.map(id => allRoles.find(role => role.id === id)?.name ?? "Unknown")
-    : [];
+  return roleIds.map(id => allRoles.find(role => role.id === id)?.name ?? "Unknown");
 }
 export default function HomeScreen(){
   const [roles, setRoles] = useState<{id: number, name: string}[]>([]);
@@ -66,6 +64,7 @@ export default function HomeScreen(){
     if (token){
       getProjects(token).then(setProjects);
       getRoles(token).then(setRoles);
+      console.log(roles);
     }
   }, []);
   return (

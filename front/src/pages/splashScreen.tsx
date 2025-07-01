@@ -3,8 +3,9 @@ import SplashHeader from '../components/splashHeader'
 import Footer from '../components/footer';
 import { useIsAuthenticated, useMsal } from '@azure/msal-react';
 import { useNavigate } from 'react-router-dom';
+import { loginRequest } from '../authConfig';
 
-async function login() {
+async function login(msalInstance) {
   const registrationData = {
     study_group: "string",
     description: "string",
@@ -12,12 +13,20 @@ async function login() {
     tg_alias: "string"
   };
 
+  const account = msalInstance.getAllAccounts()[0];
+  const tokenResponse = await msalInstance.acquireTokenSilent({
+    ...loginRequest,
+    account,
+  });
+  const accessToken = tokenResponse.accessToken;
+
   try {
     const res = await fetch("/auth/api/v1/entra/login", {
       method: "GET",
       headers: {
+        "Authorization": `Bearer ${accessToken}`,
         "Content-Type": "application/json"
-      },
+      }
     });
     console.log("trying to login");
     const loginResult = await res.json();
@@ -51,15 +60,20 @@ async function login() {
 export default function SplashScreen() {
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
+  const { instance: msalInstance } = useMsal();
+
   useEffect(() => {
     localStorage.clear();
-  });
+  }, []);
+
   useEffect(() => {
     if (isAuthenticated) {
-      login();
-      navigate('/home');
+      (async () => {
+        await login(msalInstance);
+        navigate('/home');
+      })();
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, msalInstance]);
   
   return(
     <div className='flex flex-col justify-between h-screen'>
