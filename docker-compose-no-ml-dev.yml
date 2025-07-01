@@ -26,12 +26,6 @@ services:
       - "9001:8080"
     depends_on:
       - postgres-dev
-
-  backend-recommendation-dev:
-    build: ./back/recommendation
-    ports: 
-      - "9002:8080"
-      - "9003:9090"
       
   frontend-dev:
     build: ./front
