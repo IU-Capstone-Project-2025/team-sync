@@ -1,7 +1,7 @@
 name: Deploy Test
 
 on:
-  push:
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -17,4 +17,4 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no githubci@shqcore.ru "cd test && bash ./deploy.sh ${{ github.ref_name }}"
+          ssh -o StrictHostKeyChecking=no githubci@shqcore.ru "cd test && bash ./deploy.sh"
