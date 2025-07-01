@@ -3,10 +3,11 @@ spring:
     name: projects
 
   datasource:
-    url: jdbc:postgresql://postgres_db:5432/dev-db
-    username: dev-user
-    password: dev-psw
+    url: ${DB_MAIN_JDBC}
+    username: ${DB_MAIN_USER}
+    password: ${DB_MAIN_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
 
 server:
   servlet:
