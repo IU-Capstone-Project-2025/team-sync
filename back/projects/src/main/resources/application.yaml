@@ -24,7 +24,8 @@ teamsync:
       cors-allowed-origins:
         - http://localhost:5173
         - http://localhost:8000
-
+        - https://shqcore.ru
+        - https://dev.shqcore.ru
 
 logging:
   level:
