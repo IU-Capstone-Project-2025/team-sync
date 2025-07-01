@@ -8,6 +8,9 @@ services:
     environment:
       - TENANT_ID=${TENANT_ID}
       - JWT_KEY=${JWT_KEY}
+      - DB_MAIN_JDBC=jdbc:postgresql://postgres_db:5432/${DB_NAME}
+      - DB_MAIN_USER=${DB_USER}
+      - DB_MAIN_PASSWORD=${DB_PASSWORD}
     depends_on:
       - postgres
   
@@ -16,6 +19,9 @@ services:
     environment:
       - TENANT_ID=${TENANT_ID}
       - JWT_KEY=${JWT_KEY}
+      - DB_MAIN_JDBC=jdbc:postgresql://postgres_db:5432/${DB_NAME}
+      - DB_MAIN_USER=${DB_USER}
+      - DB_MAIN_PASSWORD=${DB_PASSWORD}
     ports: 
       - "8081:8080"
     depends_on:
