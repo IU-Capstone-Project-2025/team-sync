@@ -1,5 +1,6 @@
 package ru.teamsync.projects.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,8 +14,9 @@ import ru.teamsync.projects.service.SkillService;
 
 @RestController
 @RequestMapping("/skills")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SkillController {
+
     private final SkillService skillService;
 
     @GetMapping

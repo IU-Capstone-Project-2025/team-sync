@@ -20,6 +20,10 @@ teamsync:
       expiration-time-ms: 3600000 # 1 hour
       issuer: teamsync
       user-id-claim: user_id
+    web:
+      cors-allowed-origins:
+        - http://localhost:5173
+        - http://localhost:8000
 
 
 logging:
