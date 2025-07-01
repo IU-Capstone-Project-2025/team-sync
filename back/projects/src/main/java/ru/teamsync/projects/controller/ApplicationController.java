@@ -7,6 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+//import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import ru.teamsync.projects.dto.request.ApplicationRequest;
@@ -26,8 +29,7 @@ public class ApplicationController {
     @GetMapping("/project/{projectId}")
     public BaseResponse<Page<ApplicationResponse>> getApplicationsByProject(
             @PathVariable Long projectId,
-            Pageable pageable) throws NotFoundException, AccessDeniedException {
-
+            Pageable pageable) {
         long userId = securityContextService.getCurrentUserId();
         return BaseResponse.of(applicationService.getApplicationsByProject(userId, projectId, pageable));
     }
@@ -41,9 +43,17 @@ public class ApplicationController {
 
     @PostMapping
     public ResponseEntity<BaseResponse<Void>> createApplication(
-            @RequestBody ApplicationRequest request) {
-        long userId = securityContextService.getCurrentUserId();
-        applicationService.createApplication(userId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.of(null));
+            @AuthenticationPrincipal Jwt jwt,
+            @RequestBody ApplicationRequest request,
+            @RequestHeader("Authorization") String bearerToken) {
+        String token = bearerToken.substring("Bearer ".length());
+
+        Long internalId = jwtService.extractUserId(token);
+        applicationService.createApplication(internalId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.of(null)); // 201 - created
     }
+
+    //private Long getInternalId(Jwt jwt) {
+    //    return jwt.getClaim("internal_id");
+    //}
 }

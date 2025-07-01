@@ -16,6 +16,8 @@ import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.mapper.ProjectMapper;
 import ru.teamsync.projects.repository.ProjectRepository;
+import ru.teamsync.projects.service.exception.ProjectNotFoundException;
+import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 import ru.teamsync.projects.specification.ProjectSpecifications;
 
 @Service
@@ -35,10 +37,10 @@ public class ProjectService {
 
     public void updateProject(Long projectId, ProjectUpdateRequest request, Long currentUserId) throws NotFoundException, AccessDeniedException {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new NotFoundException());
+                .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
 
         if (!project.getTeamLeadId().equals(currentUserId)) {
-            throw new AccessDeniedException("You cannot edit this project");
+            throw new ResourceAccessDeniedException("You cannot edit this project");
         }
 
         projectMapper.updateEntity(request, project);
@@ -47,9 +49,9 @@ public class ProjectService {
 
     public Page<ProjectResponse> getProjects(List<Long> skillIds, List<Long> roleIds, String courseName, ProjectStatus status, Pageable pageable) {
         boolean hasFilters = (skillIds != null && !skillIds.isEmpty()) ||
-                             (roleIds != null && !roleIds.isEmpty()) ||
-                             (courseName != null && !courseName.isEmpty()) ||
-                             (status != null);
+                (roleIds != null && !roleIds.isEmpty()) ||
+                (courseName != null && !courseName.isEmpty()) ||
+                (status != null);
 
         Page<Project> projects;
 
@@ -87,7 +89,7 @@ public class ProjectService {
                 .orElseThrow(NotFoundException::new);
 
         if (!project.getTeamLeadId().equals(currentUserId)) {
-            throw new SecurityException("You cannot delete this project");
+            throw new ResourceAccessDeniedException("You cannot delete this project");
         }
 
         projectRepository.delete(project);

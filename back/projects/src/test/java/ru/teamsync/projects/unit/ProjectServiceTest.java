@@ -1,0 +1,62 @@
+package ru.teamsync.projects.unit;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import ru.teamsync.projects.entity.Project;
+import ru.teamsync.projects.mapper.ProjectMapper;
+import ru.teamsync.projects.repository.ProjectRepository;
+import ru.teamsync.projects.service.ProjectService;
+import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
+
+public class ProjectServiceTest {
+
+    private ProjectService projectService;
+
+    private ProjectRepository projectRepositoryMock;
+    private ProjectMapper projectMapperMock;
+
+    @BeforeEach
+    public void init() {
+        projectRepositoryMock = Mockito.mock(ProjectRepository.class);
+        projectMapperMock = Mockito.mock(ProjectMapper.class);
+
+        projectService = new ProjectService(projectRepositoryMock, projectMapperMock);
+    }
+
+    @Test
+    public void should_throwAccessDenied_when_notTeamLeadDeletesProject() {
+        //Arrange
+        Project project = new Project();
+        project.setTeamLeadId(123L);
+
+        when(projectRepositoryMock.findById(1L)).thenReturn(Optional.of(project));
+
+        //Act, Assert
+        assertThatThrownBy(
+                () -> projectService.deleteProject(1L, 2L)
+        ).isInstanceOf(ResourceAccessDeniedException.class);
+    }
+
+    @Test
+    public void should_throwAccessDenied_when_notTeamLeadUpdatesProject() {
+        //Arrange
+        Project project = new Project();
+        project.setTeamLeadId(123L);
+
+        when(projectRepositoryMock.findById(1L)).thenReturn(Optional.of(project));
+
+        //Act, Assert
+        assertThatThrownBy(
+                () -> projectService.updateProject(1L, null, 2L)
+        ).isInstanceOf(ResourceAccessDeniedException.class);
+    }
+
+}
+
