@@ -24,7 +24,7 @@ jobs:
         id: jacoco
         uses: madrapps/jacoco-report@v1.7.2
         with:
-          titile: 'Projects Service Test Coverage'
+          title: 'Projects Service Test Coverage'
           fail-emoji: '💀'
           pass-emoji: '🧠'
           update-comment: true
