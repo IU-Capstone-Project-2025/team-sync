@@ -42,18 +42,9 @@ public class ApplicationController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponse<Void>> createApplication(
-            @AuthenticationPrincipal Jwt jwt,
-            @RequestBody ApplicationRequest request,
-            @RequestHeader("Authorization") String bearerToken) {
-        String token = bearerToken.substring("Bearer ".length());
-
-        Long internalId = jwtService.extractUserId(token);
-        applicationService.createApplication(internalId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.of(null)); // 201 - created
+    public ResponseEntity<BaseResponse<Void>> createApplication(@RequestBody ApplicationRequest request) {
+        long userId = securityContextService.getCurrentUserId();
+        applicationService.createApplication(userId, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.of(null));
     }
-
-    //private Long getInternalId(Jwt jwt) {
-    //    return jwt.getClaim("internal_id");
-    //}
 }
