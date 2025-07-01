@@ -13,6 +13,7 @@ services:
       - DB_MAIN_PASSWORD=${DB_PASSWORD_TEST}
     depends_on:
       - postgres-dev
+      - liquibase-dev
   
   backend-projects-dev:
     build: ./back/projects
@@ -26,6 +27,7 @@ services:
       - "9001:8080"
     depends_on:
       - postgres-dev
+      - liquibase-dev
       
   frontend-dev:
     build: ./front
@@ -42,7 +44,7 @@ services:
     ports:
       - "9006:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata-dev:/var/lib/postgresql/data
 
   pgadmin-dev:
     image: dpage/pgadmin4:9.4.0
@@ -53,7 +55,7 @@ services:
     ports:
       - "9007:80"
     volumes:
-      - pgadmin_data:/var/lib/pgadmin
+      - pgadmin_data-dev:/var/lib/pgadmin
     depends_on:
       - postgres-dev
 
@@ -65,7 +67,12 @@ services:
     depends_on:
       - postgres-dev
     command: >
-      --defaultsFile=liquibase.properties
+      --changeLogFile=changelog/changelog.yml
+      --url=jdbc:postgresql://postgres-dev:5432/${DB_NAME_TEST}
+      --username=${DB_USER_TEST}
+      --password=${DB_PASSWORD_TEST}
+      --driver=org.postgresql.Driver
+      --logLevel=info
       update
 
 volumes:

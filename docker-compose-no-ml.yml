@@ -8,24 +8,26 @@ services:
     environment:
       - TENANT_ID=${TENANT_ID}
       - JWT_KEY=${JWT_KEY}
-      - DB_MAIN_JDBC=jdbc:postgresql://postgres_db:5432/${DB_NAME}
+      - DB_MAIN_JDBC=jdbc:postgresql://postgres:5432/${DB_NAME}
       - DB_MAIN_USER=${DB_USER}
       - DB_MAIN_PASSWORD=${DB_PASSWORD}
     depends_on:
       - postgres
-  
+      - liquibase
+
   backend-projects:
     build: ./back/projects
     environment:
       - TENANT_ID=${TENANT_ID}
       - JWT_KEY=${JWT_KEY}
-      - DB_MAIN_JDBC=jdbc:postgresql://postgres_db:5432/${DB_NAME}
+      - DB_MAIN_JDBC=jdbc:postgresql://postgres:5432/${DB_NAME}
       - DB_MAIN_USER=${DB_USER}
       - DB_MAIN_PASSWORD=${DB_PASSWORD}
     ports: 
       - "8081:8080"
     depends_on:
       - postgres
+      - liquibase
       
   frontend:
     build: ./front
@@ -34,7 +36,6 @@ services:
 
   postgres:
     image: postgres:16
-    container_name: postgres_db
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME}
@@ -47,7 +48,6 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:9.4.0
-    container_name: pgadmin
     restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_USER}
@@ -61,14 +61,18 @@ services:
 
   liquibase:
     image: liquibase/liquibase:4.32.0
-    container_name: liquibase
     volumes:
       - ./migration:/migration
     working_dir: /migration
     depends_on:
       - postgres
     command: >
-      --defaultsFile=liquibase.properties
+      --changeLogFile=changelog/changelog.yml
+      --url=jdbc:postgresql://postgres:5432/${DB_NAME}
+      --username=${DB_USER}
+      --password=${DB_PASSWORD}
+      --driver=org.postgresql.Driver
+      --logLevel=info
       update
 
 volumes:
