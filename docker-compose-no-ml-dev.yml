@@ -75,5 +75,5 @@ services:
       update
 
 volumes:
-  pgdata:
-  pgadmin_data:
+  pgdata-dev:
+  pgadmin_data-dev:
