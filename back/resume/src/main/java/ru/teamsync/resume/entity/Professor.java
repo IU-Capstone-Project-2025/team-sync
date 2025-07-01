@@ -1,5 +1,7 @@
 package ru.teamsync.resume.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,13 +24,14 @@ import lombok.Setter;
 public class Professor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;
 
+    @JsonProperty("tg_alias")
     @Column(length = 64, unique = true, nullable = true)
     private String tgAlias;
 }

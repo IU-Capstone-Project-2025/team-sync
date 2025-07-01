@@ -1,4 +1,4 @@
-package ru.teamsync.resume.controller;
+package ru.teamsync.resume.service.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,15 +7,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import lombok.extern.log4j.Log4j2;
 import ru.teamsync.resume.dto.response.BaseResponse;
-import ru.teamsync.resume.service.exception.NotFoundException;
-import ru.teamsync.resume.service.exception.ResourceAccessDeniedException;
-import ru.teamsync.resume.service.exception.ServiceException;
+
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 
 @RestControllerAdvice
 @Log4j2
-public class BaseController {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<BaseResponse<Void>> handleServiceNotFound(NotFoundException ex) {

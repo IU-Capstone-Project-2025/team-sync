@@ -1,12 +1,7 @@
 spring:
-  application:
-    name: projects
-
-  datasource:
-    url: jdbc:postgresql://postgres_db:5432/dev-db
-    username: dev-user
-    password: dev-psw
-    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog.yml
 
 teamsync:
   security:
