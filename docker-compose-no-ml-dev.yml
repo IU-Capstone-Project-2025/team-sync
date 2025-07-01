@@ -33,6 +33,9 @@ services:
     build: ./front
     ports: 
       - "9004:80"
+    depends_on:
+      - backend-auth-dev
+      - backend-projects-dev
 
   postgres-dev:
     image: postgres:16
