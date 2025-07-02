@@ -98,3 +98,9 @@ async def get_redis_range(user_id: int, start: int, end: int, request: Request):
     if not values:
         return {"status": "No values found in Redis", "user_id": user_id, "start": start, "end": end}
     return {"status": "Values retrieved from Redis", "user_id": user_id, "start": start, "end": end, "values": values}
+
+@router.get("/metrics/map")
+async def get_metrics_map(request: Request):
+    metrics_model = request.app.state.metrics
+    metrics = metrics_model.get_metrics()
+    return {"status": "Metrics retrieved successfully", "metrics": metrics}

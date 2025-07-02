@@ -71,7 +71,7 @@ class Metrics:
                 return 1.0 / (i + 1)
         return 0.0
     
-    def log_metrics(self):
+    def get_metrics(self):
         self.logger.info("Logging metrics:")
         map_value = self.get_map()
         self.logger.info(f"Mean Average Precision (MAP): {map_value}")
@@ -79,3 +79,8 @@ class Metrics:
         self.logger.info(f"Normalized Discounted Cumulative Gain (NDCG): {ndcg_value}")
         mrr_value = self.get_mrr()
         self.logger.info(f"Mean Reciprocal Rank (MRR): {mrr_value}")
+        return {
+            "map": map_value,
+            "ndcg": ndcg_value,
+            "mrr": mrr_value
+        }
