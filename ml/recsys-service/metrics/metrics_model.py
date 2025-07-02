@@ -38,7 +38,6 @@ class Metrics:
         return total_mrr / num_users if num_users > 0 else 0.0
     
     def _average_precision(self, relevance_scores):
-        import math
         relevant_items = sum(relevance_scores)
         if relevant_items == 0:
             return 0.0
