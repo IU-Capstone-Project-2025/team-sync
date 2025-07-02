@@ -34,7 +34,7 @@ teamsync:
         - https://dev.shqcore.ru
   client:
     resume:
-      api-url: http://nginx/resume/api/v1
+      api-url: ${RESUME_HOST}
 
 logging:
   level:

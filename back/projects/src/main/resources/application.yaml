@@ -8,7 +8,6 @@ spring:
     password: ${DB_MAIN_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
-
 server:
   servlet:
     context-path: /projects/api/v1

@@ -3,9 +3,10 @@ spring:
     name: resume
 
   datasource:
-    url: jdbc:postgresql://postgres_db:5432/dev-db
-    username: dev-user
-    password: dev-psw
+    url: ${DB_MAIN_JDBC}
+    username: ${DB_MAIN_USER}
+    password: ${DB_MAIN_PASSWORD}
+    driver-class-name: org.postgresql.Driver
   
 server:
   address: 0.0.0.0
@@ -22,7 +23,13 @@ logging:
 teamsync:
   security:
     jwt:
-      base64key: c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0
+      base64key: ${JWT_KEY}
       expiration-time-ms: 3600000 # 1 hour
       issuer: teamsync
       user-id-claim: user_id
+    web:
+      cors-allowed-origins:
+        - http://localhost:5173
+        - http://localhost:8000
+        - https://shqcore.ru
+        - https://dev.shqcore.ru
