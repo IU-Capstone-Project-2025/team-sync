@@ -38,6 +38,7 @@ async function login(msalInstance) {
       const regRes = await fetch("/auth/api/v1/entra/registration/student", {
         method: "POST",
         headers: {
+          "Authorization": `Bearer ${accessToken}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(registrationData)
