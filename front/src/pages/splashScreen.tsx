@@ -64,10 +64,6 @@ export default function SplashScreen() {
   const { instance: msalInstance } = useMsal();
 
   useEffect(() => {
-    localStorage.clear();
-  }, []);
-
-  useEffect(() => {
     if (isAuthenticated) {
       (async () => {
         await login(msalInstance);
