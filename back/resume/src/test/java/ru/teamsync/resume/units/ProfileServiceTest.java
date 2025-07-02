@@ -3,8 +3,6 @@ package ru.teamsync.resume.units;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.data.crossstore.ChangeSetPersister;
-
 import ru.teamsync.resume.dto.request.UpdateStudentProfileRequest;
 import ru.teamsync.resume.dto.response.ProfileResponse;
 import ru.teamsync.resume.entity.Person;
@@ -95,7 +93,7 @@ public class ProfileServiceTest {
     }
 
     @Test
-    void should_returnProfileResponse_when_professorExist() throws ChangeSetPersister.NotFoundException {
+    void should_returnProfileResponse_when_professorExist() throws NotFoundException {
         var person = new Person();
         person.setId(1L);
 

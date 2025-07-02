@@ -2,7 +2,6 @@ package ru.teamsync.resume.service;
 
 import java.util.Optional;
 
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -33,7 +32,9 @@ import ru.teamsync.resume.repository.RoleRepository;
 import ru.teamsync.resume.repository.SkillRepository;
 import ru.teamsync.resume.repository.StudentRepository;
 import ru.teamsync.resume.repository.StudyGroupRepository;
-
+import ru.teamsync.resume.service.exception.NotFoundException;
+import ru.teamsync.resume.service.exception.PersonNotFoundException;
+import ru.teamsync.resume.service.exception.ProfileUpdateAccessDeniedException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -54,9 +55,9 @@ public class ProfileService {
     private final StudentMapper studentMapper;
     private final ProfessorMapper professorMapper;
 
-    public ProfileResponse getProfile(Long personId) throws NotFoundException {
+    public ProfileResponse getProfile(Long personId) {
         var person = personRepository.findById(personId)
-            .orElseThrow(() -> new NotFoundException());
+            .orElseThrow(() -> PersonNotFoundException.withId(personId));
 
         Optional<Student> student = studentRepository.findByPersonId(personId);
         if (student.isPresent()) {
@@ -76,15 +77,15 @@ public class ProfileService {
             );
         }
 
-        throw new NotFoundException();
+        throw new NotFoundException("No profile (student/professor) found for person id " + personId);
     }
 
     public void updateStudentProfile(Long personId, UpdateStudentProfileRequest request, Long currentUserId) throws NotFoundException, AccessDeniedException {
         if (!personId.equals(currentUserId)) {
-            throw new AccessDeniedException("You can only modify your own profile");
+            throw ProfileUpdateAccessDeniedException.withIds(currentUserId, personId);
         }
         var student = studentRepository.findByPersonId(personId)
-            .orElseThrow(() -> new NotFoundException());
+            .orElseThrow(() -> PersonNotFoundException.withId(personId));
 
         studentMapper.updateStudent(request, student);
         studentRepository.save(student);
@@ -95,7 +96,7 @@ public class ProfileService {
             throw new AccessDeniedException("You can only modify your own profile");
         }
         var professor = professorRepository.findByPersonId(personId)
-            .orElseThrow(() -> new NotFoundException());
+            .orElseThrow(() -> PersonNotFoundException.withId(personId));
 
         professorMapper.updateProfessor(request, professor);
         professorRepository.save(professor);
@@ -103,7 +104,7 @@ public class ProfileService {
 
     public Page<SkillResponse> getStudentSkills(Long personId, Pageable pageable) throws NotFoundException {
         Student student = studentRepository.findByPersonId(personId)
-            .orElseThrow(() -> new NotFoundException());
+            .orElseThrow(() -> PersonNotFoundException.withId(personId));
 
         var skillIds = student.getSkills();
         if (skillIds.isEmpty()) {
@@ -116,7 +117,7 @@ public class ProfileService {
 
     public Page<RoleResponse> getStudentRoles(Long personId, Pageable pageable) throws NotFoundException {
         Student student = studentRepository.findByPersonId(personId)
-            .orElseThrow(() -> new NotFoundException());
+            .orElseThrow(() -> PersonNotFoundException.withId(personId));
 
         var roleIds = student.getRoles();
         if (roleIds.isEmpty()) {
