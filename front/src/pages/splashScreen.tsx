@@ -9,8 +9,8 @@ async function login(msalInstance) {
   const registrationData = {
     study_group: "string",
     description: "string",
-    github_alias: "string",
-    tg_alias: "string"
+    github_alias: crypto.randomUUID().toString(),
+    tg_alias: crypto.randomUUID().toString()
   };
 
   const account = msalInstance.getAllAccounts()[0];
