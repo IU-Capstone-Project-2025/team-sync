@@ -1,0 +1,83 @@
+version: '3.8'
+
+services:
+  backend-auth-dev:
+    build: ./back/auth
+    ports: 
+      - "9000:8080"
+    environment:
+      - TENANT_ID=${TENANT_ID}
+      - JWT_KEY=${JWT_KEY_TEST}
+      - DB_MAIN_JDBC=jdbc:postgresql://postgres-dev:5432/${DB_NAME_TEST}
+      - DB_MAIN_USER=${DB_USER_TEST}
+      - DB_MAIN_PASSWORD=${DB_PASSWORD_TEST}
+    depends_on:
+      - postgres-dev
+      - liquibase-dev
+  
+  backend-projects-dev:
+    build: ./back/projects
+    environment:
+      - TENANT_ID=${TENANT_ID}
+      - JWT_KEY=${JWT_KEY_TEST}
+      - DB_MAIN_JDBC=jdbc:postgresql://postgres-dev:5432/${DB_NAME_TEST}
+      - DB_MAIN_USER=${DB_USER_TEST}
+      - DB_MAIN_PASSWORD=${DB_PASSWORD_TEST}
+    ports: 
+      - "9001:8080"
+    depends_on:
+      - postgres-dev
+      - liquibase-dev
+      
+  frontend-dev:
+    build: ./front
+    ports: 
+      - "9004:80"
+    depends_on:
+      - backend-auth-dev
+      - backend-projects-dev
+
+  postgres-dev:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME_TEST}
+      POSTGRES_USER: ${DB_USER_TEST}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_TEST}
+    ports:
+      - "9006:5432"
+    volumes:
+      - pgdata-dev:/var/lib/postgresql/data
+
+  pgadmin-dev:
+    image: dpage/pgadmin4:9.4.0
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_USER_TEST}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD_TEST}
+    ports:
+      - "9007:80"
+    volumes:
+      - pgadmin_data-dev:/var/lib/pgadmin
+    depends_on:
+      - postgres-dev
+
+  liquibase-dev:
+    image: liquibase/liquibase:4.32.0
+    volumes:
+      - ./migration:/migration
+    working_dir: /migration
+    depends_on:
+      - postgres-dev
+    command: >
+      --changeLogFile=changelog/changelog.yml
+      --url=jdbc:postgresql://postgres-dev:5432/${DB_NAME_TEST}
+      --username=${DB_USER_TEST}
+      --password=${DB_PASSWORD_TEST}
+      --driver=org.postgresql.Driver
+      --logLevel=info
+      update
+
+volumes:
+  pgdata-dev:
+  pgadmin_data-dev:

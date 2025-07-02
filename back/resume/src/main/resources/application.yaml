@@ -1,12 +1,23 @@
 spring:
   application:
-    name: projects
+    name: resume
 
   datasource:
     url: jdbc:postgresql://postgres_db:5432/dev-db
     username: dev-user
     password: dev-psw
-    driver-class-name: org.postgresql.Driver
+  
+server:
+  address: 0.0.0.0
+  port: 8080
+  servlet:
+    context-path: /resume/api/v1
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    root: INFO
+    ru.teamsync.resume: INFO
 
 teamsync:
   security:

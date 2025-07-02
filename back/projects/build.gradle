@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.3'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'jacoco'
 }
 
 group = 'ru.teamsync'
@@ -37,6 +38,7 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.zalando:logbook-spring-boot-starter:3.1.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -45,8 +47,26 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
+	testImplementation 'org.mockito:mockito-core:5.18.0'
+	testImplementation 'org.assertj:assertj-core:4.0.0-M1'
+
+	testImplementation 'io.rest-assured:spring-mock-mvc:5.5.5'
+	testImplementation 'org.testcontainers:postgresql:1.21.3'
+	testImplementation 'org.springframework.boot:spring-boot-testcontainers:3.5.3'
+	testImplementation 'org.liquibase:liquibase-core:4.32.0'
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	reports {
+		xml.required = true
+		csv.required = false
+		html.required = false
+	}
+	dependsOn test 
 }

@@ -2,19 +2,28 @@ package ru.teamsync.resume.service;
 
 import java.util.Optional;
 
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
+import ru.teamsync.resume.dto.StudyGroupNotFoundException;
+import ru.teamsync.resume.dto.request.ProfessorCreationRequest;
+import ru.teamsync.resume.dto.request.StudentCreationRequest;
 import ru.teamsync.resume.dto.request.UpdateProfessorProfileRequest;
 import ru.teamsync.resume.dto.request.UpdateStudentProfileRequest;
+import ru.teamsync.resume.dto.response.ProfessorCreationResponse;
 import ru.teamsync.resume.dto.response.ProfileResponse;
 import ru.teamsync.resume.dto.response.RoleResponse;
 import ru.teamsync.resume.dto.response.SkillResponse;
+import ru.teamsync.resume.dto.response.StudentCreationResponse;
+import ru.teamsync.resume.entity.Person;
 import ru.teamsync.resume.entity.Professor;
 import ru.teamsync.resume.entity.Student;
+import ru.teamsync.resume.entity.StudyGroup;
 import ru.teamsync.resume.mapper.PersonMapper;
 import ru.teamsync.resume.mapper.ProfessorMapper;
 import ru.teamsync.resume.mapper.StudentMapper;
@@ -23,9 +32,11 @@ import ru.teamsync.resume.repository.ProfessorRepository;
 import ru.teamsync.resume.repository.RoleRepository;
 import ru.teamsync.resume.repository.SkillRepository;
 import ru.teamsync.resume.repository.StudentRepository;
-import ru.teamsync.resume.service.exception.PersonNotFoundException;
-import ru.teamsync.resume.service.exception.ProfileUpdateAccessDeniedException;
+import ru.teamsync.resume.repository.StudyGroupRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 @AllArgsConstructor
 public class ProfileService {
@@ -37,14 +48,15 @@ public class ProfileService {
     private final StudentRepository studentRepository;
     private final SkillRepository skillRepository;
     private final RoleRepository roleRepository;
+    private final StudyGroupRepository studyGroupRepository;
 
     private final PersonMapper personMapper;
     private final StudentMapper studentMapper;
     private final ProfessorMapper professorMapper;
 
-    public ProfileResponse getProfile(Long personId) {
+    public ProfileResponse getProfile(Long personId) throws NotFoundException {
         var person = personRepository.findById(personId)
-            .orElseThrow(() -> PersonNotFoundException.withId(personId));
+            .orElseThrow(() -> new NotFoundException());
 
         Optional<Student> student = studentRepository.findByPersonId(personId);
         if (student.isPresent()) {
@@ -64,34 +76,34 @@ public class ProfileService {
             );
         }
 
-        throw PersonNotFoundException.withId(personId);
+        throw new NotFoundException();
     }
 
-    public void updateStudentProfile(Long personId, UpdateStudentProfileRequest request, Long currentUserId) {
+    public void updateStudentProfile(Long personId, UpdateStudentProfileRequest request, Long currentUserId) throws NotFoundException, AccessDeniedException {
         if (!personId.equals(currentUserId)) {
-            throw ProfileUpdateAccessDeniedException.withIds(currentUserId, personId);
+            throw new AccessDeniedException("You can only modify your own profile");
         }
         var student = studentRepository.findByPersonId(personId)
-            .orElseThrow(() -> PersonNotFoundException.withId(personId));
+            .orElseThrow(() -> new NotFoundException());
 
         studentMapper.updateStudent(request, student);
         studentRepository.save(student);
     }
 
-    public void updateProfessorProfile(Long personId, UpdateProfessorProfileRequest request, Long currentUserId) {
+    public void updateProfessorProfile(Long personId, UpdateProfessorProfileRequest request, Long currentUserId) throws NotFoundException, AccessDeniedException {
         if (!personId.equals(currentUserId)) {
-            throw ProfileUpdateAccessDeniedException.withIds(currentUserId, personId);
+            throw new AccessDeniedException("You can only modify your own profile");
         }
         var professor = professorRepository.findByPersonId(personId)
-            .orElseThrow(() -> PersonNotFoundException.withId(personId));
+            .orElseThrow(() -> new NotFoundException());
 
         professorMapper.updateProfessor(request, professor);
         professorRepository.save(professor);
     }
 
-    public Page<SkillResponse> getStudentSkills(Long personId, Pageable pageable) {
+    public Page<SkillResponse> getStudentSkills(Long personId, Pageable pageable) throws NotFoundException {
         Student student = studentRepository.findByPersonId(personId)
-            .orElseThrow(() -> PersonNotFoundException.withId(personId));
+            .orElseThrow(() -> new NotFoundException());
 
         var skillIds = student.getSkills();
         if (skillIds.isEmpty()) {
@@ -102,9 +114,9 @@ public class ProfileService {
         return skillsPage.map(skill -> new SkillResponse(skill.getId(), skill.getName(), skill.getDescription()));
     }
 
-    public Page<RoleResponse> getStudentRoles(Long personId, Pageable pageable) {
+    public Page<RoleResponse> getStudentRoles(Long personId, Pageable pageable) throws NotFoundException {
         Student student = studentRepository.findByPersonId(personId)
-            .orElseThrow(() -> PersonNotFoundException.withId(personId));
+            .orElseThrow(() -> new NotFoundException());
 
         var roleIds = student.getRoles();
         if (roleIds.isEmpty()) {
@@ -113,6 +125,53 @@ public class ProfileService {
 
         var rolesPage = roleRepository.findByIdIn(roleIds, pageable);
         return rolesPage.map(role -> new RoleResponse(role.getId(), role.getName(), role.getDescription()));
+    }
+
+    @Transactional
+    public StudentCreationResponse createStudentProfile(StudentCreationRequest request) {
+        Person person = Person.builder()
+                .name(request.getPerson().getName())
+                .surname(request.getPerson().getSurname())
+                .email(request.getPerson().getEmail())
+                .build();
+
+        personRepository.save(person);
+        log.info("Incoming studyGroup: {}", request.getStudyGroup());
+
+        StudyGroup studyGroup = studyGroupRepository.findByName(request.getStudyGroup())
+                .orElseThrow(() -> new StudyGroupNotFoundException(request.getStudyGroup()));
+
+        Student student = Student.builder()
+                .person(person)
+                .studyGroup(studyGroup)
+                .description(request.getDescription())
+                .githubAlias(request.getGithubAlias())
+                .tgAlias(request.getTgAlias())
+                .build();
+
+        studentRepository.save(student);
+
+        return new StudentCreationResponse(student.getId());
+    }
+
+    @Transactional
+    public ProfessorCreationResponse createProfessorProfile(ProfessorCreationRequest request) {
+        Person person = Person.builder()
+                .name(request.getPerson().getName())
+                .surname(request.getPerson().getSurname())
+                .email(request.getPerson().getEmail())
+                .build();
+
+        personRepository.save(person);
+
+        Professor professor = Professor.builder()
+            .person(person)
+            .tgAlias(request.getTgAlias())
+            .build();
+
+        professorRepository.save(professor);
+
+        return new ProfessorCreationResponse(professor.getId());
     }
 
 }
