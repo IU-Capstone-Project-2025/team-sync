@@ -13,7 +13,6 @@ import ru.teamsync.auth.config.properties.SecurityWebProperties;
 @SpringBootApplication
 @EnableWebSecurity
 @EnableMethodSecurity
-//@EnableExchangeClients
 @EnableConfigurationProperties({
         JwtProperties.class,
         InternalJwtFilterProperties.class,
