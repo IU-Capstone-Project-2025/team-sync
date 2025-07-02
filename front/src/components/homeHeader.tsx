@@ -1,3 +1,4 @@
+import React from 'react';
 import NavButton from "./navButton";
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
