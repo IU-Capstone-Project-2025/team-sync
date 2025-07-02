@@ -27,8 +27,7 @@ jobs:
           title: 'Projects Service Test Coverage'
           fail-emoji: '💀'
           pass-emoji: '🧠'
-          update-comment: true
-          comment-type: summary
+          # update-comment: true
           paths: |
             ${{ github.workspace }}/**/build/reports/jacoco/test/jacocoTestReport.xml
           token: ${{ secrets.GITHUB_TOKEN }}
