@@ -3,8 +3,11 @@ package ru.teamsync.resume.units;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import ru.teamsync.resume.dto.request.UpdateStudentProfileRequest;
 import ru.teamsync.resume.dto.response.ProfileResponse;
 import ru.teamsync.resume.entity.Person;
+import ru.teamsync.resume.entity.Professor;
 import ru.teamsync.resume.entity.Student;
 import ru.teamsync.resume.mapper.PersonMapper;
 import ru.teamsync.resume.mapper.StudentMapper;
@@ -12,8 +15,10 @@ import ru.teamsync.resume.repository.PersonRepository;
 import ru.teamsync.resume.repository.ProfessorRepository;
 import ru.teamsync.resume.repository.StudentRepository;
 import ru.teamsync.resume.service.ProfileService;
+import ru.teamsync.resume.mapper.ProfessorMapper;
 import ru.teamsync.resume.service.exception.NotFoundException;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -28,15 +33,18 @@ public class ProfileServiceTest {
     private StudentRepository studentRepository;
     private PersonMapper personMapper;
     private StudentMapper studentMapper;
+    private ProfessorMapper professorMapper;
 
     @BeforeEach
     void setup() {
         personRepository = Mockito.mock(PersonRepository.class);
         studentRepository = Mockito.mock(StudentRepository.class);
+        professorRepository = Mockito.mock(ProfessorRepository.class);
         personMapper = Mockito.mock(PersonMapper.class);
         studentMapper = Mockito.mock(StudentMapper.class);
+        professorMapper = Mockito.mock(ProfessorMapper.class);
 
-        profileService = new ProfileService(personRepository, professorRepository, studentRepository, null, null, personMapper, studentMapper, null);
+        profileService = new ProfileService(personRepository, professorRepository, studentRepository, null, null, personMapper, studentMapper, professorMapper);
     }
 
     @Test
@@ -64,6 +72,51 @@ public class ProfileServiceTest {
         ProfileResponse result = profileService.getProfile(1L);
 
         assert result != null;
+    }
+
+    @Test
+    void should_returnProfileResponse_when_professorExist() {
+        var person = new Person();
+        person.setId(1L);
+
+        var professor = new Professor();
+        professor.setId(2L);
+        professor.setPerson(person);
+
+        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
+        when(professorRepository.findByPersonId(1L)).thenReturn(Optional.of(professor));
+
+        when(personMapper.toResponse(person)).thenReturn(null);
+        when(professorMapper.toResponse(professor)).thenReturn(null);
+
+        ProfileResponse result = profileService.getProfile(1L);
+
+        assert result != null;
+    }
+
+    @Test
+    void should_throwNotFoundException_when_personWithoutRole() {
+        var person = new Person();
+        person.setId(1L);
+
+        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
+        when(studentRepository.findByPersonId(1L)).thenReturn(Optional.empty());
+        when(professorRepository.findByPersonId(1L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> profileService.getProfile(1L))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void should_throwNotFoundException_when_updatingStudentProfile_andPersonNotFound() {
+        when(personRepository.findById(1L)).thenReturn(Optional.empty());
+
+        var request = new UpdateStudentProfileRequest(
+        null, null, null, null, List.of(), List.of()
+        );
+
+        assertThatThrownBy(() -> profileService.updateStudentProfile(1L, request, 1L))
+                .isInstanceOf(NotFoundException.class);
     }
 
 }
