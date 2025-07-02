@@ -1,5 +1,7 @@
+
 package ru.teamsync.projects.integration;
 
+import groovy.util.logging.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,8 +13,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
-
-import lombok.extern.log4j.Log4j2;
 import ru.teamsync.projects.integration.utils.JwtUtilityService;
 import ru.teamsync.projects.integration.utils.StudentUtilityService;
 
@@ -39,7 +39,8 @@ public abstract class IntegrationEnvironment {
             "role",
             "project_role",
             "student_role",
-            "project_skill");
+            "project_skill"
+    );
 
     @ServiceConnection
     protected static PostgreSQLContainer<?> POSTGRES;
