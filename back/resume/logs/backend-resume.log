@@ -1,0 +1,72 @@
+2025-07-02 16:08:16 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.2.Final
+2025-07-02 16:08:16 [Test worker] INFO  r.t.r.i.c.ProfileControllerTest - Starting ProfileControllerTest using Java 21.0.4 with PID 31168 (started by Dylag in C:\studying\university\capstone\team-sync\back\resume)
+2025-07-02 16:08:16 [Test worker] INFO  r.t.r.i.c.ProfileControllerTest - The following 1 profile is active: "test"
+2025-07-02 16:08:19 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-07-02 16:08:19 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 210 ms. Found 6 JPA repository interfaces.
+2025-07-02 16:08:22 [Test worker] INFO  liquibase.database - Set default schema name to public
+2025-07-02 16:08:23 [Test worker] INFO  liquibase.changelog - Creating database history table with name: public.databasechangelog
+2025-07-02 16:08:23 [Test worker] INFO  liquibase.changelog - Reading from public.databasechangelog
+2025-07-02 16:08:23 [Test worker] INFO  liquibase.snapshot - Creating snapshot
+2025-07-02 16:08:23 [Test worker] INFO  liquibase.lockservice - Successfully acquired change log lock
+2025-07-02 16:08:23 [Test worker] INFO  liquibase.command - Using deploymentId: 1461701192
+2025-07-02 16:08:23 [Test worker] INFO  liquibase.changelog - Reading from public.databasechangelog
+2025-07-02 16:08:24 [Test worker] INFO  liquibase.ui - Running Changeset: db/changelog.yml::1::Elizaveta Zagurskih, Stepan Dementev
+2025-07-02 16:08:24 [Test worker] INFO  liquibase.changelog - SQL in file scripts/TS-39-init-database.sql executed
+2025-07-02 16:08:24 [Test worker] INFO  liquibase.changelog - ChangeSet db/changelog.yml::1::Elizaveta Zagurskih, Stepan Dementev ran successfully in 147ms
+2025-07-02 16:08:24 [Test worker] INFO  liquibase.ui - Running Changeset: db/changelog.yml::2::Stepan Dementev
+2025-07-02 16:08:24 [Test worker] INFO  liquibase.changelog - SQL in file scripts/TS-59-add-auth-schemas.sql executed
+2025-07-02 16:08:24 [Test worker] INFO  liquibase.changelog - ChangeSet db/changelog.yml::2::Stepan Dementev ran successfully in 22ms
+2025-07-02 16:08:24 [Test worker] INFO  liquibase.ui - Running Changeset: db/changelog.yml::3::Danis Sharafiev, Kamilya Shakirova
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.changelog - SQL in file scripts/TS-57-add-data.sql executed
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.changelog - ChangeSet db/changelog.yml::3::Danis Sharafiev, Kamilya Shakirova ran successfully in 5812ms
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.ui - Running Changeset: db/changelog.yml::4::Stepan Dementev
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.changelog - SQL in file scripts/TS-116-update-project-statuses.sql executed
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.changelog - ChangeSet db/changelog.yml::4::Stepan Dementev ran successfully in 13ms
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.ui - Running Changeset: db/changelog.yml::5::Stepan Dementev
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.changelog - SQL in file scripts/TS-117-add-project-roles.sql executed
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.changelog - ChangeSet db/changelog.yml::5::Stepan Dementev ran successfully in 147ms
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.ui - Running Changeset: db/changelog.yml::6::Stepan Dementev
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.changelog - SQL in file scripts/TS-154-add-missing-primary-keys.sql executed
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.changelog - ChangeSet db/changelog.yml::6::Stepan Dementev ran successfully in 15ms
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.util - UPDATE SUMMARY
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.util - Run:                          6
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.util - Previously run:               0
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.util - Filtered out:                 0
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.util - -------------------------------
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.util - Total change sets:            6
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.util - Update summary generated
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.command - Update command completed successfully.
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.ui - Liquibase: Update has been successful. Rows affected: 2638
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.lockservice - Successfully released change log lock
+2025-07-02 16:08:30 [Test worker] INFO  liquibase.command - Command execution complete
+2025-07-02 16:08:32 [Test worker] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-07-02 16:08:32 [Test worker] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@67b2afe5
+2025-07-02 16:08:32 [Test worker] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-07-02 16:08:32 [Test worker] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-07-02 16:08:32 [Test worker] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-07-02 16:08:32 [Test worker] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-07-02 16:08:34 [Test worker] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-07-02 16:08:34 [Test worker] INFO  o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.9
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-07-02 16:08:37 [Test worker] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-07-02 16:08:37 [Test worker] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-07-02 16:08:39 [Test worker] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-07-02 16:08:39 [Test worker] DEBUG o.s.s.c.a.a.c.AuthenticationConfiguration$DefaultPasswordEncoderAuthenticationManagerBuilder - No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2025-07-02 16:08:40 [Test worker] DEBUG o.s.s.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, LogoutFilter, JwtAuthFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-07-02 16:08:41 [Test worker] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2025-07-02 16:08:41 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2025-07-02 16:08:41 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet - Completed initialization in 1 ms
+2025-07-02 16:08:41 [Test worker] INFO  r.t.r.i.c.ProfileControllerTest - Started ProfileControllerTest in 27.336 seconds (process running for 46.785)
+2025-07-02 16:08:43 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing GET /profile/148
+2025-07-02 16:08:43 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured GET /profile/148
+2025-07-02 16:08:44 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing GET /profile/149
+2025-07-02 16:08:44 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured GET /profile/149
+2025-07-02 16:08:46 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-07-02 16:08:46 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-07-02 16:08:46 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
