@@ -7,6 +7,7 @@ from database.redis_model import RedisModel
 from models.models_merger import ModelsMerger
 from models.tag_based import TagBasedRecommender
 from models.description_based import DescriptionBasedRecommender
+from metrics.metrics_model import Metrics
 
 async def lifespan(app: FastAPI):    
     app.state.logger = setup_logging()
@@ -35,7 +36,12 @@ async def lifespan(app: FastAPI):
         )
     )
     logger.info("Recommendation models initialized successfully.")
-
+    app.state.metrics = Metrics(
+        relevance_matrix=[[1, 1, 1, 0, 0, 1, 1, 1, 0, 0],
+                          [0, 1, 1, 1, 1, 0, 1, 0, 1, 0],
+                          [1, 0, 1, 1, 0, 1, 1, 1, 0, 0]], # calculated for 3 random users :o
+        logger=logger
+    )
     yield
     logger.info("Application shutdown")
     if app.state.db and app.state.db.connection:
