@@ -8,7 +8,6 @@ spring:
     password: ${DB_MAIN_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
-
 server:
   servlet:
     context-path: /projects/api/v1
@@ -26,6 +25,8 @@ teamsync:
         - http://localhost:8000
         - https://shqcore.ru
         - https://dev.shqcore.ru
+        - https://team-sync.online
+        - https://dev.team-sync.online
 
 logging:
   level:

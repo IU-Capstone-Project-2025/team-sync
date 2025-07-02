@@ -11,6 +11,7 @@ services:
       - DB_MAIN_JDBC=jdbc:postgresql://postgres:5432/${DB_NAME}
       - DB_MAIN_USER=${DB_USER}
       - DB_MAIN_PASSWORD=${DB_PASSWORD}
+      - RESUME_HOST=${RESUME_HOST}
     depends_on:
       - postgres
       - liquibase
@@ -29,6 +30,20 @@ services:
       - postgres
       - liquibase
       
+  backend-resume:
+    build: ./back/resume
+    environment:
+      - TENANT_ID=${TENANT_ID}
+      - JWT_KEY=${JWT_KEY}
+      - DB_MAIN_JDBC=jdbc:postgresql://postgres:5432/${DB_NAME}
+      - DB_MAIN_USER=${DB_USER}
+      - DB_MAIN_PASSWORD=${DB_PASSWORD}
+    ports: 
+      - "8082:8080"
+    depends_on:
+      - postgres
+      - liquibase
+
   frontend:
     build: ./front
     ports: 

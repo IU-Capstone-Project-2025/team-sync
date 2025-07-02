@@ -14,6 +14,11 @@ public class ClientConfiguration {
     public HttpClientCustomizer.RestClientCustomizer restClientCustomizer(ClientProperties.ResumeServiceClientProperties clientProperties) {
         return (client, channel) -> {
             client.baseUrl(clientProperties.apiUrl());
+            client.defaultStatusHandler(
+                    status -> true,
+                    (request, response) -> {
+                    }
+            );
         };
     }
 
