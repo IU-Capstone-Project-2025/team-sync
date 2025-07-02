@@ -25,7 +25,7 @@ services:
       - DB_MAIN_PASSWORD=${DB_PASSWORD_TEST}
     ports: 
       - "9001:8080"
-    depends_o:
+    depends_on:
       - postgres-dev
       - liquibase-dev
       
