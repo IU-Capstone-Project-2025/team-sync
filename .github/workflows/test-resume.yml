@@ -1,0 +1,59 @@
+name: Java Resume Service Test Coverage
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-resume:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 21
+        uses: actions/setup-java@v1
+        with:
+          java-version: 21
+      - name: Run Coverage
+        run: |
+          cd back/resume
+          chmod +x gradlew
+          ./gradlew jacocoTestReport
+
+      - name: Add coverage to PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.7.2
+        with:
+          title: 'Resume Service Test Coverage'
+          fail-emoji: '💀'
+          pass-emoji: '🧠'
+          update-comment: true
+          paths: |
+            ${{ github.workspace }}/**/build/reports/jacoco/test/jacocoTestReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 20
+          min-coverage-changed-files: 20
+
+      - name: Install xmllint
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+      
+      - name: Echo Coverage to Console
+        run: |
+          cd back/resume
+          REPORT="build/reports/jacoco/test/jacocoTestReport.xml"
+          if [ -f "$REPORT" ]; then
+            LINE_COVERED=$(xmllint --xpath "string(//report/counter[@type='LINE']/@covered)" $REPORT)
+            LINE_MISSED=$(xmllint --xpath "string(//report/counter[@type='LINE']/@missed)" $REPORT)
+            TOTAL_LINES=$((LINE_COVERED + LINE_MISSED))
+            if [ $TOTAL_LINES -ne 0 ]; then
+              COVERAGE_PERCENT=$((100 * LINE_COVERED / TOTAL_LINES))
+              echo "🧠 Test Coverage: $COVERAGE_PERCENT%"
+            else
+              echo "No lines found to compute coverage."
+            fi
+          else
+            echo "💀 Coverage report not found at $REPORT"
+          fi
