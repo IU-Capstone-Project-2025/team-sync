@@ -1,10 +1,7 @@
 import Footer from "../components/footer";
 import HomeHeader from "../components/homeHeader";
 import HomeFilter from "../components/homeFilter";
-import { loginRequest } from "../authConfig";
-import { useMsal } from "@azure/msal-react";
 import { useEffect, useState } from "react";
-import { IPublicClientApplication, AccountInfo } from "@azure/msal-browser";
 import Card from "../components/card";
 interface Project {
   id: number;
@@ -16,10 +13,15 @@ interface Project {
   status: "DRAFT" | "OPEN" | "IN_PROGRESS" | "COMPLETE";
 }
 
-async function getRoles({instance, accounts} : {instance: IPublicClientApplication, accounts: AccountInfo[]}) {
-  const rolesUrl = "http://localhost/projects/api/v1/roles";
+async function getRoles(token: string) {
+  const rolesUrl = "/projects/api/v1/roles";
   try {
-    const response = await fetch(rolesUrl);
+    const response = await fetch(rolesUrl, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
     if (!response.ok) {
       throw new Error('Response error: ' + response.status.toString());
     }
@@ -31,13 +33,13 @@ async function getRoles({instance, accounts} : {instance: IPublicClientApplicati
   }
 }
 
-async function getProjects() {
-  const token = localStorage.getItem("backendToken");
-  const projectsUrl = "http://localhost/projects/api/v1/projects?page=0&size=100";
+async function getProjects(token: string) {
+  const projectsUrl = "/projects/api/v1/projects";
   try {
     const response = await fetch(projectsUrl, {
       headers: {
-        "Authorization": `Bearer ${token}`
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
       }
     });
     if (!response.ok) {
@@ -52,17 +54,18 @@ async function getProjects() {
   }
 }
 function getRoleNames(roleIds: number[] = [], allRoles: {id: number, name: string}[] = []) {
-  return Array.isArray(roleIds)
-    ? roleIds.map(id => allRoles.find(role => role.id === id)?.name ?? "Unknown")
-    : [];
+  return roleIds.map(id => allRoles.find(role => role.id === id)?.name ?? "Unknown");
 }
 export default function HomeScreen(){
   const [roles, setRoles] = useState<{id: number, name: string}[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
-  const { instance, accounts } = useMsal();
   useEffect(() => {
-    getProjects().then(setProjects);
-    getRoles({instance, accounts}).then(setRoles);
+    const token = localStorage.getItem("backendToken");
+    if (token){
+      getProjects(token).then(setProjects);
+      getRoles(token).then(setRoles);
+      console.log(roles);
+    }
   }, []);
   return (
     <div className="flex flex-col justify-between min-h-screen">
