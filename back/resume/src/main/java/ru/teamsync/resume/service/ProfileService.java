@@ -57,23 +57,23 @@ public class ProfileService {
 
     public ProfileResponse getProfile(Long personId) {
         var person = personRepository.findById(personId)
-            .orElseThrow(() -> PersonNotFoundException.withId(personId));
+                .orElseThrow(() -> PersonNotFoundException.withId(personId));
 
         Optional<Student> student = studentRepository.findByPersonId(personId);
         if (student.isPresent()) {
             return new ProfileResponse(
-                STUDENT_ROLE,
-                personMapper.toResponse(person),
-                studentMapper.toResponse(student.get())
+                    STUDENT_ROLE,
+                    personMapper.toResponse(person),
+                    studentMapper.toResponse(student.get())
             );
         }
 
         Optional<Professor> professor = professorRepository.findByPersonId(personId);
         if (professor.isPresent()) {
             return new ProfileResponse(
-                PROFESSOR_ROLE,
-                personMapper.toResponse(person),
-                professorMapper.toResponse(professor.get())
+                    PROFESSOR_ROLE,
+                    personMapper.toResponse(person),
+                    professorMapper.toResponse(professor.get())
             );
         }
 
@@ -85,7 +85,7 @@ public class ProfileService {
             throw ProfileUpdateAccessDeniedException.withIds(currentUserId, personId);
         }
         var student = studentRepository.findByPersonId(personId)
-            .orElseThrow(() -> PersonNotFoundException.withId(personId));
+                .orElseThrow(() -> PersonNotFoundException.withId(personId));
 
         studentMapper.updateStudent(request, student);
         studentRepository.save(student);
@@ -96,7 +96,7 @@ public class ProfileService {
             throw new AccessDeniedException("You can only modify your own profile");
         }
         var professor = professorRepository.findByPersonId(personId)
-            .orElseThrow(() -> PersonNotFoundException.withId(personId));
+                .orElseThrow(() -> PersonNotFoundException.withId(personId));
 
         professorMapper.updateProfessor(request, professor);
         professorRepository.save(professor);
@@ -104,7 +104,7 @@ public class ProfileService {
 
     public Page<SkillResponse> getStudentSkills(Long personId, Pageable pageable) throws NotFoundException {
         Student student = studentRepository.findByPersonId(personId)
-            .orElseThrow(() -> PersonNotFoundException.withId(personId));
+                .orElseThrow(() -> PersonNotFoundException.withId(personId));
 
         var skillIds = student.getSkills();
         if (skillIds.isEmpty()) {
@@ -117,7 +117,7 @@ public class ProfileService {
 
     public Page<RoleResponse> getStudentRoles(Long personId, Pageable pageable) throws NotFoundException {
         Student student = studentRepository.findByPersonId(personId)
-            .orElseThrow(() -> PersonNotFoundException.withId(personId));
+                .orElseThrow(() -> PersonNotFoundException.withId(personId));
 
         var roleIds = student.getRoles();
         if (roleIds.isEmpty()) {
@@ -140,7 +140,11 @@ public class ProfileService {
         log.info("Incoming studyGroup: {}", request.getStudyGroup());
 
         StudyGroup studyGroup = studyGroupRepository.findByName(request.getStudyGroup())
-                .orElseThrow(() -> new StudyGroupNotFoundException(request.getStudyGroup()));
+                .orElseGet(() -> {
+                    var newGroup = new StudyGroup();
+                    newGroup.setName(request.getStudyGroup());
+                    return studyGroupRepository.save(newGroup);
+                });
 
         Student student = Student.builder()
                 .person(person)
@@ -166,9 +170,9 @@ public class ProfileService {
         personRepository.save(person);
 
         Professor professor = Professor.builder()
-            .person(person)
-            .tgAlias(request.getTgAlias())
-            .build();
+                .person(person)
+                .tgAlias(request.getTgAlias())
+                .build();
 
         professorRepository.save(professor);
 
