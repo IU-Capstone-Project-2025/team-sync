@@ -1,0 +1,25 @@
+
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-projects:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check Main Docker Compose file syntax
+        run: docker compose -f docker-compose.yml config
+      
+      - name: Check No ML Prod Docker Compose file syntax
+        run: docker compose -f docker-compose-no-ml.yml config
+
+      - name: Check No ML Dev Docker Compose file syntax
+        run: docker compose -f docker-compose-no-ml-dev.yml config
+     
