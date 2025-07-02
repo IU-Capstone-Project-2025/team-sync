@@ -10,6 +10,12 @@ import ru.teamsync.resume.entity.Student;
 
 @Mapper(componentModel = "spring")
 public interface StudentMapper {
+    @Mapping(target = "studyGroup", source = "student.studyGroup")
+    @Mapping(target = "description", source = "student.description")
+    @Mapping(target = "githubAlias", source = "student.githubAlias")
+    @Mapping(target = "tgAlias", source = "student.tgAlias")
+    @Mapping(target = "skills", source = "student.skills")
+    @Mapping(target = "roles", source = "student.roles")
     StudentProfileResponse toResponse(Student student);
 
     @Mapping(target = "id", ignore = true)

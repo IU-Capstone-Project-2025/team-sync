@@ -1,3 +1,4 @@
+
 package ru.teamsync.projects.integration;
 
 import groovy.util.logging.Log4j2;

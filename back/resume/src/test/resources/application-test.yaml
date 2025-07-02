@@ -1,0 +1,12 @@
+spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog.yml
+
+teamsync:
+  security:
+    jwt:
+      base64key: c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0
+      expiration-time-ms: 3600000 # 1 hour
+      issuer: teamsync
+      user-id-claim: user_id
