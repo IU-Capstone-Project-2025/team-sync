@@ -11,7 +11,7 @@ services:
       - DB_MAIN_JDBC=jdbc:postgresql://postgres-dev:5432/${DB_NAME_TEST}
       - DB_MAIN_USER=${DB_USER_TEST}
       - DB_MAIN_PASSWORD=${DB_PASSWORD_TEST}
-      - RESUME
+      - RESUME_HOST=${RESUME_HOST_TEST}
     depends_on:
       - postgres-dev
       - liquibase-dev
