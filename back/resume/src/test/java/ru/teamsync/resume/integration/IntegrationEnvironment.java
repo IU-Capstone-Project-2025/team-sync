@@ -85,4 +85,5 @@ public abstract class IntegrationEnvironment {
         String tables = String.join(", ", TABLES);
         jdbcClient.sql("TRUNCATE TABLE " + tables + " RESTART IDENTITY CASCADE");
     }
+    
 }
