@@ -1,7 +1,10 @@
-name: Java Test Coverage
+name: Java Projects Service Test Coverage
 
 on:
   pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -31,5 +34,5 @@ jobs:
           paths: |
             ${{ github.workspace }}/**/build/reports/jacoco/test/jacocoTestReport.xml
           token: ${{ secrets.GITHUB_TOKEN }}
-          min-coverage-overall: 5
-          min-coverage-changed-files: 5
+          min-coverage-overall: 20
+          min-coverage-changed-files: 20
