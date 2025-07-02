@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  build:
+  test-projects:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -36,3 +36,24 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 20
           min-coverage-changed-files: 20
+
+      - name: Install xmllint
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+      
+      - name: Echo Coverage to Console
+        run: |
+          cd back/projects
+          REPORT="build/reports/jacoco/test/jacocoTestReport.xml"
+          if [ -f "$REPORT" ]; then
+            LINE_COVERED=$(xmllint --xpath "string(//report/counter[@type='LINE']/@covered)" $REPORT)
+            LINE_MISSED=$(xmllint --xpath "string(//report/counter[@type='LINE']/@missed)" $REPORT)
+            TOTAL_LINES=$((LINE_COVERED + LINE_MISSED))
+            if [ $TOTAL_LINES -ne 0 ]; then
+              COVERAGE_PERCENT=$((100 * LINE_COVERED / TOTAL_LINES))
+              echo "🧠 Test Coverage: $COVERAGE_PERCENT%"
+            else
+              echo "No lines found to compute coverage."
+            fi
+          else
+            echo "💀 Coverage report not found at $REPORT"
+          fi

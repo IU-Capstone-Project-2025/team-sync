@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  deploy-dev:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
