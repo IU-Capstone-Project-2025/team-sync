@@ -10,13 +10,15 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import ru.teamsync.resume.config.properties.SecurityWebProperties;
 import ru.teamsync.resume.config.security.JwtAuthFilter;
 
 @Configuration
 public class SecurityConfig {
 
     @Bean
-    @Order(1)
     public SecurityFilterChain microsoftSecurityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
@@ -32,6 +34,21 @@ public class SecurityConfig {
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer(SecurityWebProperties securityWebProperties) {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry
+                        .addMapping("/**")
+                        .allowedOrigins(securityWebProperties.corsAllowedOrigins())
+                        .allowCredentials(true)
+                        .allowedHeaders("*")
+                        .allowedMethods("*");
+            }
+        };
     }
 
 }

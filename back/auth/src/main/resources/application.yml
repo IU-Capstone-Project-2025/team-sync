@@ -32,6 +32,9 @@ teamsync:
         - http://localhost:8000
         - https://shqcore.ru
         - https://dev.shqcore.ru
+        - https://team-sync.ru
+        - https://dev.team-sync.ru
+
   client:
     resume:
       api-url: ${RESUME_HOST}
