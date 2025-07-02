@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ApplicationControllerTest extends IntegrationEnvironment {
 
 
-    //@Test
+    @Test
     public void should_returnApplications_when_requestingByProject() throws Exception {
         //Arrange
         int userId = jdbcClient
