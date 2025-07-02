@@ -3,6 +3,7 @@ package ru.teamsync.resume.units;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.data.crossstore.ChangeSetPersister;
 
 import ru.teamsync.resume.dto.request.UpdateStudentProfileRequest;
 import ru.teamsync.resume.dto.response.ProfileResponse;
@@ -13,7 +14,10 @@ import ru.teamsync.resume.mapper.PersonMapper;
 import ru.teamsync.resume.mapper.StudentMapper;
 import ru.teamsync.resume.repository.PersonRepository;
 import ru.teamsync.resume.repository.ProfessorRepository;
+import ru.teamsync.resume.repository.RoleRepository;
+import ru.teamsync.resume.repository.SkillRepository;
 import ru.teamsync.resume.repository.StudentRepository;
+import ru.teamsync.resume.repository.StudyGroupRepository;
 import ru.teamsync.resume.service.ProfileService;
 import ru.teamsync.resume.mapper.ProfessorMapper;
 import ru.teamsync.resume.service.exception.NotFoundException;
@@ -31,6 +35,9 @@ public class ProfileServiceTest {
     private PersonRepository personRepository;
     private ProfessorRepository professorRepository;
     private StudentRepository studentRepository;
+    private SkillRepository skillRepository;
+    private RoleRepository roleRepository;
+    private StudyGroupRepository studyGroupRepository;
     private PersonMapper personMapper;
     private StudentMapper studentMapper;
     private ProfessorMapper professorMapper;
@@ -40,11 +47,24 @@ public class ProfileServiceTest {
         personRepository = Mockito.mock(PersonRepository.class);
         studentRepository = Mockito.mock(StudentRepository.class);
         professorRepository = Mockito.mock(ProfessorRepository.class);
+        skillRepository = Mockito.mock(SkillRepository.class);
+        roleRepository = Mockito.mock(RoleRepository.class);
+        studyGroupRepository = Mockito.mock(StudyGroupRepository.class);
         personMapper = Mockito.mock(PersonMapper.class);
         studentMapper = Mockito.mock(StudentMapper.class);
         professorMapper = Mockito.mock(ProfessorMapper.class);
 
-        profileService = new ProfileService(personRepository, professorRepository, studentRepository, null, null, personMapper, studentMapper, professorMapper);
+        profileService = new ProfileService(
+            personRepository, 
+            professorRepository, 
+            studentRepository, 
+            skillRepository, 
+            roleRepository, 
+            studyGroupRepository,
+            personMapper, 
+            studentMapper, 
+            professorMapper
+        );
     }
 
     @Test
@@ -75,7 +95,7 @@ public class ProfileServiceTest {
     }
 
     @Test
-    void should_returnProfileResponse_when_professorExist() {
+    void should_returnProfileResponse_when_professorExist() throws ChangeSetPersister.NotFoundException {
         var person = new Person();
         person.setId(1L);
 
