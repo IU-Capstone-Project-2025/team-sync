@@ -1,9 +1,12 @@
 package ru.teamsync.projects.specification;
 
+import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
 import jakarta.persistence.criteria.Predicate;
 import ru.teamsync.projects.entity.Project;
+import ru.teamsync.projects.entity.Role;
+import ru.teamsync.projects.entity.Skill;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +26,8 @@ public class ProjectSpecifications {
             if (skillIds == null || skillIds.isEmpty()) {
                 return cb.conjunction();
             }
-            List<Predicate> predicates = new ArrayList<>();
-            for (Long skillId : skillIds) {
-                predicates.add(cb.isMember(skillId, root.get("skillIds")));
-            }
-            return cb.and(predicates.toArray(Predicate[]::new));
+            Join<Project, Skill> projectSkillJoin = root.join("skillIds");
+            return projectSkillJoin.in(skillIds);
         };
     }
 
@@ -36,11 +36,8 @@ public class ProjectSpecifications {
             if (roleIds == null || roleIds.isEmpty()) {
                 return cb.conjunction();
             }
-            List<Predicate> predicates = new ArrayList<>();
-            for (Long roleId : roleIds) {
-                predicates.add(cb.isMember(roleId, root.get("roleIds")));
-            }
-            return cb.and(predicates.toArray(Predicate[]::new));
+            Join<Project, Role> projectRoleJoin = root.join("roleIds");
+            return projectRoleJoin.in(roleIds);
         };
     }
 }
