@@ -34,3 +34,16 @@ form>p {
   font-size: 18px;
   color: var(--secondary-color);
 }
+
+@keyframes fadeIn {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+.popup-content {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border: transparent !important;
+  animation: fadeIn 0.3s;
+}

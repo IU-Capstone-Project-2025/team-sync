@@ -6,7 +6,7 @@ export const msalConfig = {
     //redirectUri: "http://localhost:80/"
   },
   cache: {
-    cacheLocation: "sessionStorage",
+    cacheLocation: "localStorage",
     storeAuthStateInCookie: false,
   },
   system: {
