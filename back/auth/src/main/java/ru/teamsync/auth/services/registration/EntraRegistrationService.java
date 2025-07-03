@@ -44,7 +44,7 @@ public class EntraRegistrationService implements RegistrationService {
 
         var response = resumeClient.createStudent(studentCreationRequest);
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-            Integer internalId = response.getBody().data().id(); 
+            Integer internalId = response.getBody().data().personId();
             log.info("Got id {}", internalId);
 
             SecurityUser securityUser = new SecurityUser();
@@ -71,7 +71,7 @@ public class EntraRegistrationService implements RegistrationService {
         ProfessorCreationRequest professorCreationRequest = resumeClientMapper.toProfessorCreationRequest(person, registerProfessorRequest);
         var response = resumeClient.createProfessor(professorCreationRequest);
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-            Integer internalId = response.getBody().data().id(); 
+            Integer internalId = response.getBody().data().personId();
             log.info("Got id {}", internalId);
 
             SecurityUser securityUser = new SecurityUser();
