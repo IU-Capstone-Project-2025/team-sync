@@ -42,4 +42,11 @@ public class ApplicationController {
         applicationService.createApplication(userId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.of(null));
     }
+
+    @DeleteMapping("/{applicationId}")
+    public ResponseEntity<BaseResponse<Void>> deleteApplication(@PathVariable Long applicationId) {
+        long userId = securityContextService.getCurrentUserId();
+        applicationService.deleteApplication(userId, applicationId);
+        return ResponseEntity.ok(BaseResponse.of(null));
+    }
 }
