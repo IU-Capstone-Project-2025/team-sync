@@ -156,7 +156,7 @@ public class ProfileService {
 
         studentRepository.save(student);
 
-        return new StudentCreationResponse(student.getId());
+        return new StudentCreationResponse(student.getId(), person.getId());
     }
 
     @Transactional
@@ -176,7 +176,7 @@ public class ProfileService {
 
         professorRepository.save(professor);
 
-        return new ProfessorCreationResponse(professor.getId());
+        return new ProfessorCreationResponse(professor.getId(), person.getId());
     }
 
 }
