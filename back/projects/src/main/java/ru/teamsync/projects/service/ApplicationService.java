@@ -15,6 +15,7 @@ import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
+import ru.teamsync.projects.service.exception.CannotApplyToOwnProjectException;
 import ru.teamsync.projects.service.exception.ProjectNotFoundException;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 
@@ -47,6 +48,12 @@ public class ApplicationService {
     }
 
     public void createApplication(Long studentId, ApplicationRequest request) {
+        Project project = projectRepository.findById(request.projectId())
+            .orElseThrow(() -> ProjectNotFoundException.withId(request.projectId()));
+
+        if (project.getTeamLeadId().equals(studentId)) {
+            throw CannotApplyToOwnProjectException.forProject(project.getId());
+        }
         Application application = new Application();
         application.setStudentId(studentId);
         application.setId(request.projectId());
