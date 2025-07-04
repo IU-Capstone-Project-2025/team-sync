@@ -47,10 +47,10 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public Page<ProjectResponse> getProjects(List<Long> skillIds, List<Long> roleIds, String courseName, ProjectStatus status, Pageable pageable) {
+    public Page<ProjectResponse> getProjects(List<Long> skillIds, List<Long> roleIds, Long courseId, ProjectStatus status, Pageable pageable) {
         boolean hasFilters = (skillIds != null && !skillIds.isEmpty()) ||
                 (roleIds != null && !roleIds.isEmpty()) ||
-                (courseName != null && !courseName.isEmpty()) ||
+                (courseId != null) ||
                 (status != null);
 
         Page<Project> projects;
@@ -60,8 +60,8 @@ public class ProjectService {
         } else {
             Specification<Project> spec = (root, query, cb) -> cb.conjunction();
 
-            if (courseName != null && !courseName.isEmpty()) {
-                spec = spec.and(ProjectSpecifications.hasCourseName(courseName));
+            if (courseId != null) {
+                spec = spec.and(ProjectSpecifications.hasCourseId(courseId));
             }
             if (skillIds != null && !skillIds.isEmpty()) {
                 spec = spec.and(ProjectSpecifications.hasSkillIds(skillIds));
