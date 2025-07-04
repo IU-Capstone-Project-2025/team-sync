@@ -14,14 +14,13 @@ public class ApplicationControllerTest extends IntegrationEnvironment {
 
     @Test
     public void should_returnApplications_when_requestingByProject() throws Exception {
-        //Arrange
         int userId = jdbcClient
                 .sql("INSERT INTO person(name, surname, email) VALUES ('test', 'test', 'testmail') RETURNING id")
                 .query(Integer.class).single();
         int applicantPersonId = jdbcClient
                 .sql("INSERT INTO person(name, surname, email) VALUES ('applicant', 'test', 'applicatntemail') RETURNING id")
                 .query(Integer.class).single();
-        int applicantId = studentUtilityService.createStudentWithPersonId(applicantPersonId);
+        int applicantId = personUtilityService.saveStudentWithPersonId(applicantPersonId);
 
         int projectId = jdbcClient.sql(
                         "INSERT INTO project(name, course_name, team_lead_id, description, project_link, status) VALUES ('a', 'a', :userId, 'a', 'a', 'ACTIVE') RETURNING id"
@@ -38,12 +37,10 @@ public class ApplicationControllerTest extends IntegrationEnvironment {
 
         String jwt = jwtUtilityService.generateTokenWithUserId(userId);
 
-        //Act
         mockMvc.perform(
                         get("/applications/project/{projectId}", projectId)
                                 .header("Authorization", "Bearer " + jwt)
                 )
-                //Assert
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.content.length()").value(1));
