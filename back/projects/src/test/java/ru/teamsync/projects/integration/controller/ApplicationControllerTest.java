@@ -69,13 +69,13 @@ public class ApplicationControllerTest extends IntegrationEnvironment {
                                         """
                                         .formatted(projectId))
                 )
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.success").value(true));
 
 
-        int actualAmountOfApplications = jdbcClient.sql("SELECT count(*) FROM application WHERE project_id = :projectId AND student_id = :studentId")
+        int actualAmountOfApplications = jdbcClient.sql("SELECT count(*) FROM application WHERE project_id = :projectId AND person_id = :personId")
                 .param("projectId", projectId)
-                .param("studentId", applicantPersonId)
+                .param("personId", applicantPersonId)
                 .query(Integer.class)
                 .single();
         assertThat(actualAmountOfApplications).isEqualTo(1);
