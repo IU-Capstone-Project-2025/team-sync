@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import ru.teamsync.projects.dto.request.ProjectCreateRequest;
 import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
+import ru.teamsync.projects.dto.request.UpdateApplicationStatusRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.dto.response.BaseResponse;
 import ru.teamsync.projects.dto.response.ProjectResponse;
@@ -88,4 +89,13 @@ public class ProjectController {
         return projectService.getApplicationsForProject(projectId, userId, pageable);
     }
 
+    @PatchMapping("/{projectId}/applications/{applicationId}")
+    public ApplicationResponse updateApplication(
+        @PathVariable Long projectId,
+        @PathVariable Long applicationId,
+        @RequestBody UpdateApplicationStatusRequest request) {
+
+        Long userId = securityContextService.getCurrentUserId();
+        return projectService.updateApplicationStatus(projectId, applicationId, userId, request.status());
+    }
 }

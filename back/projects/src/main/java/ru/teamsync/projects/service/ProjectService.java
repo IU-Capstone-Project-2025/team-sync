@@ -14,12 +14,14 @@ import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.dto.response.ProjectResponse;
 import ru.teamsync.projects.entity.Application;
+import ru.teamsync.projects.entity.ApplicationStatus;
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.mapper.ProjectMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
+import ru.teamsync.projects.service.exception.ApplicationNotFoundException;
 import ru.teamsync.projects.service.exception.ProjectNotFoundException;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 import ru.teamsync.projects.specification.ProjectSpecifications;
@@ -120,5 +122,22 @@ public class ProjectService {
         Page<Application> applications = applicationRepository.findAllByProjectId(projectId, pageable);
 
         return applications.map(applicationMapper::toDto);
+    }
+
+    public ApplicationResponse updateApplicationStatus(Long projectId, Long applicationId, Long userId, ApplicationStatus status) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
+
+        if (!project.getTeamLeadId().equals(userId)) {
+            throw new ResourceAccessDeniedException("You cannot view applications for this project");
+        }
+
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> ApplicationNotFoundException.withId(applicationId));
+
+        application.setStatus(status);
+        applicationRepository.save(application);
+
+        return applicationMapper.toDto(application);
     }
 }
