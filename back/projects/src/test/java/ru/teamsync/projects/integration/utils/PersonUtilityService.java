@@ -5,12 +5,26 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StudentUtilityService {
+public class PersonUtilityService {
 
     @Autowired
     private JdbcClient jdbcClient;
 
-    public int createStudentWithPersonId(int personId) {
+    public int saveStudentAndPersonWithName(String name) {
+        int personId = savePersonWithName(name);
+        return saveStudentWithPersonId(personId);
+    }
+
+    public int savePersonWithName(String name){
+        return jdbcClient.sql("INSERT INTO person(name, surname, email) VALUES (:name, :surname, :email) RETURNING id")
+                .param("name", name)
+                .param("surname", name)
+                .param("email", name + "email")
+                .query(Integer.class)
+                .single();
+    }
+
+    public int saveStudentWithPersonId(int personId) {
         int studyGroupId =
                 jdbcClient.sql("INSERT INTO study_group(name) VALUES (:study_group_name) RETURNING id")
                         .param("study_group_name", "Test Study Group For Person ID " + personId)

@@ -17,6 +17,7 @@ public class ClientConfiguration {
             client.defaultStatusHandler(
                     status -> true,
                     (request, response) -> {
+
                     }
             );
         };

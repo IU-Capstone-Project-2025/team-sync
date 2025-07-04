@@ -7,5 +7,5 @@ import ru.teamsync.projects.entity.Application;
 
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
     Page<Application> findAllByProjectId(Long projectId, Pageable pageable);
-    Page<Application> findAllByStudentId(Long studentId, Pageable pageable);
+    Page<Application> findAllByPersonId(Long personId, Pageable pageable);
 }

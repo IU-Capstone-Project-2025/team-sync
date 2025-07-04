@@ -42,14 +42,14 @@ public class ApplicationService {
     }
 
     public Page<ApplicationResponse> getApplicationsByMember(Long memberId, Pageable pageable) {
-        return applicationRepository.findAllByStudentId(memberId, pageable)
+        return applicationRepository.findAllByPersonId(memberId, pageable)
                 .map(applicationMapper::toDto);
     }
 
-    public void createApplication(Long studentId, ApplicationRequest request) {
+    public void createApplication(Long personId, ApplicationRequest request) {
         Application application = new Application();
-        application.setStudentId(studentId);
-        application.setId(request.projectId());
+        application.setPersonId(personId);
+        application.setProjectId(request.projectId());
         application.setStatus(ApplicationStatus.PENDING);
         application.setCreatedAt(LocalDateTime.now());
 
