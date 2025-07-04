@@ -27,6 +27,10 @@ teamsync:
         - https://dev.shqcore.ru
         - https://team-sync.online
         - https://dev.team-sync.online
+  pagination:
+    default:
+      page-number: 0
+      page-size: 100
 
 logging:
   level:

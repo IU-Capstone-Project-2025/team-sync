@@ -155,7 +155,7 @@ const Listbox = styled('ul')(({ theme }) => ({
     },
   },
 }));
-export default function CustomizedHook({ arr, onChange }: { arr: { id: number; name: string; }[], onChange: (val: number[]) => void }) {
+export default function CustomizedHook({ arr, value, onChange }: { arr: { id: number; name: string; }[], value: { id: number; name: string; }[], onChange: (val: { id: number; name: string; }[]) => void }) {
   const {
     getRootProps,
     getInputLabelProps,
@@ -164,20 +164,16 @@ export default function CustomizedHook({ arr, onChange }: { arr: { id: number; n
     getListboxProps,
     getOptionProps,
     groupedOptions,
-    value,
     focused,
     setAnchorEl,
   } = useAutocomplete({
     id: 'customized-hook',
-    defaultValue: [],
     multiple: true,
     options: arr,
     getOptionLabel: (option) => option.name,
+    value,
+    onChange: (_event, newValue) => onChange(newValue),
   });
-
-  React.useEffect(() => {
-    onChange(value.map((v: { id: number; name: string }) => v.id));
-  }, [value, onChange]);
 
   return (
     <Root>

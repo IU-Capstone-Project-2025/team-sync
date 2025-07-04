@@ -7,15 +7,27 @@ import { useNavigate } from "react-router-dom";
 import { useMsal } from "@azure/msal-react"
 
 export default function HomeHeader(){
-  const navigate = useNavigate();
   const {accounts} = useMsal();
   const account = accounts[0];
   const fullName = account?.name;
+  const navigate = useNavigate();
 
   return (
     <div className="flex-0 bg-(--header-footer-color) ">
       <div className='flex flex-row justify-between w-full h-[10%] p-10 pl-15'>
-            <svg className = "cursor-pointer" onClick={() => navigate('/home')} xmlns="http://www.w3.org/2000/svg" width="166" height="71" viewBox="0 0 166 71" fill="none">
+            <svg
+              className="cursor-pointer"
+              onClick={() => {
+                if (window.location.pathname !== '/home') {
+                  navigate('/home', { replace: true });
+                }
+              }}
+              xmlns="http://www.w3.org/2000/svg"
+              width="166"
+              height="71"
+              viewBox="0 0 166 71"
+              fill="none"
+            >
               <path d="M89.8662 4.88852V9.53262H82.3228V27.9344H76.288V9.53262H68.7095V4.88852H89.8662Z" fill="#FFC100"/>
               <path d="M93.3158 27.9344V4.88852H111.35V9.53262H99.3506V14.2116H108.894V18.5764H99.3506V23.2903H111.806V27.9344H93.3158Z" fill="#FFC100"/>
               <path d="M136.501 27.9344H130.291L128.677 22.7316H120.748L119.099 27.9344H113.029L121.169 4.88852H128.397L136.501 27.9344ZM121.871 18.6462H127.555L124.713 9.32311L121.871 18.6462Z" fill="#FFC100"/>

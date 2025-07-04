@@ -1,6 +1,7 @@
 package ru.teamsync.resume.dto.response;
 
 public record StudentCreationResponse(
-        Long id
+        Long studentId,
+        Long personId
 ) {
 }

@@ -9,8 +9,8 @@ async function login(msalInstance) {
   const registrationData = {
     study_group: "string",
     description: "string",
-    github_alias: "string",
-    tg_alias: "string"
+    github_alias: crypto.randomUUID().toString().substring(0, 15),
+    tg_alias: crypto.randomUUID().toString().substring(0, 15)
   };
 
   const account = msalInstance.getAllAccounts()[0];
@@ -64,14 +64,12 @@ export default function SplashScreen() {
   const { instance: msalInstance } = useMsal();
 
   useEffect(() => {
-    localStorage.clear();
-  }, []);
-
-  useEffect(() => {
     if (isAuthenticated) {
       (async () => {
         await login(msalInstance);
-        navigate('/home');
+        if (localStorage.getItem("backendToken") !== null){
+          navigate('/home');
+        }
       })();
     }
   }, [isAuthenticated, navigate, msalInstance]);
