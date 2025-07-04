@@ -1,0 +1,48 @@
+2025-07-04 14:16:51 [Test worker] INFO  org.zalando.logbook - 
+=== Request ===
+Method: GET
+Path: /profile/148
+Headers:
+  Authorization: XXX
+Body:
+  <empty>
+===============
+2025-07-04 14:16:54 [Test worker] INFO  org.zalando.logbook - 
+=== Response ===
+Status: 200
+Headers:
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  Content-Type: application/json
+  Expires: 0
+  Pragma: no-cache
+  Vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  X-XSS-Protection: 0
+Body:
+  {"error":null,"success":true,"data":{"type":"professor","person":{"id":148,"name":"test_professor","surname":"test_professor","email":"prof1ae494e6@ex.com"},"profile":{"tgAlias":"test-tg-alias-148"}}}
+================
+2025-07-04 14:16:55 [Test worker] INFO  org.zalando.logbook - 
+=== Request ===
+Method: GET
+Path: /profile/149
+Headers:
+  Authorization: XXX
+Body:
+  <empty>
+===============
+2025-07-04 14:16:55 [Test worker] INFO  org.zalando.logbook - 
+=== Response ===
+Status: 200
+Headers:
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  Content-Type: application/json
+  Expires: 0
+  Pragma: no-cache
+  Vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  X-XSS-Protection: 0
+Body:
+  {"error":null,"success":true,"data":{"type":"student","person":{"id":149,"name":"test_student","surname":"test_student","email":"stud8a4a814d@ex.com"},"profile":{"studyGroup":{"id":6,"name":"Test Study Group For Person ID 149"},"description":null,"githubAlias":"test-github-alias-149","tgAlias":"test-tg-alias-149","skills":[],"roles":[]}}}
+================
