@@ -30,12 +30,14 @@ public class ProfileServiceTest {
 
     private ProfileService profileService;
 
+    private ApplicationRepository applicationRepository;
     private PersonRepository personRepository;
     private ProfessorRepository professorRepository;
     private StudentRepository studentRepository;
     private SkillRepository skillRepository;
     private RoleRepository roleRepository;
     private StudyGroupRepository studyGroupRepository;
+    private ApplicationMapper applicationMapper;
     private PersonMapper personMapper;
     private StudentMapper studentMapper;
     private ProfessorMapper professorMapper;

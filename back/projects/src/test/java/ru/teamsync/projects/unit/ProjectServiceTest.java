@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import ru.teamsync.projects.entity.Project;
+import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.mapper.ProjectMapper;
+import ru.teamsync.projects.repository.ApplicationRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.service.ProjectService;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
@@ -19,15 +21,20 @@ public class ProjectServiceTest {
 
     private ProjectService projectService;
 
+    private ApplicationRepository applicationRepositoryMock;
+    private ApplicationMapper applicationMapperMock;
+    
     private ProjectRepository projectRepositoryMock;
     private ProjectMapper projectMapperMock;
 
     @BeforeEach
     public void init() {
+        applicationRepositoryMock = Mockito.mock(ApplicationRepository.class);
+        applicationMapperMock = Mockito.mock(ApplicationMapper.class);
         projectRepositoryMock = Mockito.mock(ProjectRepository.class);
         projectMapperMock = Mockito.mock(ProjectMapper.class);
 
-        projectService = new ProjectService(projectRepositoryMock, projectMapperMock);
+        projectService = new ProjectService(projectRepositoryMock, projectMapperMock, applicationRepositoryMock, applicationMapperMock);
     }
 
     @Test
