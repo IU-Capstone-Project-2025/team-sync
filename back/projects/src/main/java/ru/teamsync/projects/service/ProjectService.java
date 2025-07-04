@@ -11,10 +11,14 @@ import org.springframework.stereotype.Service;
 
 import ru.teamsync.projects.dto.request.ProjectCreateRequest;
 import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
+import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.dto.response.ProjectResponse;
+import ru.teamsync.projects.entity.Application;
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.ProjectStatus;
+import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.mapper.ProjectMapper;
+import ru.teamsync.projects.repository.ApplicationRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.service.exception.ProjectNotFoundException;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
@@ -22,12 +26,22 @@ import ru.teamsync.projects.specification.ProjectSpecifications;
 
 @Service
 public class ProjectService {
+
+    private final ApplicationRepository applicationRepository;
     private final ProjectRepository projectRepository;
+    
+    private final ApplicationMapper applicationMapper;
     private final ProjectMapper projectMapper;
 
-    public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper) {
+    public ProjectService(
+            ProjectRepository projectRepository, 
+            ProjectMapper projectMapper,
+            ApplicationRepository applicationRepository,
+            ApplicationMapper applicationMapper) {
         this.projectRepository = projectRepository;
         this.projectMapper = projectMapper;
+        this.applicationRepository = applicationRepository;
+        this.applicationMapper = applicationMapper;
     }
 
     public void createProject(ProjectCreateRequest request, Long userId) {
@@ -84,14 +98,27 @@ public class ProjectService {
                 .map(projectMapper::toDto);
     }
 
-    public void deleteProject(Long projectId, Long currentUserId) throws NotFoundException, SecurityException {
+    public void deleteProject(Long projectId, Long currentUserId) throws SecurityException {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
 
         if (!project.getTeamLeadId().equals(currentUserId)) {
             throw new ResourceAccessDeniedException("You cannot delete this project");
         }
 
         projectRepository.delete(project);
+    }
+
+    public Page<ApplicationResponse> getApplicationsForProject(Long projectId, Long userId, Pageable pageable) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
+
+        if (!project.getTeamLeadId().equals(userId)) {
+            throw new ResourceAccessDeniedException("You cannot view applications for this project");
+        }
+
+        Page<Application> applications = applicationRepository.findAllByProjectId(projectId, pageable);
+
+        return applications.map(applicationMapper::toDto);
     }
 }
