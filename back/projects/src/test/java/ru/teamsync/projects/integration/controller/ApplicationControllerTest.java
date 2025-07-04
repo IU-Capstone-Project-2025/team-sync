@@ -4,7 +4,9 @@ package ru.teamsync.projects.integration.controller;
 import org.junit.jupiter.api.Test;
 import ru.teamsync.projects.integration.IntegrationEnvironment;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,5 +46,38 @@ public class ApplicationControllerTest extends IntegrationEnvironment {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.content.length()").value(1));
+    }
+
+    @Test
+    public void should_saveApplication_when_applyingToProject() throws Exception {
+        int teamLeadId = personUtilityService.savePersonWithName("name");
+        int projectId = projectsUtilityService.saveProjectWithNameAndTeamLeadId("Test Project", teamLeadId);
+
+        int applicantPersonId = personUtilityService.savePersonWithName("Applicant");
+
+        String jwt = jwtUtilityService.generateTokenWithUserId(applicantPersonId);
+
+
+        mockMvc.perform(
+                        post("/applications")
+                                .header("Authorization", "Bearer " + jwt)
+                                .contentType("application/json")
+                                .content("""
+                                        {
+                                            "project_id": %d
+                                        }
+                                        """
+                                        .formatted(projectId))
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+
+
+        int actualAmountOfApplications = jdbcClient.sql("SELECT count(*) FROM application WHERE project_id = :projectId AND student_id = :studentId")
+                .param("projectId", projectId)
+                .param("studentId", applicantPersonId)
+                .query(Integer.class)
+                .single();
+        assertThat(actualAmountOfApplications).isEqualTo(1);
     }
 }
