@@ -20,6 +20,9 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "required_members_count")
+    private Integer requiredMembersCount;
+
     private String name;
     private String courseName;
     private Long teamLeadId;

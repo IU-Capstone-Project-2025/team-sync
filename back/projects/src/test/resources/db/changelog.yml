@@ -53,3 +53,12 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ;   
+  - changeSet:
+      id: 7
+      author: Elizaveta Zagurskih
+      changes:
+        - sqlFile:
+            path: scripts/TS-92-add-team-size.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ;  

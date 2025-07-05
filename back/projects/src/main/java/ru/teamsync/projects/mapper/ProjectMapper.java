@@ -18,6 +18,7 @@ public interface ProjectMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "name", source = "request.name")
+    @Mapping(target = "requiredMembersCount", source = "request.requiredMembersCount")
     @Mapping(target = "teamLeadId", source = "userId")
     @Mapping(target = "status", expression = "java(ProjectStatus.valueOf(request.status().toUpperCase()))")
     @Mapping(target = "courseName", source = "request.courseName")
@@ -32,6 +33,7 @@ public interface ProjectMapper {
     @Mapping(source = "skills", target = "skillIds")
     @Mapping(source = "roles", target = "roleIds")
     @Mapping(target = "name", source = "request.name")
+    @Mapping(target = "requiredMembersCount", source = "request.requiredMembersCount")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "teamLeadId", ignore = true) 
     void updateEntity(ProjectUpdateRequest request, @MappingTarget Project project);

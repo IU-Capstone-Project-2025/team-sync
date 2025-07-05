@@ -23,5 +23,8 @@ public record ProjectUpdateRequest(
     List<Long> skills,
 
     @JsonProperty("roles")
-    List<Long> roles
+    List<Long> roles,
+
+    @JsonProperty("required_members_count")
+    Integer requiredMembersCount
 ) {}

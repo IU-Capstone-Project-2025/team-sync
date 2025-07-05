@@ -58,6 +58,13 @@ public class ApplicationService {
             throw new IllegalStateException("You have already applied for this project.");
         }
 
+        Project project = projectRepository.findById(request.projectId())
+            .orElseThrow(() -> ProjectNotFoundException.withId(request.projectId()));
+
+        if (project.getRequiredMembersCount() == 0) {
+            throw new IllegalStateException("This project has no available spots.");
+        }
+
         Application application = new Application();
         application.setStudentId(studentId);
         application.setProjectId(request.projectId());

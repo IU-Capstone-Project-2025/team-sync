@@ -131,6 +131,8 @@ public class ProjectService {
                 member.setProjectId(projectId);
                 member.setMemberId(application.getStudentId());
                 projectMemberRepository.save(member);
+
+                projectRepository.decrementRequiredMembersCount(projectId);
             }
         }
 

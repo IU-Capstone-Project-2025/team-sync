@@ -18,12 +18,10 @@ import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.service.ApplicationService;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -63,6 +61,10 @@ public class ApplicationServiceTest {
         //Arrange
         ApplicationRequest applicationRequest = new ApplicationRequest(123L);
 
+        Project project = new Project();
+        project.setRequiredMembersCount(5);
+        when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(project));
+        
         //Act
         applicationService.createApplication(1L, applicationRequest);
 
