@@ -17,10 +17,12 @@ import ru.teamsync.projects.dto.response.ProjectResponse;
 import ru.teamsync.projects.entity.Application;
 import ru.teamsync.projects.entity.ApplicationStatus;
 import ru.teamsync.projects.entity.Project;
+import ru.teamsync.projects.entity.ProjectMember;
 import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.mapper.ProjectMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
+import ru.teamsync.projects.repository.ProjectMemberRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.service.exception.ApplicationNotFoundException;
 import ru.teamsync.projects.service.exception.ProjectNotFoundException;
@@ -33,6 +35,7 @@ public class ProjectService {
 
     private final ApplicationRepository applicationRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectMemberRepository projectMemberRepository;
     
     private final ApplicationMapper applicationMapper;
     private final ProjectMapper projectMapper;
@@ -102,7 +105,12 @@ public class ProjectService {
         projectRepository.delete(project);
     }
 
-    public ApplicationResponse updateApplicationStatus(Long projectId, Long applicationId, Long userId, ApplicationStatus status) {
+    public ApplicationResponse updateApplicationStatus(
+            Long projectId, 
+            Long applicationId, 
+            Long userId, 
+            ApplicationStatus status) {
+
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
 
@@ -116,6 +124,15 @@ public class ProjectService {
         application.setStatus(status);
         applicationRepository.save(application);
 
+        if (status == ApplicationStatus.APPROVED) {
+            ProjectMember member = new ProjectMember();
+            member.setProjectId(projectId);
+            member.setMemberId(application.getStudentId());
+            projectMemberRepository.save(member);
+        }
+
         return applicationMapper.toDto(application);
     }
+
+
 }
