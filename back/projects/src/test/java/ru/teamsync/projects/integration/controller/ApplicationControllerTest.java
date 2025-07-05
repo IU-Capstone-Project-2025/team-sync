@@ -15,6 +15,10 @@ public class ApplicationControllerTest extends IntegrationEnvironment {
     @Test
     public void should_returnApplications_when_requestingByProject() throws Exception {
         //Arrange
+        int courseId = jdbcClient
+            .sql("INSERT INTO course(name) VALUES ('Test Course') RETURNING id")
+            .query(Integer.class)
+            .single();
         int userId = jdbcClient
                 .sql("INSERT INTO person(name, surname, email) VALUES ('test', 'test', 'testmail') RETURNING id")
                 .query(Integer.class).single();
@@ -24,8 +28,9 @@ public class ApplicationControllerTest extends IntegrationEnvironment {
         int applicantId = studentUtilityService.createStudentWithPersonId(applicantPersonId);
 
         int projectId = jdbcClient.sql(
-                        "INSERT INTO project(name, course_name, team_lead_id, description, project_link, status) VALUES ('a', 'a', :userId, 'a', 'a', 'ACTIVE') RETURNING id"
+                        "INSERT INTO project(name, course_id, team_lead_id, description, project_link, status) VALUES ('a', :courseId, :userId, 'a', 'a', 'ACTIVE') RETURNING id"
                 )
+                .param("courseId", courseId)
                 .param("userId", userId)
                 .query(Integer.class)
                 .single();

@@ -3,23 +3,22 @@ package ru.teamsync.projects.specification;
 import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
-import jakarta.persistence.criteria.Predicate;
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.Role;
 import ru.teamsync.projects.entity.Skill;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectSpecifications {
-    public static Specification<Project> hasCourseName(String courseName) {
+    public static Specification<Project> hasAnyCourseIds(List<Long> courseIds) {
         return (root, query, cb) -> {
-            if (courseName == null || courseName.isEmpty()) {
+            if (courseIds == null || courseIds.isEmpty()) {
                 return cb.conjunction();
             }
-            return cb.equal(root.get("courseName"), courseName);
+            return root.get("course").get("id").in(courseIds);
         };
     }
+
 
     public static Specification<Project> hasSkillIds(List<Long> skillIds) {
         return (root, query, cb) -> {
