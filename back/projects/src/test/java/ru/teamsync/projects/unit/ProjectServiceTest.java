@@ -34,7 +34,7 @@ public class ProjectServiceTest {
         projectRepositoryMock = Mockito.mock(ProjectRepository.class);
         projectMapperMock = Mockito.mock(ProjectMapper.class);
 
-        projectService = new ProjectService(projectRepositoryMock, projectMapperMock, applicationRepositoryMock, applicationMapperMock);
+        projectService = new ProjectService(applicationRepositoryMock, projectRepositoryMock, applicationMapperMock, projectMapperMock);
     }
 
     @Test

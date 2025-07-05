@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import ru.teamsync.projects.dto.request.ProjectCreateRequest;
 import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
@@ -27,6 +28,7 @@ import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 import ru.teamsync.projects.specification.ProjectSpecifications;
 
 @Service
+@RequiredArgsConstructor
 public class ProjectService {
 
     private final ApplicationRepository applicationRepository;
@@ -34,17 +36,6 @@ public class ProjectService {
     
     private final ApplicationMapper applicationMapper;
     private final ProjectMapper projectMapper;
-
-    public ProjectService(
-            ProjectRepository projectRepository, 
-            ProjectMapper projectMapper,
-            ApplicationRepository applicationRepository,
-            ApplicationMapper applicationMapper) {
-        this.projectRepository = projectRepository;
-        this.projectMapper = projectMapper;
-        this.applicationRepository = applicationRepository;
-        this.applicationMapper = applicationMapper;
-    }
 
     public void createProject(ProjectCreateRequest request, Long userId) {
         Project project = projectMapper.toEntity(request, userId);
@@ -109,19 +100,6 @@ public class ProjectService {
         }
 
         projectRepository.delete(project);
-    }
-
-    public Page<ApplicationResponse> getApplicationsForProject(Long projectId, Long userId, Pageable pageable) {
-        Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
-
-        if (!project.getTeamLeadId().equals(userId)) {
-            throw new ResourceAccessDeniedException("You cannot view applications for this project");
-        }
-
-        Page<Application> applications = applicationRepository.findAllByProjectId(projectId, pageable);
-
-        return applications.map(applicationMapper::toDto);
     }
 
     public ApplicationResponse updateApplicationStatus(Long projectId, Long applicationId, Long userId, ApplicationStatus status) {

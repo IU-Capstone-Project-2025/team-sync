@@ -77,18 +77,6 @@ public class ProjectController {
         return ResponseEntity.ok(BaseResponse.of(null));
     }
 
-    /*
-     * Project owner can see applications to their project
-     */
-    @GetMapping("/{projectId}/applications")
-    public Page<ApplicationResponse> getApplicationsForProject(
-            @PathVariable Long projectId,
-            Pageable pageable) {
-        
-        Long userId = securityContextService.getCurrentUserId();
-        return projectService.getApplicationsForProject(projectId, userId, pageable);
-    }
-
     @PatchMapping("/{projectId}/applications/{applicationId}")
     public ApplicationResponse updateApplication(
         @PathVariable Long projectId,
