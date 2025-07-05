@@ -125,10 +125,13 @@ public class ProjectService {
         applicationRepository.save(application);
 
         if (status == ApplicationStatus.APPROVED) {
-            ProjectMember member = new ProjectMember();
-            member.setProjectId(projectId);
-            member.setMemberId(application.getStudentId());
-            projectMemberRepository.save(member);
+            boolean alreadyMember = projectMemberRepository.existsByProjectIdAndMemberId(projectId, application.getStudentId());
+            if (!alreadyMember) {
+                ProjectMember member = new ProjectMember();
+                member.setProjectId(projectId);
+                member.setMemberId(application.getStudentId());
+                projectMemberRepository.save(member);
+            }
         }
 
         return applicationMapper.toDto(application);
