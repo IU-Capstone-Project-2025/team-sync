@@ -1,6 +1,7 @@
 package ru.teamsync.projects.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -47,9 +48,19 @@ public class ApplicationService {
     }
 
     public void createApplication(Long studentId, ApplicationRequest request) {
+        List<ApplicationStatus> activeStatuses = List.of(ApplicationStatus.PENDING, ApplicationStatus.APPROVED);
+        
+        boolean exists = applicationRepository.existsByProjectIdAndStudentIdAndStatusIn(
+            request.projectId(), studentId, activeStatuses
+        );
+
+        if (exists) {
+            throw new IllegalStateException("You have already applied for this project.");
+        }
+
         Application application = new Application();
         application.setStudentId(studentId);
-        application.setId(request.projectId());
+        application.setProjectId(request.projectId());
         application.setStatus(ApplicationStatus.PENDING);
         application.setCreatedAt(LocalDateTime.now());
 
