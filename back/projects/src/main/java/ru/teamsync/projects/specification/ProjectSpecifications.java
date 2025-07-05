@@ -10,14 +10,15 @@ import ru.teamsync.projects.entity.Skill;
 import java.util.List;
 
 public class ProjectSpecifications {
-    public static Specification<Project> hasCourseId(Long courseId) {
+    public static Specification<Project> hasAnyCourseIds(List<Long> courseIds) {
         return (root, query, cb) -> {
-            if (courseId == null) {
+            if (courseIds == null || courseIds.isEmpty()) {
                 return cb.conjunction();
             }
-            return cb.equal(root.get("course").get("id"), courseId);
+            return root.get("course").get("id").in(courseIds);
         };
     }
+
 
     public static Specification<Project> hasSkillIds(List<Long> skillIds) {
         return (root, query, cb) -> {

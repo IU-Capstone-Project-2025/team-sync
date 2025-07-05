@@ -47,35 +47,29 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
-    public Page<ProjectResponse> getProjects(List<Long> skillIds, List<Long> roleIds, Long courseId, ProjectStatus status, Pageable pageable) {
-        boolean hasFilters = (skillIds != null && !skillIds.isEmpty()) ||
-                (roleIds != null && !roleIds.isEmpty()) ||
-                (courseId != null) ||
-                (status != null);
+    public Page<ProjectResponse> getProjects(
+            List<Long> skillIds, 
+            List<Long> roleIds, 
+            List<Long> courseIds, 
+            ProjectStatus status, 
+            Pageable pageable) {
+    
+        Specification<Project> spec = Specification.where(null);
 
-        Page<Project> projects;
-
-        if (!hasFilters) {
-            projects = projectRepository.findAll(pageable);
-        } else {
-            Specification<Project> spec = (root, query, cb) -> cb.conjunction();
-
-            if (courseId != null) {
-                spec = spec.and(ProjectSpecifications.hasCourseId(courseId));
-            }
-            if (skillIds != null && !skillIds.isEmpty()) {
-                spec = spec.and(ProjectSpecifications.hasSkillIds(skillIds));
-            }
-            if (roleIds != null && !roleIds.isEmpty()) {
-                spec = spec.and(ProjectSpecifications.hasRoleIds(roleIds));
-            }
-            if (status != null) {
-                spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), status));
-            }
-
-            projects = projectRepository.findAll(spec, pageable);
+        if (courseIds != null && !courseIds.isEmpty()) {
+            spec = spec.and(ProjectSpecifications.hasAnyCourseIds(courseIds));
+        }
+        if (skillIds != null && !skillIds.isEmpty()) {
+            spec = spec.and(ProjectSpecifications.hasSkillIds(skillIds));
+        }
+        if (roleIds != null && !roleIds.isEmpty()) {
+            spec = spec.and(ProjectSpecifications.hasRoleIds(roleIds));
+        }
+        if (status != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), status));
         }
 
+        Page<Project> projects = projectRepository.findAll(spec, pageable);
         return projects.map(projectMapper::toDto);
     }
 
