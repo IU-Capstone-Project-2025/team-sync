@@ -51,6 +51,8 @@ services:
   
   ml-recsys:
     build: ./ml/recsys-service
+    env_file:
+      - .env
     ports: 
       - "8000:8000"
   
@@ -58,6 +60,11 @@ services:
     build: ./ml/search-service
     ports: 
       - "8001:8000"
+
+  ml-embedder:
+    build: ./ml/embedder
+    ports: 
+      - "8002:8000"
 
   nginx:
     image: nginx:latest

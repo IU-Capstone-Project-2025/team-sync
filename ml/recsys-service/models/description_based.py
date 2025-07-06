@@ -1,14 +1,14 @@
 from models.base_recommender import Recommender
 from config.config import Config
-from sentence_transformers import SentenceTransformer
-# import faiss
+from models.embedder import Embedder
 import numpy as np
 
 class DescriptionBasedRecommender(Recommender):
     def __init__(self, DBModel, logger, model_name):
         super().__init__(DBModel, logger, model_name)
-        self.coefficient = Config.DESCRIPTION_COEFFICIENT
-        self.sbert = SentenceTransformer(Config.DESCRIPTION_MODEL_NAME)
+        self.config = Config()
+        self.coefficient = self.config.DESCRIPTION_COEFFICIENT
+        self.sbert = Embedder(url=self.config.EMBEDDER_URL, logger=logger)
         self.embeddings = []
         # self.index = faiss.IndexFlatIP(self.sbert.get_sentence_embedding_dimension())
         self.logger.info(f"Initialized {self.model_name} description-based recommender.")
@@ -28,10 +28,10 @@ class DescriptionBasedRecommender(Recommender):
                 recommendations.append(score)
                 self.logger.warning(f"No description found for user {user_id}.")
                 continue
-            embedding = self.sbert.encode(user_description, convert_to_tensor=True)
+            embedding = self.sbert.encode(user_description)[0] # [[0.1, 0.2, 0.3, ...]]
             if self.embeddings:
                 # cosine similarity calculation
-                score = np.dot(self.embeddings[index], embedding.cpu().numpy()) / (np.linalg.norm(self.embeddings[index]) * np.linalg.norm(embedding.cpu().numpy()))
+                score = np.dot(self.embeddings[index], embedding) / (np.linalg.norm(self.embeddings[index]) * np.linalg.norm(embedding))
             else:
                 self.logger.warning(f"No embeddings available for project {project_id}.")
             recommendations.append(score)
@@ -49,8 +49,8 @@ class DescriptionBasedRecommender(Recommender):
         for project in project_ids:
             project_description = self.db.get_project_description(project)
             if project_description:
-                embedding = self.sbert.encode(project_description, convert_to_tensor=True)
-                self.embeddings.append(embedding.cpu().numpy())
+                embedding = self.sbert.encode(project_description)[0]
+                self.embeddings.append(embedding)
                 # result.append(embedding.cpu().numpy())
         # self.index = faiss.IndexFlatIP(self.sbert.get_sentence_embedding_dimension())
         # faiss.normalize_L2(np.array(result))

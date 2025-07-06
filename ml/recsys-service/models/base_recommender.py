@@ -6,7 +6,8 @@ class Recommender(ABC):
         self.model_name = model_name
         self.db = DBModel
         self.logger = logger
-        self.coefficient = Config.BASE_COEFFICIENT # for weighting scores among all models 
+        self.config = Config()
+        self.coefficient = self.config.BASE_COEFFICIENT # for weighting scores among all models 
         self.logger.info(f"Initialized {self.model_name} recommender with DB model.")
     
     @abstractmethod

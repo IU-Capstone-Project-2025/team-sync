@@ -6,11 +6,12 @@ from config.config import Config
 class RedisModel:
     def __init__(self, logger):
         self.logger = logger
+        self.config = Config()
         self.client = Redis(
-            host = Config.REDIS_HOST, 
-            port=Config.REDIS_PORT, 
-            db=Config.REDIS_DB,
-            password=Config.REDIS_PASSWORD)
+            host = self.config.REDIS_HOST,
+            port=self.config.REDIS_PORT,
+            db=self.config.REDIS_DB,
+            password=self.config.REDIS_PASSWORD)
         max_retries = 10
         while max_retries > 0:
             try:

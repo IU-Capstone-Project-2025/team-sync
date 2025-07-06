@@ -8,8 +8,11 @@ from models.models_merger import ModelsMerger
 from models.tag_based import TagBasedRecommender
 from models.description_based import DescriptionBasedRecommender
 from metrics.metrics_model import Metrics
+from dotenv import load_dotenv
+from models.embedder import Embedder
 
 async def lifespan(app: FastAPI):    
+    load_dotenv()
     app.state.logger = setup_logging()
     logger = app.state.logger
     logger.info("Application startup")
@@ -34,6 +37,10 @@ async def lifespan(app: FastAPI):
             logger=logger,
             model_name="description_based"
         )
+    )
+    app.state.embedder = Embedder(
+        url="http://ml-embedder:8000",
+        logger=logger
     )
     logger.info("Recommendation models initialized successfully.")
     app.state.metrics = Metrics(
