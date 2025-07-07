@@ -9,30 +9,25 @@ class TagBasedRecommender(Recommender):
         super().__init__(DBModel, logger, model_name)
         self.coefficient = self.config.TAG_COEFFICIENT
         self.logger.info(f"Initialized {self.model_name} tag-based recommender.")
-    
+        self.all_skills = {}
+        self.projects_with_skills = []
+        
     def calculate_scores(self, user_id, project_ids=None):
         """Get project recommendations based on project skills."""
         self.logger.info(f"Fetching recommendations for user {user_id}.")
         if not project_ids:
             self.logger.warning("No projects available for recommendations.")
             return []
-        all_skills = {}
-        for skill in self.db.get_all_skills():
-            all_skills[skill[0]] = len(all_skills)
-        num_skills = len(all_skills)
+
+        num_skills = len(self.all_skills)
+        num_projects = len(project_ids)
         
         user_skills_v = np.zeros(shape=(1, num_skills), dtype=np.float32)
         for skill in self.db.get_user_skills(user_id):
-            user_skills_v[0][all_skills[skill]] = 1
-        num_projects = len(project_ids)
-
-        projects_with_skills = np.zeros(shape=(num_projects, num_skills), dtype=np.float32)
-        for i in range(num_projects):
-            for skill in self.db.get_project_skills(project_ids[i]):
-                projects_with_skills[i][all_skills[skill]] = 1
+            user_skills_v[0][self.all_skills[skill]] = 1
 
         index = faiss.IndexFlatL2(num_skills)
-        index.add(projects_with_skills)
+        index.add(self.projects_with_skills)
         distances, indices = index.search(user_skills_v, num_projects)
         distances, indices = distances[0], indices[0]
 
@@ -49,4 +44,18 @@ class TagBasedRecommender(Recommender):
     
     def save_data_for_calculation(self, project_ids=None):
         """Save data needed for score calculation."""
-        pass
+        if not project_ids:
+            self.logger.warning("No projects available for recommendations.")
+            return
+        self.logger.info(f"Saving projects with skills for {len(project_ids)} projects.")
+        self.all_skills = {}
+        for skill in self.db.get_all_skills():
+            self.all_skills[skill[0]] = len(self.all_skills)
+        num_skills = len(self.all_skills)
+        num_projects = len(project_ids)
+
+        self.projects_with_skills = np.zeros(shape=(num_projects, num_skills), dtype=np.float32)
+        for i in range(num_projects):
+            for skill in self.db.get_project_skills(project_ids[i]):
+                self.projects_with_skills[i][self.all_skills[skill]] = 1
+        
