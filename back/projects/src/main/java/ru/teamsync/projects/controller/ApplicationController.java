@@ -1,15 +1,10 @@
 package ru.teamsync.projects.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-//import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import ru.teamsync.projects.dto.request.ApplicationRequest;
@@ -46,5 +41,12 @@ public class ApplicationController {
         long userId = securityContextService.getCurrentUserId();
         applicationService.createApplication(userId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.of(null));
+    }
+
+    @DeleteMapping("/{applicationId}")
+    public ResponseEntity<BaseResponse<Void>> deleteApplication(@PathVariable Long applicationId) {
+        long userId = securityContextService.getCurrentUserId();
+        applicationService.deleteApplication(userId, applicationId);
+        return ResponseEntity.ok(BaseResponse.of(null));
     }
 }

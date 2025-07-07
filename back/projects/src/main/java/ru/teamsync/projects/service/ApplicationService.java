@@ -16,6 +16,8 @@ import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
+import ru.teamsync.projects.service.exception.ApplicationNotFoundException;
+import ru.teamsync.projects.service.exception.CannotApplyToOwnProjectException;
 import ru.teamsync.projects.service.exception.ProjectNotFoundException;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 
@@ -72,5 +74,16 @@ public class ApplicationService {
         application.setCreatedAt(LocalDateTime.now());
 
         applicationRepository.save(application);
+    }
+
+    public void deleteApplication(Long userId, Long applicationId) {
+        Application application = applicationRepository.findById(applicationId)
+            .orElseThrow(() -> ApplicationNotFoundException.withId(applicationId));
+
+        if (!application.getStudentId().equals(userId)) {
+            throw new ResourceAccessDeniedException("You have no permission to delete this application");
+        }
+
+        applicationRepository.delete(application);
     }
 }

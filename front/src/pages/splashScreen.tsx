@@ -64,10 +64,12 @@ export default function SplashScreen() {
   const { instance: msalInstance } = useMsal();
 
   useEffect(() => {
-    if (isAuthenticated && localStorage.getItem("backendToken") !== null) {
+    if (isAuthenticated) {
       (async () => {
         await login(msalInstance);
-        navigate('/home');
+        if (localStorage.getItem("backendToken") !== null){
+          navigate('/home');
+        }
       })();
     }
   }, [isAuthenticated, navigate, msalInstance]);
