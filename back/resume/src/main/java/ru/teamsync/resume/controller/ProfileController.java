@@ -31,6 +31,13 @@ public class ProfileController {
     private final ProfileService profileService;
     private final SecurityContextService securityContextService;
 
+    @GetMapping
+    public ResponseEntity<BaseResponse<ProfileResponse>> getCurrentUserProfile() {
+        Long personId = securityContextService.getCurrentUserId();
+        ProfileResponse response = profileService.getProfile(personId);
+        return ResponseEntity.ok(BaseResponse.of(response));
+    }
+
     @GetMapping("/{personId}")
     public ResponseEntity<BaseResponse<ProfileResponse>> getProfile(
         @PathVariable Long personId) throws NotFoundException {
