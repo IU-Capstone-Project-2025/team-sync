@@ -23,8 +23,9 @@ public class Application {
     @Column(name = "student_id")
     private Long studentId;
 
-    @Column(name = "project_id")
-    private Long projectId;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
