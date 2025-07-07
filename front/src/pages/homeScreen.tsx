@@ -11,6 +11,7 @@ interface Project {
   description: string;
   id: number;
   name: string;
+  skill_ids: number[];
   role_ids: number[];
   status: "DRAFT" | "OPEN" | "IN_PROGRESS" | "COMPLETE";
   team_lead_id: number;
@@ -94,10 +95,12 @@ async function getProjects(
     };
   }
 }
-function getRoleNames(roleIds: number[] = [], allRoles: {id: number, name: string}[] = []) {
-  const roleNames = roleIds.map(id => allRoles.find(role => role.id === id)?.name ?? "Unknown");
-  return roleNames;
+
+function getNames(ids: number[] = [], all: {id: number, name: string}[] = []) {
+  const names = ids.map(id => all.find(obj => obj.id === id)?.name ?? "Unknown");
+  return names;
 }
+
 export default function HomeScreen(){
   const [roles, setRoles] = useState<{id: number, name: string}[]>([]);
   const [skills, setSkills] = useState<{id: number, name: string}[]>([]);
@@ -134,7 +137,7 @@ export default function HomeScreen(){
     <div className="flex flex-col justify-between min-h-screen">
       <HomeHeader />
       <div className="flex flex-col px-18">
-          <p className="font-[Inter] text-(--primary-color) text-xl pb-5">
+          <p className="font-[Inter] text-(--primary-color) text-xl pt-3 pb-5">
             All projects
           </p>
           <h1 className="font-[Manrope] text-(--secondary-color) text-5xl font-bold">
@@ -241,7 +244,7 @@ export default function HomeScreen(){
                             <h2 className="font-[Inter] font-bold text-4xl pb-2">
                               Choose skills
                             </h2>
-                            <div style={{ maxHeight: '500px', overflowY: 'auto', paddingRight: '4px' }}>
+                            <div style={{ maxHeight: '50vh', overflowY: 'auto', paddingRight: '4px' }}>
                               {skills.length > 0 && skills.map((skill) => {
                                 const isChecked = selectedSkills.includes(skill.id);
                                 return (
@@ -250,7 +253,7 @@ export default function HomeScreen(){
                                     type="button"
                                     onClick={() => handleSkillToggle(skill.id)}
                                     className={
-                                      "inline-flex flex-row items-center font-[Inter] text-(--secondary-color) border-2 rounded-lg mt-3 px-2 mx-1 py-1 w-fit " +
+                                      "inline-flex flex-row items-center font-[Inter] text-(--secondary-color) border-2 rounded-lg mt-3 px-2 mx-1 py-1 w-fit" +
                                       (isChecked ? "border-(--accent-color-2)" : "border-(--primary-color)")
                                     }
                                   >
@@ -351,7 +354,7 @@ export default function HomeScreen(){
                             <h2 className="font-[Inter] font-bold text-4xl">
                               Choose roles
                             </h2>
-                            <div style={{ maxHeight: '500px', overflowY: 'auto', paddingRight: '4px' }}>
+                            <div style={{ maxHeight: '50vh', overflowY: 'auto', paddingRight: '4px' }}>
                               {roles.length > 0 && roles.map((role) => {
                                 const isChecked = selectedRoles.includes(role.id);
                                 return (
@@ -403,9 +406,14 @@ export default function HomeScreen(){
                 <Card
                   key={proj.id || idx}
                   props={{
-                    projName: proj.name,
+                    courseName: proj.course_name,
                     description: proj.description,
-                    roles: getRoleNames(proj.role_ids, roles)
+                    id: proj.id,
+                    projectName: proj.name,
+                    roles: getNames(proj.role_ids, roles),
+                    skills: getNames(proj.skill_ids, skills),
+                    status: proj.status,
+                    teamLeadId: proj.team_lead_id
                   }}
                 />
               ))}
