@@ -9,9 +9,8 @@ class Embedder:
         """Returns embeddings"""
         logger = self.logger
         response = requests.post(f"{self.url}/api/v1/embedding", json={"texts": texts})
-        logger.info(f"Embedder response: {response.status_code} - {response.text}")
+        logger.info(f"Embedder response: {response.status_code}")
         response = response.json()
-        logger.info(f"Embedder response JSON: {response}")
         embeddings = response.get("embeddings", [])
         logger.info(f"Received {len(embeddings)} embeddings from embedder.")
         return [embedding for embedding in embeddings if isinstance(embedding, list)]

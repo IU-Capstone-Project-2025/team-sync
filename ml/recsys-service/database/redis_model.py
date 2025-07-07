@@ -12,10 +12,12 @@ class RedisModel:
             port=self.config.REDIS_PORT,
             db=self.config.REDIS_DB,
             password=self.config.REDIS_PASSWORD)
+
+    async def connect(self):
         max_retries = 10
         while max_retries > 0:
             try:
-                self.client.ping()
+                await self.client.ping()
                 self.logger.info("Connected to Redis successfully.")
                 break
             except redis.ConnectionError as e:

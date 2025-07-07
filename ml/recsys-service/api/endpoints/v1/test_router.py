@@ -104,15 +104,3 @@ async def get_metrics_map(request: Request):
     metrics_model = request.app.state.metrics
     metrics = metrics_model.get_metrics()
     return {"status": "Metrics retrieved successfully", "metrics": metrics}
-
-@router.post("/embedder/encode/{string}")
-async def embedder_encode(request: Request, string: str):
-    logger = request.app.state.logger
-    logger.info(f"Encoding string: {string}")
-    embedder = request.app.state.embedder
-    if not embedder:
-        return {"status": "Embedder service is not available"}
-    embeddings = embedder.encode([string])
-    if not embeddings:
-        return {"status": "No embeddings returned from the embedder service"}
-    return {"status": "Embeddings retrieved successfully", "embeddings": embeddings}

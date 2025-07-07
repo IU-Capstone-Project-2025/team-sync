@@ -18,6 +18,7 @@ async def lifespan(app: FastAPI):
     logger.info("Application startup")
     app.state.db = DBModel(logger=logger)
     app.state.redis = RedisModel(logger=logger)
+    await app.state.redis.connect()
     await app.state.db.connect()
     logger.info("Database connection established successfully.")
 
@@ -37,10 +38,6 @@ async def lifespan(app: FastAPI):
             logger=logger,
             model_name="description_based"
         )
-    )
-    app.state.embedder = Embedder(
-        url="http://ml-embedder:8000",
-        logger=logger
     )
     logger.info("Recommendation models initialized successfully.")
     app.state.metrics = Metrics(

@@ -1,0 +1,127 @@
+version: '3.8'
+
+services:
+  backend-auth:
+    build: ./back/auth
+    ports: 
+      - "8084:8080"
+    environment:
+      - TENANT_ID=${TENANT_ID}
+      - JWT_KEY=${JWT_KEY}
+      - DB_MAIN_JDBC=jdbc:postgresql://postgres:5432/${DB_NAME}
+      - DB_MAIN_USER=${DB_USER}
+      - DB_MAIN_PASSWORD=${DB_PASSWORD}
+      - RESUME_HOST=${RESUME_HOST}
+    depends_on:
+      - postgres
+      - liquibase
+
+  backend-projects:
+    build: ./back/projects
+    environment:
+      - TENANT_ID=${TENANT_ID}
+      - JWT_KEY=${JWT_KEY}
+      - DB_MAIN_JDBC=jdbc:postgresql://postgres:5432/${DB_NAME}
+      - DB_MAIN_USER=${DB_USER}
+      - DB_MAIN_PASSWORD=${DB_PASSWORD}
+    ports: 
+      - "8081:8080"
+    depends_on:
+      - postgres
+      - liquibase
+      
+  backend-resume:
+    build: ./back/resume
+    environment:
+      - TENANT_ID=${TENANT_ID}
+      - JWT_KEY=${JWT_KEY}
+      - DB_MAIN_JDBC=jdbc:postgresql://postgres:5432/${DB_NAME}
+      - DB_MAIN_USER=${DB_USER}
+      - DB_MAIN_PASSWORD=${DB_PASSWORD}
+    ports: 
+      - "8082:8080"
+    depends_on:
+      - postgres
+      - liquibase
+
+  keydb:
+    image: bitnami/keydb:6.3.4
+    container_name: keydb
+    ports:
+      - "6379:6379"
+    volumes:
+      - keydb_data:/data
+    environment:
+      - KEYDB_PASSWORD=${KEY_DB_PASSWORD}
+    restart: unless-stopped
+
+  ml-recsys:
+    build: ./ml/recsys-service
+    env_file:
+      - .env
+    ports: 
+      - "8000:8000"
+  
+  ml-search:
+    build: ./ml/search-service
+    ports: 
+      - "8001:8000"
+
+  ml-embedder:
+    build: ./ml/embedder
+    ports: 
+      - "8002:8000"
+
+  frontend:
+    build: ./front
+    ports: 
+      - "3000:80"
+    depends_on:
+      - backend-auth
+      - backend-projects
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:9.4.0
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_USER}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+
+  liquibase:
+    image: liquibase/liquibase:4.32.0
+    volumes:
+      - ./migration:/migration
+    working_dir: /migration
+    depends_on:
+      - postgres
+    command: >
+      --changeLogFile=changelog/changelog.yml
+      --url=jdbc:postgresql://postgres:5432/${DB_NAME}
+      --username=${DB_USER}
+      --password=${DB_PASSWORD}
+      --driver=org.postgresql.Driver
+      --logLevel=info
+      update
+
+volumes:
+  pgdata:
+  pgadmin_data:
+  keydb_data:

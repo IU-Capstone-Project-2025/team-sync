@@ -21,6 +21,7 @@ class DescriptionBasedRecommender(Recommender):
             return []
         recommendations = []
         user_description = self.db.get_user_description(user_id)
+        embedding = self.sbert.encode(user_description)[0] # [[0.1, 0.2, 0.3, ...]]
         for index, project_id in enumerate(project_ids):
             score = 0
             # TODO: Implement actual description-based scoring logic
@@ -28,7 +29,6 @@ class DescriptionBasedRecommender(Recommender):
                 recommendations.append(score)
                 self.logger.warning(f"No description found for user {user_id}.")
                 continue
-            embedding = self.sbert.encode(user_description)[0] # [[0.1, 0.2, 0.3, ...]]
             if self.embeddings:
                 # cosine similarity calculation
                 score = np.dot(self.embeddings[index], embedding) / (np.linalg.norm(self.embeddings[index]) * np.linalg.norm(embedding))
