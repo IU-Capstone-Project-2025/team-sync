@@ -1,11 +1,11 @@
 package ru.teamsync.projects.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 
 import jakarta.validation.constraints.NotNull;
 
 public record ApplicationRequest(
     @NotNull 
-    @JsonProperty("project_id")
+    @JsonAlias({"projectId", "project_id"})
     Long projectId 
 ) {}
