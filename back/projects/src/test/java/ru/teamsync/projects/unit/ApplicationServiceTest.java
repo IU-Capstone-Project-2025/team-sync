@@ -63,6 +63,14 @@ public class ApplicationServiceTest {
         //Arrange
         ApplicationRequest applicationRequest = new ApplicationRequest(123L);
 
+        // Заглушка на projectRepository
+        Project project = new Project();
+        project.setId(123L);
+        project.setTeamLeadId(999L);
+
+        when(projectRepositoryMock.findById(123L))
+            .thenReturn(Optional.of(project));
+
         //Act
         applicationService.createApplication(1L, applicationRequest);
 

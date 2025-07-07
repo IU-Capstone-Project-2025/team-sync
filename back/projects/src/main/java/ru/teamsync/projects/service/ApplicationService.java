@@ -15,6 +15,8 @@ import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
+import ru.teamsync.projects.service.exception.ApplicationNotFoundException;
+import ru.teamsync.projects.service.exception.CannotApplyToOwnProjectException;
 import ru.teamsync.projects.service.exception.ProjectNotFoundException;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 
@@ -46,7 +48,13 @@ public class ApplicationService {
                 .map(applicationMapper::toDto);
     }
 
-    public void createApplication(Long personId, ApplicationRequest request) {
+    public void createApplication(Long studentId, ApplicationRequest request) {
+        Project project = projectRepository.findById(request.projectId())
+            .orElseThrow(() -> ProjectNotFoundException.withId(request.projectId()));
+
+        if (project.getTeamLeadId().equals(studentId)) {
+            throw CannotApplyToOwnProjectException.forProject(project.getId());
+        }
         Application application = new Application();
         application.setPersonId(personId);
         application.setProjectId(request.projectId());
@@ -54,5 +62,16 @@ public class ApplicationService {
         application.setCreatedAt(LocalDateTime.now());
 
         applicationRepository.save(application);
+    }
+
+    public void deleteApplication(Long userId, Long applicationId) {
+        Application application = applicationRepository.findById(applicationId)
+            .orElseThrow(() -> ApplicationNotFoundException.withId(applicationId));
+
+        if (!application.getStudentId().equals(userId)) {
+            throw new ResourceAccessDeniedException("You have no permission to delete this application");
+        }
+
+        applicationRepository.delete(application);
     }
 }
