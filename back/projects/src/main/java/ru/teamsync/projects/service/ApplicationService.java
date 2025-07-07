@@ -56,7 +56,7 @@ public class ApplicationService {
             throw CannotApplyToOwnProjectException.forProject(project.getId());
         }
         Application application = new Application();
-        application.setPersonId(personId);
+        application.setPersonId(studentId);
         application.setProjectId(request.projectId());
         application.setStatus(ApplicationStatus.PENDING);
         application.setCreatedAt(LocalDateTime.now());
@@ -68,7 +68,7 @@ public class ApplicationService {
         Application application = applicationRepository.findById(applicationId)
             .orElseThrow(() -> ApplicationNotFoundException.withId(applicationId));
 
-        if (!application.getStudentId().equals(userId)) {
+        if (!application.getPersonId().equals(userId)) {
             throw new ResourceAccessDeniedException("You have no permission to delete this application");
         }
 
