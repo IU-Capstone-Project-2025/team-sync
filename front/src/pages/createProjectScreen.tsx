@@ -116,7 +116,7 @@ export default function CreateProjectScreen() {
           <p className="mb-2 mt-5">How many people do you need?</p>
           <input name = "numPeople" required className = "focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 min-w-50 p-1 text-(--secondary-color) font-[Inter] text-md" type="query" />
           <p className="mb-2">Required skills</p>
-          <CustomizedHook
+          <CustoxmizedHook
             arr={skills}
             value={skills.filter(skill => selectedSkills.includes(skill.id))}
             onChange={items => setSelectedSkills(items.map(item => item.id))}
