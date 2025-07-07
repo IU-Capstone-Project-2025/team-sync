@@ -6,6 +6,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record ApplicationRequest(
     @NotNull 
-    @JsonProperty("projectId")
+    @JsonProperty("project_id")
     Long projectId 
 ) {}
