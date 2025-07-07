@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import ru.teamsync.projects.dto.request.ApplicationRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
@@ -49,7 +48,6 @@ public class ApplicationService {
                 .map(applicationMapper::toDto);
     }
 
-    @Transactional
     public void createApplication(Long studentId, ApplicationRequest request) {
         Project project = projectRepository.findById(request.projectId())
             .orElseThrow(() -> ProjectNotFoundException.withId(request.projectId()));
