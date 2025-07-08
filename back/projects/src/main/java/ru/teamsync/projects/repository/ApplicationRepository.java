@@ -10,6 +10,7 @@ import ru.teamsync.projects.entity.Project;
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
     @EntityGraph(attributePaths = {"project"})
     Page<Application> findAllByProject(Project project, Pageable pageable);
-    
+
+    @EntityGraph(attributePaths = {"project"})
     Page<Application> findAllByPersonId(Long personId, Pageable pageable);
 }
