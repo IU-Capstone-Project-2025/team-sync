@@ -40,7 +40,7 @@ async function getRoles(token: string) {
 }
 
 async function getSkills(token: string) {
-  const rolesUrl = `${backendHost}projects/api/v1/skills`;
+  const rolesUrl = `${backendHost}/projects/api/v1/skills`;
   try {
     const response = await fetch(rolesUrl, {
       headers: {
