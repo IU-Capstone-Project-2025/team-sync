@@ -29,7 +29,7 @@ public class ProfileControllerTest extends IntegrationEnvironment {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.type").value("student"))
+                .andExpect(jsonPath("$.data.type").value("STUDENT"))
                 .andExpect(jsonPath("$.data").exists());
     }
 
@@ -51,7 +51,7 @@ public class ProfileControllerTest extends IntegrationEnvironment {
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.type").value("professor"))
+                .andExpect(jsonPath("$.data.type").value("PROFESSOR"))
                 .andExpect(jsonPath("$.data").exists());
     }
 }

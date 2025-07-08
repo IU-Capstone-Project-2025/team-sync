@@ -9,23 +9,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
-import ru.teamsync.resume.dto.StudyGroupNotFoundException;
 import ru.teamsync.resume.dto.request.ProfessorCreationRequest;
 import ru.teamsync.resume.dto.request.StudentCreationRequest;
 import ru.teamsync.resume.dto.request.UpdateProfessorProfileRequest;
 import ru.teamsync.resume.dto.request.UpdateStudentProfileRequest;
-import ru.teamsync.resume.dto.response.ProfessorCreationResponse;
-import ru.teamsync.resume.dto.response.ProfileResponse;
-import ru.teamsync.resume.dto.response.RoleResponse;
-import ru.teamsync.resume.dto.response.SkillResponse;
-import ru.teamsync.resume.dto.response.StudentCreationResponse;
+import ru.teamsync.resume.dto.response.*;
 import ru.teamsync.resume.entity.Person;
 import ru.teamsync.resume.entity.Professor;
 import ru.teamsync.resume.entity.Student;
 import ru.teamsync.resume.entity.StudyGroup;
 import ru.teamsync.resume.mapper.PersonMapper;
-import ru.teamsync.resume.mapper.ProfessorMapper;
-import ru.teamsync.resume.mapper.StudentMapper;
+import ru.teamsync.resume.mapper.ProfileMapper;
 import ru.teamsync.resume.repository.PersonRepository;
 import ru.teamsync.resume.repository.ProfessorRepository;
 import ru.teamsync.resume.repository.RoleRepository;
@@ -41,8 +35,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @AllArgsConstructor
 public class ProfileService {
-    private static final String STUDENT_ROLE = "student";
-    private static final String PROFESSOR_ROLE = "professor";
 
     private final PersonRepository personRepository;
     private final ProfessorRepository professorRepository;
@@ -52,8 +44,7 @@ public class ProfileService {
     private final StudyGroupRepository studyGroupRepository;
 
     private final PersonMapper personMapper;
-    private final StudentMapper studentMapper;
-    private final ProfessorMapper professorMapper;
+    private final ProfileMapper profileMapper;
 
     public ProfileResponse getProfile(Long personId) {
         var person = personRepository.findById(personId)
@@ -61,19 +52,17 @@ public class ProfileService {
 
         Optional<Student> student = studentRepository.findByPersonId(personId);
         if (student.isPresent()) {
-            return new ProfileResponse(
-                    STUDENT_ROLE,
-                    personMapper.toResponse(person),
-                    studentMapper.toResponse(student.get())
+            return ProfileResponse.ofStudent(
+                    profileMapper.toResponse(student.get()),
+                    personMapper.toResponse(person)
             );
         }
 
         Optional<Professor> professor = professorRepository.findByPersonId(personId);
         if (professor.isPresent()) {
-            return new ProfileResponse(
-                    PROFESSOR_ROLE,
-                    personMapper.toResponse(person),
-                    professorMapper.toResponse(professor.get())
+            return ProfileResponse.ofProfessor(
+                    profileMapper.toResponse(professor.get()),
+                    personMapper.toResponse(person)
             );
         }
 
@@ -87,7 +76,7 @@ public class ProfileService {
         var student = studentRepository.findByPersonId(personId)
                 .orElseThrow(() -> PersonNotFoundException.withId(personId));
 
-        studentMapper.updateStudent(request, student);
+        profileMapper.updateStudent(request, student);
         studentRepository.save(student);
     }
 
@@ -98,7 +87,7 @@ public class ProfileService {
         var professor = professorRepository.findByPersonId(personId)
                 .orElseThrow(() -> PersonNotFoundException.withId(personId));
 
-        professorMapper.updateProfessor(request, professor);
+        profileMapper.updateProfessor(request, professor);
         professorRepository.save(professor);
     }
 

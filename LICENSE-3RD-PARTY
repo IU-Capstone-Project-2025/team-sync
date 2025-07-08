@@ -1,0 +1,8 @@
+This project includes the all-MiniLM-L6-v2 ONNX model obtained from:
+https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
+
+The model is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Authors of the model: UKPLab (https://www.ukp.tu-darmstadt.de/).

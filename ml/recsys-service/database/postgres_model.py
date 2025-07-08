@@ -6,7 +6,8 @@ import asyncio
 
 class DBModel:
     def __init__(self, logger):
-        self.db_url = Config.DB_URL
+        self.config = Config()
+        self.db_url = self.config.DB_URL
         self.logger = logger
         if not self.db_url:
             raise ValueError("Database URL is not set in the configuration.")

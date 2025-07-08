@@ -52,4 +52,14 @@ databaseChangeLog:
             path: scripts/TS-154-add-missing-primary-keys.sql
             relativeToChangelogFile: true
             splitStatements: true
+            endDelimiter: ;
+
+  - changeSet:
+      id: 7
+      author: Stepan Dementev
+      changes:
+        - sqlFile:
+            path: scripts/TS-161-rename-applications-column.sql
+            relativeToChangelogFile: true
+            splitStatements: true
             endDelimiter: ;   
