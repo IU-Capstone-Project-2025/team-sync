@@ -16,7 +16,7 @@ public record JwtProperties(
 ) {
 
     public Key getSecurityKey() {
-        byte[] keyBytes = Base64.getDecoder().decode(base64Key);
+        byte[] keyBytes = base64Key.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
