@@ -39,7 +39,7 @@ public class ApplicationService {
             throw new ResourceAccessDeniedException("You have no access to this project as you are not teamlead");
         }
 
-        return applicationRepository.findAllByProjectId(projectId, pageable)
+        return applicationRepository.findAllByProject(project, pageable)
                 .map(applicationMapper::toDto);
     }
 
