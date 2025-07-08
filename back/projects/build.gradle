@@ -57,6 +57,8 @@ dependencies {
 	testImplementation 'org.testcontainers:postgresql:1.21.3'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers:3.5.3'
 	testImplementation 'org.liquibase:liquibase-core:4.32.0'
+
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }
 
 test {
