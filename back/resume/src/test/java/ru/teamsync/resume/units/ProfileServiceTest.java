@@ -9,7 +9,6 @@ import ru.teamsync.resume.entity.Person;
 import ru.teamsync.resume.entity.Professor;
 import ru.teamsync.resume.entity.Student;
 import ru.teamsync.resume.mapper.PersonMapper;
-import ru.teamsync.resume.mapper.StudentMapper;
 import ru.teamsync.resume.repository.PersonRepository;
 import ru.teamsync.resume.repository.ProfessorRepository;
 import ru.teamsync.resume.repository.RoleRepository;
@@ -17,7 +16,6 @@ import ru.teamsync.resume.repository.SkillRepository;
 import ru.teamsync.resume.repository.StudentRepository;
 import ru.teamsync.resume.repository.StudyGroupRepository;
 import ru.teamsync.resume.service.ProfileService;
-import ru.teamsync.resume.mapper.ProfessorMapper;
 import ru.teamsync.resume.service.exception.NotFoundException;
 
 import java.util.List;
