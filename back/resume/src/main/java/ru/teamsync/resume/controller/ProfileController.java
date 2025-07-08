@@ -33,15 +33,15 @@ public class ProfileController {
 
     @GetMapping("/{personId}")
     public ResponseEntity<BaseResponse<ProfileResponse>> getProfile(
-        @PathVariable Long personId) throws NotFoundException {
+            @PathVariable Long personId) {
         ProfileResponse response = profileService.getProfile(personId);
         return ResponseEntity.ok(BaseResponse.of(response));
     }
 
     @PutMapping("/student/{personId}")
     public ResponseEntity<BaseResponse<Void>> updateStudentProfile(
-            @PathVariable Long personId, 
-            @RequestBody UpdateStudentProfileRequest request) throws AccessDeniedException, NotFoundException {
+            @PathVariable Long personId,
+            @RequestBody UpdateStudentProfileRequest request) {
 
         Long currentUserId = securityContextService.getCurrentUserId();
         profileService.updateStudentProfile(personId, request, currentUserId);
@@ -50,8 +50,8 @@ public class ProfileController {
 
     @PutMapping("/professor/{personId}")
     public ResponseEntity<BaseResponse<Void>> updateProfessorProfile(
-            @PathVariable Long personId, 
-            @RequestBody UpdateProfessorProfileRequest request) throws AccessDeniedException, NotFoundException {
+            @PathVariable Long personId,
+            @RequestBody UpdateProfessorProfileRequest request) {
 
         Long currentUserId = securityContextService.getCurrentUserId();
         profileService.updateProfessorProfile(personId, request, currentUserId);

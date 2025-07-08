@@ -58,3 +58,9 @@ Default ports and sample endpoints
 | Stepan Dementev | @dementevssstepan | s.dementev@innopolis.university | Backend + DevOps |
 | Elizaveta Zagurskih | @wkwthigo | e.zagurskih@innopolis.university | Backend |
 | Kamilya Shakirova | @hugecatwithacheburek | k.shakirova@innopolis.university | ML |
+
+## Third-party Models
+This project uses the `all-MiniLM-L6-v2` model from UKPLab:
+- Model card: https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2
+- License: Apache 2.0
+

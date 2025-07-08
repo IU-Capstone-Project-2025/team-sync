@@ -3,6 +3,8 @@ package ru.teamsync.projects.integration;
 
 import groovy.util.logging.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,8 +15,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ru.teamsync.projects.integration.utils.JwtUtilityService;
-import ru.teamsync.projects.integration.utils.StudentUtilityService;
+import ru.teamsync.projects.integration.utils.PersonUtilityService;
+import ru.teamsync.projects.integration.utils.ProjectsUtilityService;
 
 import java.util.List;
 
@@ -39,8 +45,10 @@ public abstract class IntegrationEnvironment {
             "role",
             "project_role",
             "student_role",
-            "project_skill"
+            "project_skill",
+            "course"
     );
+    private static final Logger log = LoggerFactory.getLogger(IntegrationEnvironment.class);
 
     @ServiceConnection
     protected static PostgreSQLContainer<?> POSTGRES;
@@ -58,7 +66,13 @@ public abstract class IntegrationEnvironment {
     protected JwtUtilityService jwtUtilityService;
 
     @Autowired
-    protected StudentUtilityService studentUtilityService;
+    protected PersonUtilityService personUtilityService;
+
+    @Autowired
+    protected ProjectsUtilityService projectsUtilityService;
+
+    @Autowired
+    protected ObjectMapper objectMapper;
 
     static {
         try {
@@ -79,7 +93,7 @@ public abstract class IntegrationEnvironment {
     @BeforeEach
     void tearDownTables() {
         String tables = String.join(", ", TABLES);
-        jdbcClient.sql("TRUNCATE TABLE " + tables + " RESTART IDENTITY CASCADE");
+        jdbcClient.sql("TRUNCATE TABLE " + tables + " RESTART IDENTITY CASCADE").update();
     }
 
 }

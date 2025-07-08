@@ -9,7 +9,7 @@ import ru.teamsync.resume.entity.Person;
 import ru.teamsync.resume.entity.Professor;
 import ru.teamsync.resume.entity.Student;
 import ru.teamsync.resume.mapper.PersonMapper;
-import ru.teamsync.resume.mapper.StudentMapper;
+import ru.teamsync.resume.mapper.ProfileMapper;
 import ru.teamsync.resume.repository.PersonRepository;
 import ru.teamsync.resume.repository.ProfessorRepository;
 import ru.teamsync.resume.repository.RoleRepository;
@@ -17,7 +17,6 @@ import ru.teamsync.resume.repository.SkillRepository;
 import ru.teamsync.resume.repository.StudentRepository;
 import ru.teamsync.resume.repository.StudyGroupRepository;
 import ru.teamsync.resume.service.ProfileService;
-import ru.teamsync.resume.mapper.ProfessorMapper;
 import ru.teamsync.resume.service.exception.NotFoundException;
 
 import java.util.List;
@@ -37,8 +36,7 @@ public class ProfileServiceTest {
     private RoleRepository roleRepository;
     private StudyGroupRepository studyGroupRepository;
     private PersonMapper personMapper;
-    private StudentMapper studentMapper;
-    private ProfessorMapper professorMapper;
+    private ProfileMapper profileMapper;
 
     @BeforeEach
     void setup() {
@@ -49,8 +47,7 @@ public class ProfileServiceTest {
         roleRepository = Mockito.mock(RoleRepository.class);
         studyGroupRepository = Mockito.mock(StudyGroupRepository.class);
         personMapper = Mockito.mock(PersonMapper.class);
-        studentMapper = Mockito.mock(StudentMapper.class);
-        professorMapper = Mockito.mock(ProfessorMapper.class);
+        profileMapper = Mockito.mock(ProfileMapper.class);
 
         profileService = new ProfileService(
             personRepository, 
@@ -60,8 +57,7 @@ public class ProfileServiceTest {
             roleRepository, 
             studyGroupRepository,
             personMapper, 
-            studentMapper, 
-            professorMapper
+            profileMapper
         );
     }
 
@@ -85,7 +81,7 @@ public class ProfileServiceTest {
         when(studentRepository.findByPersonId(1L)).thenReturn(Optional.of(student));
 
         when(personMapper.toResponse(person)).thenReturn(null);
-        when(studentMapper.toResponse(student)).thenReturn(null);
+        when(profileMapper.toResponse(student)).thenReturn(null);
 
         ProfileResponse result = profileService.getProfile(1L);
 
@@ -105,7 +101,7 @@ public class ProfileServiceTest {
         when(professorRepository.findByPersonId(1L)).thenReturn(Optional.of(professor));
 
         when(personMapper.toResponse(person)).thenReturn(null);
-        when(professorMapper.toResponse(professor)).thenReturn(null);
+        when(profileMapper.toResponse(professor)).thenReturn(null);
 
         ProfileResponse result = profileService.getProfile(1L);
 
