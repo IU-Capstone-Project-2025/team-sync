@@ -144,11 +144,11 @@ public class ProjectService {
                 throw new IllegalStateException("Cannot approve — project is already full.");
             }
             
-            boolean alreadyMember = projectMemberRepository.existsByProjectIdAndMemberId(projectId, application.getStudentId());
+            boolean alreadyMember = projectMemberRepository.existsByProjectIdAndMemberId(projectId, application.getPersonId());
             if (!alreadyMember) {
                 ProjectMember member = new ProjectMember();
                 member.setProjectId(projectId);
-                member.setMemberId(application.getStudentId());
+                member.setMemberId(application.getPersonId());
                 projectMemberRepository.save(member);
             }
         }

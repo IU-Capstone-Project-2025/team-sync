@@ -12,9 +12,9 @@ import ru.teamsync.projects.entity.ApplicationStatus;
 
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
     Page<Application> findAllByProjectId(Long projectId, Pageable pageable);
-    Page<Application> findAllByStudentId(Long studentId, Pageable pageable);
+    Page<Application> findAllByPersonId(Long personId, Pageable pageable);
 
-    boolean existsByProjectIdAndStudentIdAndStatusIn(Long projectId, Long studentId, List<ApplicationStatus> statuses);
+    boolean existsByProjectIdAndPersonIdAndStatusIn(Long projectId, Long personId, List<ApplicationStatus> statuses);
 
     @Query("SELECT COUNT(a) FROM Application a WHERE a.projectId = :projectId AND a.status = 'APPROVED'")
     int countApprovedApplicationsByProjectId(Long projectId);

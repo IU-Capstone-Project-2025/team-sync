@@ -3,11 +3,8 @@ package ru.teamsync.projects.unit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import ru.teamsync.projects.dto.request.ApplicationRequest;
 import ru.teamsync.projects.entity.Application;
 import ru.teamsync.projects.entity.ApplicationStatus;
@@ -18,12 +15,10 @@ import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.service.ApplicationService;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -70,7 +65,6 @@ public class ApplicationServiceTest {
         project.setRequiredMembersCount(5);
 
         when(projectRepositoryMock.findById(123L)).thenReturn(Optional.of(project));
-
 
         //Act
         applicationService.createApplication(1L, applicationRequest);

@@ -44,15 +44,15 @@ public class ApplicationService {
     }
 
     public Page<ApplicationResponse> getApplicationsByMember(Long memberId, Pageable pageable) {
-        return applicationRepository.findAllByStudentId(memberId, pageable)
+        return applicationRepository.findAllByPersonId(memberId, pageable)
                 .map(applicationMapper::toDto);
     }
 
-    public void createApplication(Long studentId, ApplicationRequest request) {
+    public void createApplication(Long personId, ApplicationRequest request) {
         List<ApplicationStatus> activeStatuses = List.of(ApplicationStatus.PENDING, ApplicationStatus.APPROVED);
         
-        boolean exists = applicationRepository.existsByProjectIdAndStudentIdAndStatusIn(
-            request.projectId(), studentId, activeStatuses
+        boolean exists = applicationRepository.existsByProjectIdAndPersonIdAndStatusIn(
+            request.projectId(), personId, activeStatuses
         );
 
         if (exists) {
@@ -68,7 +68,7 @@ public class ApplicationService {
         }
 
         Application application = new Application();
-        application.setStudentId(studentId);
+        application.setPersonId(personId);
         application.setProjectId(request.projectId());
         application.setStatus(ApplicationStatus.PENDING);
         application.setCreatedAt(LocalDateTime.now());
@@ -80,7 +80,7 @@ public class ApplicationService {
         Application application = applicationRepository.findById(applicationId)
             .orElseThrow(() -> ApplicationNotFoundException.withId(applicationId));
 
-        if (!application.getStudentId().equals(userId)) {
+        if (!application.getPersonId().equals(userId)) {
             throw new ResourceAccessDeniedException("You have no permission to delete this application");
         }
 
