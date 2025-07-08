@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import ru.teamsync.projects.dto.request.ApplicationRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
+import ru.teamsync.projects.dto.response.PageResponse;
 import ru.teamsync.projects.entity.Application;
 import ru.teamsync.projects.entity.ApplicationStatus;
 import ru.teamsync.projects.entity.Project;
@@ -43,9 +44,19 @@ public class ApplicationService {
                 .map(applicationMapper::toDto);
     }
 
-    public Page<ApplicationResponse> getApplicationsByMember(Long memberId, Pageable pageable) {
-        return applicationRepository.findAllByPersonId(memberId, pageable)
-                .map(applicationMapper::toDto);
+    public PageResponse<ApplicationResponse> getApplicationsByMember(Long memberId, Pageable pageable) {
+        Page<ApplicationResponse> page = applicationRepository.findAllByPersonId(memberId, pageable)
+            .map(applicationMapper::toDto);
+
+        return new PageResponse<>(
+            page.getContent(),
+            page.getTotalPages(),
+            page.getTotalElements(),
+            page.getNumber(),
+            page.getSize(),
+            page.isFirst(),
+            page.isLast()
+        );
     }
 
     public void createApplication(Long studentId, ApplicationRequest request) {

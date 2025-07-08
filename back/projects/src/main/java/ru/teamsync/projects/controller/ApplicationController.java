@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.teamsync.projects.dto.request.ApplicationRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.dto.response.BaseResponse;
+import ru.teamsync.projects.dto.response.PageResponse;
 import ru.teamsync.projects.service.ApplicationService;
 import ru.teamsync.projects.service.SecurityContextService;
 
@@ -30,8 +31,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/my")
-    public BaseResponse<Page<ApplicationResponse>> getApplicationsByStudent(
-            Pageable pageable) {
+    public BaseResponse<PageResponse<ApplicationResponse>> getApplicationsByStudent(Pageable pageable) {
         long userId = securityContextService.getCurrentUserId();
         return BaseResponse.of(applicationService.getApplicationsByMember(userId, pageable));
     }
