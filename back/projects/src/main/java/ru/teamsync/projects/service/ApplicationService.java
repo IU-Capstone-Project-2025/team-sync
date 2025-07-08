@@ -63,7 +63,8 @@ public class ApplicationService {
         Project project = projectRepository.findById(request.projectId())
             .orElseThrow(() -> ProjectNotFoundException.withId(request.projectId()));
 
-        if (project.getRequiredMembersCount() == 0) {
+        int approvedCount = applicationRepository.countApprovedApplicationsByProjectId(request.projectId());
+        if (approvedCount >= project.getRequiredMembersCount()) {
             throw new IllegalStateException("This project has no available spots.");
         }
 

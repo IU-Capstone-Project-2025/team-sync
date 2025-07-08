@@ -125,6 +125,11 @@ public class ProjectService {
         applicationRepository.save(application);
 
         if (status == ApplicationStatus.APPROVED) {
+            int approvedCount = applicationRepository.countApprovedApplicationsByProjectId(projectId);
+            if (approvedCount >= project.getRequiredMembersCount()) {
+                throw new IllegalStateException("Cannot approve — project is already full.");
+            }
+            
             boolean alreadyMember = projectMemberRepository.existsByProjectIdAndMemberId(projectId, application.getStudentId());
             if (!alreadyMember) {
                 ProjectMember member = new ProjectMember();
