@@ -9,29 +9,39 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import ru.teamsync.projects.dto.request.ProjectCreateRequest;
 import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
 import ru.teamsync.projects.dto.response.ProjectResponse;
+import ru.teamsync.projects.entity.Course;
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.mapper.ProjectMapper;
+import ru.teamsync.projects.repository.CourseRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.service.exception.ProjectNotFoundException;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 import ru.teamsync.projects.specification.ProjectSpecifications;
 
 @Service
+@RequiredArgsConstructor
 public class ProjectService {
+
+    private final CourseRepository courseRepository;
+
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
 
-    public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper) {
-        this.projectRepository = projectRepository;
-        this.projectMapper = projectMapper;
-    }
-
     public void createProject(ProjectCreateRequest request, Long userId) {
         Project project = projectMapper.toEntity(request, userId);
+
+        Course course = courseRepository.findByName(request.courseName())
+                .orElseGet(() -> {
+                    Course newCourse = new Course();
+                    newCourse.setName(request.courseName());
+                    return courseRepository.save(newCourse);
+                });
+        project.setCourse(course);
         projectRepository.save(project);
     }
 
@@ -43,7 +53,15 @@ public class ProjectService {
             throw new ResourceAccessDeniedException("You cannot edit this project");
         }
 
+        Course course = courseRepository.findByName(request.courseName())
+                .orElseGet(() -> {
+                    Course newCourse = new Course();
+                    newCourse.setName(request.courseName());
+                    return courseRepository.save(newCourse);
+                });
+
         projectMapper.updateEntity(request, project);
+        project.setCourse(course);
         projectRepository.save(project);
     }
 

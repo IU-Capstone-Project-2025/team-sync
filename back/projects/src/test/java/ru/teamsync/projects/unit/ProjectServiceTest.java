@@ -6,6 +6,7 @@ import org.mockito.Mockito;
 
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.mapper.ProjectMapper;
+import ru.teamsync.projects.repository.CourseRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.service.ProjectService;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
@@ -19,6 +20,8 @@ public class ProjectServiceTest {
 
     private ProjectService projectService;
 
+    private CourseRepository courseRepositoryMock;
+
     private ProjectRepository projectRepositoryMock;
     private ProjectMapper projectMapperMock;
 
@@ -27,7 +30,7 @@ public class ProjectServiceTest {
         projectRepositoryMock = Mockito.mock(ProjectRepository.class);
         projectMapperMock = Mockito.mock(ProjectMapper.class);
 
-        projectService = new ProjectService(projectRepositoryMock, projectMapperMock);
+        projectService = new ProjectService(courseRepositoryMock, projectRepositoryMock, projectMapperMock);
     }
 
     @Test
