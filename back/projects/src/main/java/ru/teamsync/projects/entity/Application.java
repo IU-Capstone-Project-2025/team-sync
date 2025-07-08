@@ -20,8 +20,8 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "student_id")
-    private Long studentId;
+    @Column(name = "person_id")
+    private Long personId;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
