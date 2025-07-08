@@ -17,4 +17,10 @@ public class CourseService {
     public List<Course> getCourses() {
         return courseRepository.findAll();
     }
+
+    public Course createCourseByName(String name) {
+        Course course = new Course();
+        course.setName(name);
+        return courseRepository.save(course);
+    }
 }
