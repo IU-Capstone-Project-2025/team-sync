@@ -24,7 +24,7 @@ public class ApplicationControllerTest extends IntegrationEnvironment {
         int applicantId = studentUtilityService.createStudentWithPersonId(applicantPersonId);
 
         int projectId = jdbcClient.sql(
-                        "INSERT INTO project(name, course_name, team_lead_id, description, project_link, status) VALUES ('a', 'a', :userId, 'a', 'a', 'ACTIVE') RETURNING id"
+                        "INSERT INTO project(name, course_name, team_lead_id, description, project_link, status, required_members_count) VALUES ('a', 'a', :userId, 'a', 'a', 'ACTIVE', 4) RETURNING id"
                 )
                 .param("userId", userId)
                 .query(Integer.class)

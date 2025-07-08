@@ -1,6 +1,7 @@
 package ru.teamsync.projects.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
+import ru.teamsync.projects.service.exception.ApplicationNotFoundException;
 import ru.teamsync.projects.service.exception.ProjectNotFoundException;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 
@@ -47,12 +49,41 @@ public class ApplicationService {
     }
 
     public void createApplication(Long studentId, ApplicationRequest request) {
+        List<ApplicationStatus> activeStatuses = List.of(ApplicationStatus.PENDING, ApplicationStatus.APPROVED);
+        
+        boolean exists = applicationRepository.existsByProjectIdAndStudentIdAndStatusIn(
+            request.projectId(), studentId, activeStatuses
+        );
+
+        if (exists) {
+            throw new IllegalStateException("You have already applied for this project.");
+        }
+
+        Project project = projectRepository.findById(request.projectId())
+            .orElseThrow(() -> ProjectNotFoundException.withId(request.projectId()));
+
+        int approvedCount = applicationRepository.countApprovedApplicationsByProjectId(request.projectId());
+        if (approvedCount >= project.getRequiredMembersCount()) {
+            throw new IllegalStateException("This project has no free slots.");
+        }
+
         Application application = new Application();
         application.setStudentId(studentId);
-        application.setId(request.projectId());
+        application.setProjectId(request.projectId());
         application.setStatus(ApplicationStatus.PENDING);
         application.setCreatedAt(LocalDateTime.now());
 
         applicationRepository.save(application);
+    }
+
+    public void deleteApplication(Long userId, Long applicationId) {
+        Application application = applicationRepository.findById(applicationId)
+            .orElseThrow(() -> ApplicationNotFoundException.withId(applicationId));
+
+        if (!application.getStudentId().equals(userId)) {
+            throw new ResourceAccessDeniedException("You have no permission to delete this application");
+        }
+
+        applicationRepository.delete(application);
     }
 }

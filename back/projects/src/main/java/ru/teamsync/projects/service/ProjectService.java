@@ -3,6 +3,8 @@ package ru.teamsync.projects.service;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,35 +16,30 @@ import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.dto.response.ProjectResponse;
 import ru.teamsync.projects.entity.Application;
+import ru.teamsync.projects.entity.ApplicationStatus;
 import ru.teamsync.projects.entity.Project;
+import ru.teamsync.projects.entity.ProjectMember;
 import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.mapper.ProjectMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
+import ru.teamsync.projects.repository.ProjectMemberRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
+import ru.teamsync.projects.service.exception.ApplicationNotFoundException;
 import ru.teamsync.projects.service.exception.ProjectNotFoundException;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 import ru.teamsync.projects.specification.ProjectSpecifications;
 
 @Service
+@RequiredArgsConstructor
 public class ProjectService {
 
     private final ApplicationRepository applicationRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectMemberRepository projectMemberRepository;
     
     private final ApplicationMapper applicationMapper;
     private final ProjectMapper projectMapper;
-
-    public ProjectService(
-            ProjectRepository projectRepository, 
-            ProjectMapper projectMapper,
-            ApplicationRepository applicationRepository,
-            ApplicationMapper applicationMapper) {
-        this.projectRepository = projectRepository;
-        this.projectMapper = projectMapper;
-        this.applicationRepository = applicationRepository;
-        this.applicationMapper = applicationMapper;
-    }
 
     public void createProject(ProjectCreateRequest request, Long userId) {
         Project project = projectMapper.toEntity(request, userId);
@@ -120,5 +117,42 @@ public class ProjectService {
         Page<Application> applications = applicationRepository.findAllByProjectId(projectId, pageable);
 
         return applications.map(applicationMapper::toDto);
+    }
+
+    public ApplicationResponse updateApplicationStatus(
+            Long projectId, 
+            Long applicationId, 
+            Long userId, 
+            ApplicationStatus status) {
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
+
+        if (!project.getTeamLeadId().equals(userId)) {
+            throw new ResourceAccessDeniedException("You cannot view applications for this project");
+        }
+
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> ApplicationNotFoundException.withId(applicationId));
+
+        application.setStatus(status);
+        applicationRepository.save(application);
+
+        if (status == ApplicationStatus.APPROVED) {
+            int approvedCount = applicationRepository.countApprovedApplicationsByProjectId(projectId);
+            if (approvedCount >= project.getRequiredMembersCount()) {
+                throw new IllegalStateException("Cannot approve — project is already full.");
+            }
+            
+            boolean alreadyMember = projectMemberRepository.existsByProjectIdAndMemberId(projectId, application.getStudentId());
+            if (!alreadyMember) {
+                ProjectMember member = new ProjectMember();
+                member.setProjectId(projectId);
+                member.setMemberId(application.getStudentId());
+                projectMemberRepository.save(member);
+            }
+        }
+
+        return applicationMapper.toDto(application);
     }
 }
