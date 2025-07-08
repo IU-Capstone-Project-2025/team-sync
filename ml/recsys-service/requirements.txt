@@ -4,5 +4,4 @@ psycopg2-binary==2.9.9
 redis==4.6.0
 faiss-cpu==1.7.2
 numpy==1.26.4
-python-dotenv==1.0.0
 requests==2.31.0
