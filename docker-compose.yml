@@ -51,6 +51,11 @@ services:
   
   ml-recsys:
     build: ./ml/recsys-service
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - KEY_DB_PASSWORD=${KEY_DB_PASSWORD}
     ports: 
       - "8000:8000"
   
@@ -58,6 +63,11 @@ services:
     build: ./ml/search-service
     ports: 
       - "8001:8000"
+
+  ml-embedder:
+    build: ./ml/embedder
+    ports: 
+      - "8002:8000"
 
   nginx:
     image: nginx:latest

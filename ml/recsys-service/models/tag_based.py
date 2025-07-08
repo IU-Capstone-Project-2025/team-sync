@@ -7,11 +7,11 @@ from config.config import Config
 class TagBasedRecommender(Recommender):
     def __init__(self, DBModel, logger, model_name):
         super().__init__(DBModel, logger, model_name)
-        self.coefficient = Config.TAG_COEFFICIENT
+        self.coefficient = self.config.TAG_COEFFICIENT
         self.logger.info(f"Initialized {self.model_name} tag-based recommender.")
         self.all_skills = {}
         self.projects_with_skills = []
-
+        
     def calculate_scores(self, user_id, project_ids=None):
         """Get project recommendations based on project skills."""
         self.logger.info(f"Fetching recommendations for user {user_id}.")

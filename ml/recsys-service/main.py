@@ -8,6 +8,7 @@ from models.models_merger import ModelsMerger
 from models.tag_based import TagBasedRecommender
 from models.description_based import DescriptionBasedRecommender
 from metrics.metrics_model import Metrics
+from models.embedder import Embedder
 
 async def lifespan(app: FastAPI):    
     app.state.logger = setup_logging()
@@ -15,6 +16,7 @@ async def lifespan(app: FastAPI):
     logger.info("Application startup")
     app.state.db = DBModel(logger=logger)
     app.state.redis = RedisModel(logger=logger)
+    await app.state.redis.connect()
     await app.state.db.connect()
     logger.info("Database connection established successfully.")
 
