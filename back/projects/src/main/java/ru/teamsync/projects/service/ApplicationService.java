@@ -57,7 +57,7 @@ public class ApplicationService {
         }
         Application application = new Application();
         application.setPersonId(studentId);
-        application.setProjectId(request.projectId());
+        application.setProject(project);
         application.setStatus(ApplicationStatus.PENDING);
         application.setCreatedAt(LocalDateTime.now());
 
