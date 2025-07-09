@@ -7,7 +7,7 @@ public class ApplicationNotFoundException extends NotFoundException {
     }
 
     public static ApplicationNotFoundException withId(Long applicationtId) {
-        return new ApplicationNotFoundException("Application with id " + applicationtId + " not foud");
+        return new ApplicationNotFoundException("Application with id " + applicationtId + " not found");
     }
 
 }

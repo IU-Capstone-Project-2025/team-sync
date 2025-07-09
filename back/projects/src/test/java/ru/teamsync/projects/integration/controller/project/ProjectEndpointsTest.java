@@ -69,7 +69,8 @@ public class ProjectEndpointsTest extends IntegrationEnvironment {
                 "https://updated-link.com",
                 "ACTIVE",
                 null,
-                null
+                null,
+                5
         );
 
         mockMvc.perform(
@@ -84,7 +85,8 @@ public class ProjectEndpointsTest extends IntegrationEnvironment {
                                             "project_link": "123",
                                             "status": "ACTIVE",
                                             "skills": null,
-                                            "roles": null
+                                            "roles": null,
+                                            "required_members_count": 4
                                         }
                                         """)
                 )

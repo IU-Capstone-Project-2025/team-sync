@@ -3,12 +3,10 @@ package ru.teamsync.projects.specification;
 import jakarta.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 
-import jakarta.persistence.criteria.Predicate;
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.Role;
 import ru.teamsync.projects.entity.Skill;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectSpecifications {
