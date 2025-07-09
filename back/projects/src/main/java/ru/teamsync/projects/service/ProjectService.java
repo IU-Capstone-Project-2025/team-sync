@@ -11,12 +11,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import ru.teamsync.projects.dto.request.ProjectCreateRequest;
 import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.dto.response.ProjectResponse;
 import ru.teamsync.projects.entity.Application;
 import ru.teamsync.projects.entity.ApplicationStatus;
+import ru.teamsync.projects.entity.Course;
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.ProjectMember;
 import ru.teamsync.projects.entity.ProjectStatus;
@@ -24,6 +26,7 @@ import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.mapper.ProjectMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
 import ru.teamsync.projects.repository.ProjectMemberRepository;
+import ru.teamsync.projects.repository.CourseRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.service.exception.ApplicationNotFoundException;
 import ru.teamsync.projects.service.exception.ProjectNotFoundException;
@@ -35,6 +38,9 @@ import ru.teamsync.projects.specification.ProjectSpecifications;
 public class ProjectService {
 
     private final ApplicationRepository applicationRepository;
+
+    private final CourseRepository courseRepository;
+
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
     
@@ -43,6 +49,14 @@ public class ProjectService {
 
     public void createProject(ProjectCreateRequest request, Long userId) {
         Project project = projectMapper.toEntity(request, userId);
+
+        Course course = courseRepository.findByName(request.courseName())
+                .orElseGet(() -> {
+                    Course newCourse = new Course();
+                    newCourse.setName(request.courseName());
+                    return courseRepository.save(newCourse);
+                });
+        project.setCourse(course);
         projectRepository.save(project);
     }
 
@@ -54,39 +68,41 @@ public class ProjectService {
             throw new ResourceAccessDeniedException("You cannot edit this project");
         }
 
+        Course course = courseRepository.findByName(request.courseName())
+                .orElseGet(() -> {
+                    Course newCourse = new Course();
+                    newCourse.setName(request.courseName());
+                    return courseRepository.save(newCourse);
+                });
+
         projectMapper.updateEntity(request, project);
+        project.setCourse(course);
         projectRepository.save(project);
     }
 
-    public Page<ProjectResponse> getProjects(List<Long> skillIds, List<Long> roleIds, String courseName, ProjectStatus status, Pageable pageable) {
-        boolean hasFilters = (skillIds != null && !skillIds.isEmpty()) ||
-                (roleIds != null && !roleIds.isEmpty()) ||
-                (courseName != null && !courseName.isEmpty()) ||
-                (status != null);
+    public Page<ProjectResponse> getProjects(
+            List<Long> skillIds, 
+            List<Long> roleIds, 
+            List<Long> courseIds, 
+            ProjectStatus status, 
+            Pageable pageable) {
+    
+        Specification<Project> spec = Specification.where(null);
 
-        Page<Project> projects;
-
-        if (!hasFilters) {
-            projects = projectRepository.findAll(pageable);
-        } else {
-            Specification<Project> spec = (root, query, cb) -> cb.conjunction();
-
-            if (courseName != null && !courseName.isEmpty()) {
-                spec = spec.and(ProjectSpecifications.hasCourseName(courseName));
-            }
-            if (skillIds != null && !skillIds.isEmpty()) {
-                spec = spec.and(ProjectSpecifications.hasSkillIds(skillIds));
-            }
-            if (roleIds != null && !roleIds.isEmpty()) {
-                spec = spec.and(ProjectSpecifications.hasRoleIds(roleIds));
-            }
-            if (status != null) {
-                spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), status));
-            }
-
-            projects = projectRepository.findAll(spec, pageable);
+        if (courseIds != null && !courseIds.isEmpty()) {
+            spec = spec.and(ProjectSpecifications.hasAnyCourseIds(courseIds));
+        }
+        if (skillIds != null && !skillIds.isEmpty()) {
+            spec = spec.and(ProjectSpecifications.hasSkillIds(skillIds));
+        }
+        if (roleIds != null && !roleIds.isEmpty()) {
+            spec = spec.and(ProjectSpecifications.hasRoleIds(roleIds));
+        }
+        if (status != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), status));
         }
 
+        Page<Project> projects = projectRepository.findAll(spec, pageable);
         return projects.map(projectMapper::toDto);
     }
 

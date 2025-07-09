@@ -21,7 +21,11 @@ public class Project {
     private Long id;
 
     private String name;
-    private String courseName;
+
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
+
     private Long teamLeadId;
     private String description;
     private String projectLink;

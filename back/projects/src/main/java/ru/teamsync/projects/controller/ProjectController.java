@@ -60,11 +60,11 @@ public class ProjectController {
     public BaseResponse<Page<ProjectResponse>> getProjects(
             @RequestParam(required = false) List<Long> skillIds,
             @RequestParam(required = false) List<Long> roleIds,
-            @RequestParam(required = false) String courseName,
+            @RequestParam(required = false) List<Long> courseIds,
             @RequestParam(required = false) ProjectStatus status,
             Pageable pageable) {
         Page<ProjectResponse> projects = projectService.getProjects(
-                skillIds, roleIds, courseName, status, pageable
+                skillIds, roleIds, courseIds, status, pageable
         );
         return BaseResponse.of(projects);
     }

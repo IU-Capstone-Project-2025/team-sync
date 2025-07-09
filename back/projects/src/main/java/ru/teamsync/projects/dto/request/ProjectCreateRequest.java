@@ -10,8 +10,8 @@ public record ProjectCreateRequest(
     @NotBlank
     String name,
 
-    @JsonProperty("course_name")
-    @NotBlank
+    @JsonProperty("course_name") 
+    @NotBlank 
     String courseName,
 
     @JsonProperty("description")

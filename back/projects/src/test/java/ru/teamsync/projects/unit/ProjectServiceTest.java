@@ -9,6 +9,7 @@ import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.mapper.ProjectMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
 import ru.teamsync.projects.repository.ProjectMemberRepository;
+import ru.teamsync.projects.repository.CourseRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.service.ProjectService;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
@@ -21,6 +22,9 @@ import static org.mockito.Mockito.when;
 public class ProjectServiceTest {
 
     private ProjectService projectService;
+
+    private CourseRepository courseRepositoryMock;
+
 
     private ApplicationRepository applicationRepositoryMock;
     private ApplicationMapper applicationMapperMock;
@@ -37,7 +41,7 @@ public class ProjectServiceTest {
         projectMapperMock = Mockito.mock(ProjectMapper.class);
         projectMemberRepositoryMock = Mockito.mock(ProjectMemberRepository.class);
 
-        projectService = new ProjectService(applicationRepositoryMock, projectRepositoryMock, projectMemberRepositoryMock, applicationMapperMock, projectMapperMock);
+        projectService = new ProjectService(applicationRepositoryMock, courseRepositoryMock, projectRepositoryMock, projectMemberRepositoryMock, applicationMapperMock, projectMapperMock);
     }
 
     @Test
