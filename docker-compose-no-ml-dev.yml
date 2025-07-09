@@ -46,7 +46,10 @@ services:
       - liquibase-dev
 
   frontend-dev:
-    build: ./front
+    build: 
+      context: ./front
+      args:
+        - VITE_BACKEND_HOST=${BACKEND_HOST_TEST}
     ports: 
       - "9004:80"
     depends_on:

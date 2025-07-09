@@ -194,7 +194,7 @@ export default function ProfileScreen() {
                         value={roles.filter(role => userRoles.map(s => s.id).includes(role.id))}
                         onChange={items => setUserRoles(items.map(item => ({ id: item.id, name: item.name })))}
                     />
-
+                    <br/>
                     <p className="mb-2">Your skills</p>
                     <CustomizedHook
                         arr ={skills}
