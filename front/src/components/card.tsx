@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Popup from "reactjs-popup";
 
+const backendHost = import.meta.env.VITE_BACKEND_HOST
+
 function truncateString({string, maxLength} : {string: string, maxLength: number}){
   if (string.length >  maxLength){
     return string.substring(0, maxLength-1) + "...";
@@ -14,7 +16,7 @@ async function sendApplication(projId: number, token){
   const applicationJson = {
     projectId: projId
   };
-  const applicationUrl = "https://dev.team-sync.online/projects/api/v1/applications";
+  const applicationUrl = `${backendHost}/projects/api/v1/applications`;
   const response = await fetch(applicationUrl, {  
     method: 'POST', 
     mode: 'cors', 

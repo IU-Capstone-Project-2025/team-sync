@@ -22,8 +22,11 @@ interface Application {
   status: string;
   created_at: number[];
 }
+
+const backendHost = import.meta.env.VITE_BACKEND_HOST
+
 async function getRoles(token: string) {
-  const rolesUrl = "https://dev.team-sync.online/projects/api/v1/roles";
+  const rolesUrl = `${backendHost}/projects/api/v1/roles`;
   try {
     const response = await fetch(rolesUrl, {
       headers: {
@@ -43,7 +46,7 @@ async function getRoles(token: string) {
 }
 
 async function getSkills(token: string) {
-  const rolesUrl = "https://dev.team-sync.online/projects/api/v1/skills";
+  const rolesUrl = `${backendHost}/projects/api/v1/skills`;
   try {
     const response = await fetch(rolesUrl, {
       headers: {
@@ -63,7 +66,7 @@ async function getSkills(token: string) {
 }
 
 async function getApplications(token: string) {
-  const applicationsUrl = "https://dev.team-sync.online/projects/api/v1/applications/my";
+  const applicationsUrl = `${backendHost}/projects/api/v1/applications/my`;
   try {
     const response = await fetch(applicationsUrl, {
       headers: {

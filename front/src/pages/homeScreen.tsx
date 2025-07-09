@@ -40,7 +40,7 @@ async function getRoles(token: string) {
 }
 
 async function getSkills(token: string) {
-  const rolesUrl = "/projects/api/v1/skills";
+  const rolesUrl = `${backendHost}/projects/api/v1/skills`;
   try {
     const response = await fetch(rolesUrl, {
       headers: {
@@ -72,7 +72,7 @@ async function getProjects(
     params.push("roleIds=" + filterRoles.map(role => role.id).join(','));
   }
   const queryString = params.length > 0 ? "&" + params.join("&") : "";
-  const projectsUrl = "/projects/api/v1/projects?sort=id,desc&size=50" + queryString;
+  const projectsUrl = `${backendHost}/projects/api/v1/projects?sort=id,desc&size=50` + queryString;
   try {
     const response = await fetch(projectsUrl, {
       headers: {
