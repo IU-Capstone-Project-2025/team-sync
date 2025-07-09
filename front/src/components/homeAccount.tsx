@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useNavigate } from "react-router-dom";
-
+import { useMsal } from '@azure/msal-react';
 
 export default function Account({name}){
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { instance } = useMsal();
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -61,7 +62,11 @@ export default function Account({name}){
               onClick={() => {
                 console.log('Logout clicked');
                 setIsMenuOpen(false);
-                //TODO IMPLEMENT LOGOUT LOGIC HERE
+                localStorage.removeItem("backendToken");
+                instance.loginPopup().then(()=>{
+                  console.log('cleared token');
+                  navigate('/')
+                });
               }}
             >
               Logout
