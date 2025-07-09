@@ -1,0 +1,1 @@
+* * * * * curl -X POST http://ml-recsys:8000/api/v1/airflow/recommendations >> /tmp/cron.log 2>&1
