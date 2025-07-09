@@ -36,6 +36,7 @@ public interface ProfileMapper {
     @Mapping(target = "tgAlias", source = "request.tgAlias")
     @Mapping(target = "skills", source = "request.skills")
     @Mapping(target = "roles", source = "request.roles")
+    @Mapping(target = "studyGroup", source = "studyGroup")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateStudent(UpdateStudentProfileRequest request, StudyGroup studyGroup, @MappingTarget Student student);
 
