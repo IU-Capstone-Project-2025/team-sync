@@ -69,6 +69,7 @@ public class ProfileService {
         throw new NotFoundException("No profile (student/professor) found for person id " + personId);
     }
 
+    @Transactional
     public void updateStudentProfile(Long personId, UpdateStudentProfileRequest request, Long currentUserId) throws NotFoundException, AccessDeniedException {
         if (!personId.equals(currentUserId)) {
             throw ProfileUpdateAccessDeniedException.withIds(currentUserId, personId);
@@ -76,10 +77,14 @@ public class ProfileService {
         var student = studentRepository.findByPersonId(personId)
                 .orElseThrow(() -> PersonNotFoundException.withId(personId));
 
-        profileMapper.updateStudent(request, student);
+        var studyGroup = findOrSaveStudyGroupWithName(request.studyGroup());
+
+        profileMapper.updateStudent(request, studyGroup, student);
         studentRepository.save(student);
+
     }
 
+    @Transactional
     public void updateProfessorProfile(Long personId, UpdateProfessorProfileRequest request, Long currentUserId) throws NotFoundException, AccessDeniedException {
         if (!personId.equals(currentUserId)) {
             throw new AccessDeniedException("You can only modify your own profile");
@@ -128,12 +133,7 @@ public class ProfileService {
         personRepository.save(person);
         log.info("Incoming studyGroup: {}", request.getStudyGroup());
 
-        StudyGroup studyGroup = studyGroupRepository.findByName(request.getStudyGroup())
-                .orElseGet(() -> {
-                    var newGroup = new StudyGroup();
-                    newGroup.setName(request.getStudyGroup());
-                    return studyGroupRepository.save(newGroup);
-                });
+        StudyGroup studyGroup = findOrSaveStudyGroupWithName(request.getStudyGroup());
 
         Student student = Student.builder()
                 .person(person)
@@ -166,6 +166,18 @@ public class ProfileService {
         professorRepository.save(professor);
 
         return new ProfessorCreationResponse(professor.getId(), person.getId());
+    }
+
+    private StudyGroup findOrSaveStudyGroupWithName(String studyGroupName) {
+        if (studyGroupName == null) {
+            return null;
+        }
+        return studyGroupRepository.findByName(studyGroupName)
+                .orElseGet(() -> {
+                    StudyGroup newGroup = new StudyGroup();
+                    newGroup.setName(studyGroupName);
+                    return studyGroupRepository.save(newGroup);
+                });
     }
 
 }
