@@ -18,7 +18,7 @@ interface Project {
 }
 
 async function getRoles(token: string) {
-  const rolesUrl = "/projects/api/v1/roles";
+  const rolesUrl = "https://dev.team-sync.online/projects/api/v1/roles";
   try {
     const response = await fetch(rolesUrl, {
       headers: {
@@ -38,7 +38,7 @@ async function getRoles(token: string) {
 }
 
 async function getSkills(token: string) {
-  const rolesUrl = "/projects/api/v1/skills";
+  const rolesUrl = "https://dev.team-sync.online/projects/api/v1/skills";
   try {
     const response = await fetch(rolesUrl, {
       headers: {
@@ -70,7 +70,7 @@ async function getProjects(
     params.push("roleIds=" + filterRoles.map(role => role.id).join(','));
   }
   const queryString = params.length > 0 ? "&" + params.join("&") : "";
-  const projectsUrl = "/projects/api/v1/projects?sort=id,desc&size=50" + queryString;
+  const projectsUrl = "https://dev.team-sync.online/projects/api/v1/projects?sort=id,desc&size=50" + queryString;
   try {
     const response = await fetch(projectsUrl, {
       headers: {

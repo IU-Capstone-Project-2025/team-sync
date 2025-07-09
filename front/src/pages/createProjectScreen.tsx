@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 async function getSkills(token) {
-  const skillsUrl = "/projects/api/v1/skills";
+  const skillsUrl = "https://dev.team-sync.online/projects/api/v1/skills";
   try {
     const response = await fetch(skillsUrl, {
       headers: {
@@ -25,7 +25,7 @@ async function getSkills(token) {
 }
 
 async function getRoles(token) {
-  const rolesUrl = "/projects/api/v1/roles";
+  const rolesUrl = "https://dev.team-sync.online/projects/api/v1/roles";
   try {
     const response = await fetch(rolesUrl, {
       headers: {
@@ -61,7 +61,7 @@ export default function CreateProjectScreen() {
   async function createProject(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
-    const projectUrl = "/projects/api/v1/projects";
+    const projectUrl = "https://dev.team-sync.online/projects/api/v1/projects";
     if (selectedSkills.length === 0 || selectedRoles.length === 0){
       console.error("Skills or roles empty");
       return;
