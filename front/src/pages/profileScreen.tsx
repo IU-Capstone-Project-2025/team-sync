@@ -201,7 +201,7 @@ export default function ProfileScreen() {
                         value={skills.filter(skill => userSkills.map(s => s.id).includes(skill.id))}
                         onChange={items => setUserSkills(items.map(item => ({ id: item.id, name: item.name })))}
                     />
-    
+                    <br/>
                     <button className="bg-(--accent-color-2)/42 text-(--secondary-color) rounded-2xl p-2 px-4 block text-xl mb-5" type="submit">
                         Update Profile
                     </button>
