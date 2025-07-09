@@ -130,7 +130,7 @@ public class ProjectService {
             throw new ResourceAccessDeniedException("You cannot view applications for this project");
         }
 
-        Page<Application> applications = applicationRepository.findAllByProjectId(projectId, pageable);
+        Page<Application> applications = applicationRepository.findAllByProject(project, pageable);
 
         return applications.map(applicationMapper::toDto);
     }

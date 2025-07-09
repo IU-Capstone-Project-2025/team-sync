@@ -5,9 +5,8 @@ import java.time.LocalDateTime;
 import ru.teamsync.projects.entity.ApplicationStatus;
 
 public record ApplicationResponse(
-    Long id,
-    Long personId,
-    Long projectId,
+    Long applicationId,
+    ProjectResponse project,
     ApplicationStatus status,
     LocalDateTime createdAt
 ) {}

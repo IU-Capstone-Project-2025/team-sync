@@ -39,13 +39,15 @@ public class ApplicationService {
             throw new ResourceAccessDeniedException("You have no access to this project as you are not teamlead");
         }
 
-        return applicationRepository.findAllByProjectId(projectId, pageable)
+        return applicationRepository.findAllByProject(project, pageable)
                 .map(applicationMapper::toDto);
     }
 
     public Page<ApplicationResponse> getApplicationsByMember(Long memberId, Pageable pageable) {
-        return applicationRepository.findAllByPersonId(memberId, pageable)
-                .map(applicationMapper::toDto);
+        Page<ApplicationResponse> page = applicationRepository.findAllByPersonId(memberId, pageable)
+            .map(applicationMapper::toDto);
+
+        return page;
     }
 
     public void createApplication(Long personId, ApplicationRequest request) {
@@ -69,7 +71,7 @@ public class ApplicationService {
 
         Application application = new Application();
         application.setPersonId(personId);
-        application.setProjectId(request.projectId());
+        application.setProject(project);
         application.setStatus(ApplicationStatus.PENDING);
         application.setCreatedAt(LocalDateTime.now());
 
