@@ -142,9 +142,7 @@ export default function ProfileScreen() {
         const profileJson = {
             "tg_alias": formData.get('tgAlias'),
             "github_alias": formData.get('githubAlias'),
-            "study_group": {
-                "name": formData.get('studyGroup'),
-            },
+            "study_group": formData.get('studyGroup'),
             "description": formData.get('description'),
             "skills": userSkills.map(skill => skill.id),
             "roles": userRoles.map(role => role.id)
@@ -166,8 +164,9 @@ export default function ProfileScreen() {
         });
 
         if(!response.ok) {
-            console.error('Failed to update profile:', response.statusText);
-            return;
+            alert('Failed to update profile: '+response.statusText);
+        } else {
+            alert('Profile updated successfully');
         }
     }
 
