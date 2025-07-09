@@ -13,5 +13,6 @@ public record ProjectResponse(
     String projectLink,
     ProjectStatus status,
     List<Long> skillIds,
-    List<Long> roleIds
+    List<Long> roleIds,
+    Integer requiredMembersCount
 ) {}

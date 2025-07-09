@@ -52,7 +52,7 @@ databaseChangeLog:
             path: scripts/TS-154-add-missing-primary-keys.sql
             relativeToChangelogFile: true
             splitStatements: true
-            endDelimiter: ;   
+            endDelimiter: ;  
   - changeSet:
       id: 7
       author: Stepan Dementev
@@ -61,7 +61,7 @@ databaseChangeLog:
             path: scripts/TS-161-rename-applications-column.sql
             relativeToChangelogFile: true
             splitStatements: true
-            endDelimiter: ;
+            endDelimiter: ; 
   - changeSet:
       id: 8
       author: Stepan Dementev
@@ -70,9 +70,19 @@ databaseChangeLog:
             path: scripts/TS-202-remove-project-skill-duplicates.sql
             relativeToChangelogFile: true
             splitStatements: true
-            endDelimiter: ;
+            endDelimiter: ;   
   - changeSet:
       id: 9
+      author: Elizaveta Zagurskih
+      changes:
+        - sqlFile:
+            path: scripts/TS-92-add-team-size.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ; 
+            endDelimiter: ;
+  - changeSet:
+      id: 10
       author: Elizaveta Zagurskih
       changes:
         - sqlFile:

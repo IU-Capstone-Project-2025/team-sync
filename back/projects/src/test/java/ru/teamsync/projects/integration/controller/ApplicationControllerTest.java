@@ -27,7 +27,7 @@ public class ApplicationControllerTest extends IntegrationEnvironment {
         int applicantId = personUtilityService.savePersonWithName("Applicant");
 
         int projectId = jdbcClient.sql(
-                        "INSERT INTO project(name, course_id, team_lead_id, description, project_link, status) VALUES ('a', :courseId, :teamLeadId , 'a', 'a', 'ACTIVE') RETURNING id"
+                        "INSERT INTO project(name, course_id, team_lead_id, description, project_link, status, required_members_count) VALUES ('a', :courseId, :teamLeadId , 'a', 'a', 'ACTIVE', 4) RETURNING id"
                 )
                 .param("courseId", courseId)
                 .param("teamLeadId", teamLeadId)
@@ -94,6 +94,10 @@ public class ApplicationControllerTest extends IntegrationEnvironment {
         int applicantPersonId = personUtilityService.savePersonWithName("Applicant");
 
         String jwt = jwtUtilityService.generateTokenWithUserId(applicantPersonId);
+
+        jdbcClient.sql("UPDATE project SET required_members_count = 5 WHERE id = :projectId")
+        .param("projectId", projectId)
+        .update();
 
 
         mockMvc.perform(
