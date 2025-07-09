@@ -33,7 +33,7 @@ public class FavouriteProject {
     private Project project;
 
     @Column(name = "person_id")
-    private Long persontId;
+    private Long personId;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

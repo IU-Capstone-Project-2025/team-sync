@@ -14,17 +14,19 @@ import ru.teamsync.projects.entity.Project;
 @Mapper(componentModel = "spring")
 public interface ProjectMapper {
 
+    @Mapping(target = "courseId", source = "course.id")
     ProjectResponse toDto(Project project);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "name", source = "request.name")
     @Mapping(target = "teamLeadId", source = "userId")
     @Mapping(target = "status", expression = "java(ProjectStatus.valueOf(request.status().toUpperCase()))")
-    @Mapping(target = "courseName", source = "request.courseName")
+    @Mapping(target = "course", ignore = true)
     @Mapping(target = "description", source = "request.description")
     @Mapping(target = "projectLink", source = "request.projectLink")
     @Mapping(target = "skillIds", source = "request.skills")
     @Mapping(target = "roleIds", source = "request.roles")
+    @Mapping(target = "requiredMembersCount", source = "request.requiredMembersCount")
     Project toEntity(ProjectCreateRequest request, Long userId);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -32,7 +34,9 @@ public interface ProjectMapper {
     @Mapping(source = "skills", target = "skillIds")
     @Mapping(source = "roles", target = "roleIds")
     @Mapping(target = "name", source = "request.name")
+    @Mapping(target = "requiredMembersCount", source = "request.requiredMembersCount")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "teamLeadId", ignore = true) 
+    @Mapping(target = "course", ignore = true)
     void updateEntity(ProjectUpdateRequest request, @MappingTarget Project project);
 }

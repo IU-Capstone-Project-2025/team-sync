@@ -9,5 +9,5 @@ import ru.teamsync.projects.entity.FavouriteProject;
 public interface FavouriteProjectRepository extends JpaRepository<FavouriteProject, Long> {
     Page<FavouriteProject> findAllByPersonId(Long personId, Pageable pageable);
     boolean existsByProjectIdAndPersonId(Long projectId, Long personId);
-    void deleteByProjectIdAndPersontId(Long projectId, Long personId);
+    void deleteByProjectIdAndPersonId(Long projectId, Long personId);
 }

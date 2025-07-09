@@ -44,6 +44,18 @@ services:
       - postgres
       - liquibase
 
+  qdrant:
+    image: qdrant/qdrant:v1.2.0
+    container_name: qdrant
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT__STORAGE__PATH=/qdrant/storage
+      - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY}
+    restart: unless-stopped
+
   keydb:
     image: bitnami/keydb:6.3.4
     container_name: keydb
@@ -128,3 +140,4 @@ volumes:
   pgdata:
   pgadmin_data:
   keydb_data:
+  qdrant_data:

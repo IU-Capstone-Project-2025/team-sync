@@ -36,7 +36,7 @@ public class FavouriteProjectService {
 
         FavouriteProject favourite = new FavouriteProject();
         favourite.setProject(project);
-        favourite.setPersontId(personId);
+        favourite.setPersonId(personId);
         favourite.setCreatedAt(LocalDateTime.now());
 
         favouriteProjectRepository.save(favourite);
