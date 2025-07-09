@@ -138,8 +138,7 @@ export default function responseCard({props, onDelete}) {
                             }
                           })
                           .catch(error => console.error("Delete error:", error));
-                        }
-                      }}
+                        }}}
                       >
                       Yes, cancel it
                     </button>
