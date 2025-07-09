@@ -1,8 +1,6 @@
 package ru.teamsync.projects.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 public record ProjectUpdateRequest(
