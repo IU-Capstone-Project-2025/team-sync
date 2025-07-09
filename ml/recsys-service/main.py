@@ -37,6 +37,13 @@ async def lifespan(app: FastAPI):
             model_name="description_based"
         )
     )
+    app.state.merger.add_model(
+        RoleBasedRecommender(
+            DBModel=app.state.db,
+            logger=logger,
+            model_name="role_based"
+        )
+    )
     logger.info("Recommendation models initialized successfully.")
     app.state.metrics = Metrics(
         relevance_matrix=[[1, 1, 1, 0, 0, 1, 1, 1, 0, 0],
