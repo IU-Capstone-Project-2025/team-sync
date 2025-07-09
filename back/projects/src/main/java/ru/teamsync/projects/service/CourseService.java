@@ -18,9 +18,9 @@ public class CourseService {
         return courseRepository.findAll();
     }
 
-    // public Course createCourseByName(String name) {
-    //     Course course = new Course();
-    //     course.setName(name);
-    //     return courseRepository.save(course);
-    // }
+    public Course createCourseByName(String name) {
+        Course course = new Course();
+        course.setName(name);
+        return courseRepository.save(course);
+    }
 }

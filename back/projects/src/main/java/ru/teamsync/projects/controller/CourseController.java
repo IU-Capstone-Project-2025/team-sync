@@ -35,10 +35,10 @@ public class CourseController {
         return BaseResponse.of(courses);
     }
 
-    // @PostMapping
-    // public ResponseEntity<BaseResponse<Course>> createCourse(@Valid @RequestBody CourseCreateRequest request) {
-    //     Course savedCourse = courseService.createCourseByName(request.name());
-    //     return ResponseEntity.status(HttpStatus.CREATED)
-    //             .body(BaseResponse.of(savedCourse));
-    // }
+    @PostMapping
+    public ResponseEntity<BaseResponse<Course>> createCourse(@Valid @RequestBody CourseCreateRequest request) {
+        Course savedCourse = courseService.createCourseByName(request.name());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(BaseResponse.of(savedCourse));
+    }
 }

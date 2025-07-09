@@ -8,7 +8,7 @@ public record ProjectUpdateRequest(
     @JsonProperty("name")
     String name,
 
-    @JsonProperty("course_id")
+    @JsonProperty("course_name")
     String courseName,
 
     @JsonProperty("description")
