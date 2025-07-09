@@ -23,7 +23,7 @@ export default function CreateProjectScreen() {
   async function createProject(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
-    const projectUrl = "/projects/api/v1/projects";
+    const projectUrl = "https://dev.team-sync.online/projects/api/v1/projects";
     if (selectedSkills.length === 0 || selectedRoles.length === 0){
       console.error("Skills or roles empty");
       return;
