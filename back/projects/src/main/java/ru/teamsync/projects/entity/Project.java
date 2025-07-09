@@ -44,4 +44,7 @@ public class Project {
     )
     @Column(name = "role_id")
     private List<Long> roleIds;
+
+    @Column(name = "required_members_count")
+    private Integer requiredMembersCount;
 }

@@ -25,6 +25,7 @@ public interface ProjectMapper {
     @Mapping(target = "projectLink", source = "request.projectLink")
     @Mapping(target = "skillIds", source = "request.skills")
     @Mapping(target = "roleIds", source = "request.roles")
+    @Mapping(target = "requiredMembersCount", source = "request.requiredMembersCount")
     Project toEntity(ProjectCreateRequest request, Long userId);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -32,6 +33,7 @@ public interface ProjectMapper {
     @Mapping(source = "skills", target = "skillIds")
     @Mapping(source = "roles", target = "roleIds")
     @Mapping(target = "name", source = "request.name")
+    @Mapping(target = "requiredMembersCount", source = "request.requiredMembersCount")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "teamLeadId", ignore = true) 
     void updateEntity(ProjectUpdateRequest request, @MappingTarget Project project);
