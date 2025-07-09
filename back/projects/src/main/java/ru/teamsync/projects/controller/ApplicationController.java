@@ -36,8 +36,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/my")
-    public BaseResponse<Page<ApplicationResponse>> getApplicationsByStudent(
-            Pageable pageable) {
+    public BaseResponse<Page<ApplicationResponse>> getApplicationsByStudent(Pageable pageable) {
         long userId = securityContextService.getCurrentUserId();
         return BaseResponse.of(applicationService.getApplicationsByMember(userId, pageable));
     }
