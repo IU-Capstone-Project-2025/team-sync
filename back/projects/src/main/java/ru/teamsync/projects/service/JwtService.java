@@ -7,8 +7,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import ru.teamsync.projects.config.properties.JwtProperties;
 
-import java.util.Date;
-
 @Service
 @RequiredArgsConstructor
 @Log4j2

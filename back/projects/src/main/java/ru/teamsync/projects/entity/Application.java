@@ -23,8 +23,9 @@ public class Application {
     @Column(name = "person_id")
     private Long personId;
 
-    @Column(name = "project_id")
-    private Long projectId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

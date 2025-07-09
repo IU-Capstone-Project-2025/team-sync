@@ -25,6 +25,7 @@ public class StudentCreationRequest {
     private String studyGroup;
 
     private String description;
+
     @JsonProperty("github_alias")
     private String githubAlias;
 

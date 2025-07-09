@@ -15,6 +15,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ru.teamsync.projects.integration.utils.JwtUtilityService;
 import ru.teamsync.projects.integration.utils.PersonUtilityService;
 import ru.teamsync.projects.integration.utils.ProjectsUtilityService;
@@ -42,7 +45,8 @@ public abstract class IntegrationEnvironment {
             "role",
             "project_role",
             "student_role",
-            "project_skill"
+            "project_skill",
+            "course"
     );
     private static final Logger log = LoggerFactory.getLogger(IntegrationEnvironment.class);
 
@@ -66,6 +70,9 @@ public abstract class IntegrationEnvironment {
 
     @Autowired
     protected ProjectsUtilityService projectsUtilityService;
+
+    @Autowired
+    protected ObjectMapper objectMapper;
 
     static {
         try {

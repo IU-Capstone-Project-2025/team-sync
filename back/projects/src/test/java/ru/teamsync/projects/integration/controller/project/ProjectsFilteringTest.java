@@ -117,22 +117,36 @@ public class ProjectsFilteringTest extends IntegrationEnvironment {
     public void should_returnFilteredProjects_when_filterByCourseName() throws Exception {
         int teamLeadId = personUtilityService.savePersonWithName("person");
 
-        int project1Id = projectsUtilityService.saveProjectWithNameAndTeamLeadId("project", teamLeadId);
-        int project2Id = projectsUtilityService.saveProjectWithNameAndTeamLeadId("project2", teamLeadId);
+        int course1Id = jdbcClient.sql(
+                "INSERT INTO course(name) VALUES ('Course 1') RETURNING id"
+        ).query(Integer.class).single();
 
-        jdbcClient.sql("UPDATE project SET course_name = 'Course 1' WHERE id = :projectId")
-                .param("projectId", project1Id)
-                .update();
-        jdbcClient.sql("UPDATE project SET course_name = 'Course 2' WHERE id = :projectId")
-                .param("projectId", project2Id)
-                .update();
+        int course2Id = jdbcClient.sql(
+                "INSERT INTO course(name) VALUES ('Course 2') RETURNING id"
+        ).query(Integer.class).single();
+
+        int project1Id = jdbcClient.sql(
+                "INSERT INTO project(name, description, course_id, team_lead_id, project_link, status) " +
+                "VALUES ('project', 'desc', :courseId, :teamLeadId, 'link', 'ACTIVE') RETURNING id"
+        ).param("courseId", course1Id)
+        .param("teamLeadId", teamLeadId)
+        .query(Integer.class)
+        .single();
+
+        int project2Id = jdbcClient.sql(
+                "INSERT INTO project(name, description, course_id, team_lead_id, project_link, status) " +
+                "VALUES ('project2', 'desc', :courseId, :teamLeadId, 'link', 'ACTIVE') RETURNING id"
+        ).param("courseId", course2Id)
+        .param("teamLeadId", teamLeadId)
+        .query(Integer.class)
+        .single();
 
         String jwt = jwtUtilityService.generateTokenWithUserId(teamLeadId);
 
-        mockMvc.perform(
+        mockMvc.perform( 
                         get("/projects")
                                 .header("Authorization", "Bearer " + jwt)
-                                .queryParam("courseName", "Course 1")
+                                .queryParam("courseIds", String.valueOf(course1Id))
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))

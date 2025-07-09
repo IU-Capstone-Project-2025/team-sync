@@ -1,6 +1,7 @@
 package ru.teamsync.projects.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +17,6 @@ import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.service.exception.ApplicationNotFoundException;
-import ru.teamsync.projects.service.exception.CannotApplyToOwnProjectException;
 import ru.teamsync.projects.service.exception.ProjectNotFoundException;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 
@@ -39,25 +39,39 @@ public class ApplicationService {
             throw new ResourceAccessDeniedException("You have no access to this project as you are not teamlead");
         }
 
-        return applicationRepository.findAllByProjectId(projectId, pageable)
+        return applicationRepository.findAllByProject(project, pageable)
                 .map(applicationMapper::toDto);
     }
 
     public Page<ApplicationResponse> getApplicationsByMember(Long memberId, Pageable pageable) {
-        return applicationRepository.findAllByPersonId(memberId, pageable)
-                .map(applicationMapper::toDto);
+        Page<ApplicationResponse> page = applicationRepository.findAllByPersonId(memberId, pageable)
+            .map(applicationMapper::toDto);
+
+        return page;
     }
 
-    public void createApplication(Long studentId, ApplicationRequest request) {
+    public void createApplication(Long personId, ApplicationRequest request) {
+        List<ApplicationStatus> activeStatuses = List.of(ApplicationStatus.PENDING, ApplicationStatus.APPROVED);
+        
+        boolean exists = applicationRepository.existsByProjectIdAndPersonIdAndStatusIn(
+            request.projectId(), personId, activeStatuses
+        );
+
+        if (exists) {
+            throw new IllegalStateException("You have already applied for this project.");
+        }
+
         Project project = projectRepository.findById(request.projectId())
             .orElseThrow(() -> ProjectNotFoundException.withId(request.projectId()));
 
-        if (project.getTeamLeadId().equals(studentId)) {
-            throw CannotApplyToOwnProjectException.forProject(project.getId());
+        int approvedCount = applicationRepository.countApprovedApplicationsByProjectId(request.projectId());
+        if (approvedCount >= project.getRequiredMembersCount()) {
+            throw new IllegalStateException("This project has no free slots.");
         }
+
         Application application = new Application();
-        application.setPersonId(studentId);
-        application.setProjectId(request.projectId());
+        application.setPersonId(personId);
+        application.setProject(project);
         application.setStatus(ApplicationStatus.PENDING);
         application.setCreatedAt(LocalDateTime.now());
 

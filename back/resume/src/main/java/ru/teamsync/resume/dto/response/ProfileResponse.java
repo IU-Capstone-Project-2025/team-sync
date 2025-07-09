@@ -1,10 +1,10 @@
 package ru.teamsync.resume.dto.response;
 
 public record ProfileResponse(
-        ProfileType type,                         // "student" | "professor"
+        ProfileType type,
         PersonResponse person,
         StudentProfileResponse studentProfile,
-        ProfessorProfileResponse professorProfile  // StudentProfileResponse | ProfessorProfileResponse
+        ProfessorProfileResponse professorProfile
 ) {
 
     public static ProfileResponse ofStudent(StudentProfileResponse studentProfile, PersonResponse person) {

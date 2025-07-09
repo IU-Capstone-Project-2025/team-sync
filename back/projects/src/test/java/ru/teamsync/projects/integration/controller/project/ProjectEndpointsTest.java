@@ -1,10 +1,10 @@
 package ru.teamsync.projects.integration.controller.project;
 
 import org.junit.jupiter.api.Test;
+
 import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
 import ru.teamsync.projects.integration.IntegrationEnvironment;
 
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -58,38 +58,39 @@ public class ProjectEndpointsTest extends IntegrationEnvironment {
         int currentUserId = personUtilityService.savePersonWithName("Person1");
         int anotherUserId = personUtilityService.savePersonWithName("Person2");
 
-        int anotherUserProjectId = projectsUtilityService.saveProjectWithNameAndTeamLeadId("Project1", anotherUserId);
+        int courseId = jdbcClient.sql("INSERT INTO course(name) VALUES ('Course 1') RETURNING id")
+            .query(Integer.class)
+            .single();
+
+        int anotherUserProjectId = jdbcClient.sql(
+                "INSERT INTO project(name, description, course_id, team_lead_id, project_link, status) " +
+                "VALUES ('Project1', 'desc', :courseId, :teamLeadId, 'link', 'DRAFT') RETURNING id"
+        ).param("courseId", courseId)
+        .param("teamLeadId", anotherUserId)
+        .query(Integer.class)
+        .single();
 
         String jwt = jwtUtilityService.generateTokenWithUserId(currentUserId);
 
         var projectUpdateRequest = new ProjectUpdateRequest(
-                "Updated Project",
-                "Updated Course",
-                "Updated Description",
-                "https://updated-link.com",
+                "123",
+                String.valueOf(courseId),
+                "123",
+                "123",
                 "ACTIVE",
                 null,
-                null
+                null,
+                5
         );
 
+        String json = objectMapper.writeValueAsString(projectUpdateRequest);
+
         mockMvc.perform(
-                        put("/projects/{projectId}", anotherUserProjectId)
-                                .header("Authorization", "Bearer " + jwt)
-                                .contentType("application/json")
-                                .content("""
-                                        {
-                                            "name": "123",
-                                            "course_name": "123",
-                                            "description": "123",
-                                            "project_link": "123",
-                                            "status": "ACTIVE",
-                                            "skills": null,
-                                            "roles": null
-                                        }
-                                        """)
+            put("/projects/{projectId}", anotherUserProjectId)
+                    .header("Authorization", "Bearer " + jwt)
+                    .contentType("application/json")
+                    .content(json)
                 )
                 .andExpect(status().isForbidden());
     }
-
-
 }

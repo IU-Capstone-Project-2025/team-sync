@@ -1,12 +1,18 @@
 package ru.teamsync.projects.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import lombok.RequiredArgsConstructor;
 import ru.teamsync.projects.dto.request.ApplicationRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.dto.response.BaseResponse;
@@ -30,8 +36,7 @@ public class ApplicationController {
     }
 
     @GetMapping("/my")
-    public BaseResponse<Page<ApplicationResponse>> getApplicationsByStudent(
-            Pageable pageable) {
+    public BaseResponse<Page<ApplicationResponse>> getApplicationsByStudent(Pageable pageable) {
         long userId = securityContextService.getCurrentUserId();
         return BaseResponse.of(applicationService.getApplicationsByMember(userId, pageable));
     }
