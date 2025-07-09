@@ -65,13 +65,9 @@ export default function SplashScreen() {
   const navigate = useNavigate();
   const { instance: msalInstance } = useMsal();
 
-  console.log("SplashScreen rendered, isAuthenticated:", isAuthenticated);
-
   useEffect(() => {
-    console.log("useEffect triggered, isAuthenticated:", isAuthenticated);
     if (isAuthenticated) {
       (async () => {
-        console.log("Logging in...");
         await login(msalInstance);
         if (localStorage.getItem("backendToken") !== null){
           navigate('/home');
