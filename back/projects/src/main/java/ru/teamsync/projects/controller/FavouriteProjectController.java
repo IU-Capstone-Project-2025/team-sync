@@ -42,7 +42,8 @@ public class FavouriteProjectController {
 
     @DeleteMapping("/{favouriteProjectId}")
     public ResponseEntity<BaseResponse<Void>> deleteFavourite(@PathVariable Long favouriteProjectId) {
-        favouriteProjectService.deleteFavouriteProject(favouriteProjectId);
+        Long personId = securityContextService.getCurrentUserId();
+        favouriteProjectService.deleteFavouriteProject(favouriteProjectId, personId);
         return ResponseEntity.ok(BaseResponse.of(null));
     }
 }

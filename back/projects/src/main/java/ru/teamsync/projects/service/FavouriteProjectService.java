@@ -42,13 +42,13 @@ public class FavouriteProjectService {
         favouriteProjectRepository.save(favourite);
     }
 
-    public void deleteFavouriteProject(Long favouriteProjectId) {
-        boolean exists = favouriteProjectRepository.existsById(favouriteProjectId);
+    public void deleteFavouriteProject(Long favouriteProjectId, Long personId) {
+        boolean exists = projectRepository.existsById(favouriteProjectId);
         if (!exists) {
             throw new IllegalStateException("Favourite project not found");
         }
 
-        favouriteProjectRepository.deleteById(favouriteProjectId);
+        favouriteProjectRepository.deleteByPersonIdAndProjectId(personId, favouriteProjectId);
     }
 
     public Page<FavouriteProjectResponse> getFavouritesProjectsByPersonId(
