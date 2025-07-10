@@ -48,7 +48,7 @@ public class FavouriteProjectService {
             throw new IllegalStateException("Favourite project not found");
         }
 
-        favouriteProjectRepository.deleteById(favouriteProjectId);
+        favouriteProjectRepository.deleteByProjectId(favouriteProjectId);
     }
 
     public Page<FavouriteProjectResponse> getFavouritesProjectsByPersonId(
