@@ -78,6 +78,12 @@ public class ProjectService {
         projectMapper.updateEntity(request, project);
         project.setCourse(course);
         projectRepository.save(project);
+
+        if (request.membersToRemove() != null && !request.membersToRemove().isEmpty()) {
+            for (Long memberId : request.membersToRemove()) {
+                projectMemberRepository.deleteByProjectIdAndMemberId(projectId, memberId);
+            }
+        }
     }
 
     public Page<ProjectResponse> getProjects(
