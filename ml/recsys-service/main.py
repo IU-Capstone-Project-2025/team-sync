@@ -49,6 +49,10 @@ async def lifespan(app: FastAPI):
     logger.info("Recommendation models initialized successfully.")
 
     # scheduler initialization
+
+    # init calculations
+    await trigger_recommendation_job(app)
+
     logger.info("Initializing scheduler...")
     app.state.scheduler = AsyncIOScheduler()
     app.state.scheduler.add_job(
