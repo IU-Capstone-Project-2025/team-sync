@@ -23,7 +23,7 @@ interface Application {
   created_at: number[];
 }
 async function getRoles(token: string) {
-  const rolesUrl = "https://dev.team-sync.online/projects/api/v1/roles";
+  const rolesUrl = "/projects/api/v1/roles";
   try {
     const response = await fetch(rolesUrl, {
       headers: {
@@ -43,7 +43,7 @@ async function getRoles(token: string) {
 }
 
 async function getSkills(token: string) {
-  const rolesUrl = "https://dev.team-sync.online/projects/api/v1/skills";
+  const rolesUrl = "/projects/api/v1/skills";
   try {
     const response = await fetch(rolesUrl, {
       headers: {
@@ -63,7 +63,7 @@ async function getSkills(token: string) {
 }
 
 async function getApplications(token: string) {
-  const applicationsUrl = "https://dev.team-sync.online/projects/api/v1/applications/my";
+  const applicationsUrl = "/projects/api/v1/applications/my";
   try {
     const response = await fetch(applicationsUrl, {
       headers: {

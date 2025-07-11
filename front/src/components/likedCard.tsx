@@ -4,7 +4,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 
 async function deleteLike(token: string, applicationId: number) : Promise<boolean>{
-  const likeUrl = "https://dev.team-sync.online/projects/api/v1/favourite/" + applicationId.toString();
+  const likeUrl = "/projects/api/v1/favourite/" + applicationId.toString();
     const appJson = {
       applicationId: applicationId
     };

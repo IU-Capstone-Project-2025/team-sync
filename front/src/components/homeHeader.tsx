@@ -42,7 +42,7 @@ export default function HomeHeader(){
             <span className='flex flex-row justify-end items-center space-x-6'>
               <NavButton text = "My responses" link = "/responses"/>
               <NavButton text = "My projects" link = "/projects"/>
-              <FavoriteBorderIcon onClick = {() => {navigate("/likes")}} sx={{ fontSize: 30 }} className="text-[color:var(--secondary-color)]" />
+              <FavoriteBorderIcon onClick = {() => {if(window.location.pathname != "/likes"){navigate("/likes")}}} sx={{ fontSize: 30 }} className="cursor-pointer text-[color:var(--secondary-color)]" />
               <NotificationsNoneIcon sx={{ fontSize: 30 }} className="text-[color:var(--secondary-color)]"/>
               <Account name ={fullName}/>
             </span>

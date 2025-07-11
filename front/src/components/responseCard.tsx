@@ -13,7 +13,7 @@ function truncateString({string, maxLength} : {string: string, maxLength: number
 }
 
 async function deleteApplication(token: string, applicationId: number) : Promise<boolean>{
-  const applicationUrl = "https://dev.team-sync.online/projects/api/v1/applications/" + applicationId.toString();
+  const applicationUrl = "/projects/api/v1/applications/" + applicationId.toString();
     const appJson = {
       applicationId: applicationId
     };
