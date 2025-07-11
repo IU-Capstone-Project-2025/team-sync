@@ -20,7 +20,7 @@ jobs:
         id: tag
         run: |
           REF=${{ github.ref_name }}
-          TAG=$(echo "$REF" | grep -oE 'TS-[0-9]+')
+          TAG=$(echo "$REF" | grep -oE 'TS-[0-9]+' | tr '[:upper:]' '[:lower:]')
           echo "tag=$TAG" >> $GITHUB_OUTPUT
 
       - name: Log in to GHCR
