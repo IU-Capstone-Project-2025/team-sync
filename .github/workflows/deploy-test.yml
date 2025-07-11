@@ -1,20 +1,38 @@
-name: Deploy Test
+name: Build & Push Tagged Docker Image
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - '**'
 
 jobs:
-  deploy-dev:
+  docker:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Setup SSH agent and add key
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Deploy to server
+      - name: Extract TS-xxx from branch
+        id: tag
         run: |
-          ssh -o StrictHostKeyChecking=no githubci@shqcore.ru "cd test && bash ./deploy.sh ${{ github.ref_name }}"
+          REF=${{ github.ref_name }}
+          TAG=$(echo "$REF" | grep -oE 'TS-[0-9]+')
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build Docker image
+        run: |
+          cd projects
+          IMAGE_BASE=ghcr.io/${{ github.repository_owner }}/my-app
+          docker build -t $IMAGE_BASE:${{ steps.tag.outputs.tag }} .
+
+      - name: Push Docker image
+        run: |
+          IMAGE_BASE=ghcr.io/${{ github.repository_owner }}/my-app
+          docker push $IMAGE_BASE:${{ steps.tag.outputs.tag }}
