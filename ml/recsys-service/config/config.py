@@ -48,6 +48,10 @@ class Config:
     @property
     def TAG_COEFFICIENT(self):
         return float(os.getenv("TAG_COEFFICIENT", 0.3))
+    
+    @property
+    def ROLE_COEFFICIENT(self):
+        return float(os.getenv("ROLE_COEFFICIENT", 0.3))
 
     @property
     def DESCRIPTION_COEFFICIENT(self):

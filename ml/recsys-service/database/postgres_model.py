@@ -58,7 +58,29 @@ class DBModel:
 
                 return [i[0] for i in cursor.fetchall()]
         except psycopg2.Error as e:
-            self.logger.error(f"Error fetching skills for user {id}: {e}")
+            self.logger.error(f"Error fetching skills for user or project {id}: {e}")
+            return []
+        
+    def fetch_roles(self, table_name, id):
+        """Returns list of tuples with all roles for a given user or project."""
+        if not self.connection:
+            raise ConnectionError("Database connection is not established.")
+        
+        try:
+            with self.connection.cursor() as cursor:
+                if table_name == "student_role":
+                    query = sql.SQL("SELECT role_id FROM {} WHERE student_id = %s").format(
+                        sql.Identifier(table_name)
+                    )
+                else:
+                    query = sql.SQL("SELECT role_id FROM {} WHERE project_id = %s").format(
+                        sql.Identifier(table_name)
+                    )
+                cursor.execute(query, (id,))
+
+                return [i[0] for i in cursor.fetchall()]
+        except psycopg2.Error as e:
+            self.logger.error(f"Error fetching roles for user or project {id}: {e}")
             return []
 
     def fetch_ids(self, table_name):
@@ -111,6 +133,18 @@ class DBModel:
     def get_all_skills(self):
         """Returns list of tuples with all skills in the database."""
         return self.fetch_all("skill")
+    
+    def get_user_roles(self, user_id):  # [1, 2, 78]
+        """Returns list with all roles for a given user."""
+        return self.fetch_roles("student_role", user_id)
+
+    def get_project_roles(self, project_id):  # [4, 64, 65]
+        """Returns list with all roles for a given project."""
+        return self.fetch_roles("project_role", project_id)
+
+    def get_all_roles(self):
+        """Returns list of tuples with all roles in the database."""
+        return self.fetch_all("role")
     
     def get_all_students(self):
         """Returns list of tuples with all students in the database."""
