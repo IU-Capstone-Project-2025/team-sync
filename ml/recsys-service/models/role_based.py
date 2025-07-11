@@ -32,7 +32,10 @@ class RoleBasedRecommender(Recommender):
         distances, indices = distances[0], indices[0]
 
         min_dist, max_dist = np.min(distances), np.max(distances)
-        normalized_scores = 1 - (distances - min_dist) / (max_dist - min_dist)
+        if max_dist == min_dist:
+            normalized_scores = np.ones_like(distances)  # Assign uniform scores
+        else:
+            normalized_scores = 1 - (distances - min_dist) / (max_dist - min_dist)
 
         recommendations = []
         for i, score in zip(indices, normalized_scores):
