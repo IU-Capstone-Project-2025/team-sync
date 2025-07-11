@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 async function getSkills(token) {
-  const skillsUrl = "https://dev.team-sync.online/projects/api/v1/skills";
+  const skillsUrl = "/projects/api/v1/skills";
   try {
     const response = await fetch(skillsUrl, {
       headers: {
@@ -25,7 +25,7 @@ async function getSkills(token) {
 }
 
 async function getRoles(token) {
-  const rolesUrl = "https://dev.team-sync.online/projects/api/v1/roles";
+  const rolesUrl = "/projects/api/v1/roles";
   try {
     const response = await fetch(rolesUrl, {
       headers: {
@@ -61,7 +61,7 @@ export default function CreateProjectScreen() {
   async function createProject(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
-    const projectUrl = "https://dev.team-sync.online/projects/api/v1/projects";
+    const projectUrl = "/projects/api/v1/projects";
     if (selectedSkills.length === 0 || selectedRoles.length === 0){
       console.error("Skills or roles empty");
       return;
@@ -72,7 +72,8 @@ export default function CreateProjectScreen() {
       "name": formData.get('projectName'),
       "skills": selectedSkills,
       "roles": selectedRoles,
-      "status": "OPEN"
+      "status": "OPEN",
+      "required_members_count": formData.get('numPeople')
     };
 
     const token = localStorage.getItem("backendToken");
@@ -112,16 +113,14 @@ export default function CreateProjectScreen() {
             onChange={items => setSelectedRoles(items.map(item => item.id))}
           />
           <p className="mb-2 mt-5">How many people do you need?</p>
-          <input name = "numPeople" required className = "focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 min-w-50 p-1 text-(--secondary-color) font-[Inter] text-md" type="query" />
+          <input name = "numPeople" required className = "[&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [appearance:textfield] focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 min-w-50 p-1 text-(--secondary-color) font-[Inter] text-md" type="number" />
           <p className="mb-2">Required skills</p>
           <CustomizedHook
             arr={skills}
             value={skills.filter(skill => selectedSkills.includes(skill.id))}
             onChange={items => setSelectedSkills(items.map(item => item.id))}
           />
-          <p className="mb-2 mt-5">Project link</p>
-          <input name = "projectLink" required className = "focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 min-w-50 p-1 text-(--secondary-color) font-[Inter] text-md" type="url" />
-          <button className = "bg-(--accent-color-2)/42 text-(--secondary-color) rounded-2xl p-2 px-4 block text-xl mb-5" type="submit">
+          <button className = "bg-(--accent-color-2)/42 text-(--secondary-color) rounded-2xl p-2 px-4 block text-xl my-5" type="submit">
             Add project
           </button>
         </form>
