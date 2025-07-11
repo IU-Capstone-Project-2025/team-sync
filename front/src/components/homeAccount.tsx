@@ -62,8 +62,8 @@ export default function Account({name}){
               onClick={() => {
                 console.log('Logout clicked');
                 setIsMenuOpen(false);
-                localStorage.removeItem("backendToken");
-                instance.loginPopup().then(()=>{
+                instance.logoutPopup().then(()=>{
+                  localStorage.removeItem("backendToken");
                   console.log('cleared token');
                   navigate('/')
                 });
