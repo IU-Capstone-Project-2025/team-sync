@@ -37,7 +37,7 @@ async function login(msalInstance) {
       console.log(loginResult.data.access_token);
     } else if (res.status === 409) {
       console.log("trying to register");
-      const regRes = await fetch(`${backendHost}/auth/api/v1/entra/login`, {
+      const regRes = await fetch(`${backendHost}/auth/api/v1/entra/registration/student`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${accessToken}`,
