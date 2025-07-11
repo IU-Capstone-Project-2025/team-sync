@@ -3,8 +3,10 @@ import Popup from "reactjs-popup";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 
+const backendHost = import.meta.env.VITE_BACKEND_HOST
+
 async function deleteLike(token: string, applicationId: number) : Promise<boolean>{
-  const likeUrl = "/projects/api/v1/favourite/" + applicationId.toString();
+  const likeUrl = `${backendHost}/projects/api/v1/favourite/` + applicationId.toString();
     const appJson = {
       applicationId: applicationId
     };

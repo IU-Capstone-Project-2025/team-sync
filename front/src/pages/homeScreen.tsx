@@ -61,7 +61,7 @@ async function getSkills(token: string) {
 }
 
 async function getCourses(token: string) {
-  const rolesUrl = "/projects/api/v1/courses";
+  const rolesUrl = `${backendHost}/projects/api/v1/courses`;
   try {
     const response = await fetch(rolesUrl, {
       headers: {
@@ -121,7 +121,7 @@ async function getProjects(
 }
 
 async function getLikedProjects(token: string) {
-  const projectsUrl = "/projects/api/v1/favourite/my";
+  const projectsUrl = `${backendHost}/projects/api/v1/favourite/my`;
   try {
     const response = await fetch(projectsUrl, {
       headers: {

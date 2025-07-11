@@ -58,7 +58,7 @@ async function likeProject(projId: number, token: string){
   const projectJson = {
     project_id: projId
   };
-  const applicationUrl = "/projects/api/v1/favourite";
+  const applicationUrl = `${backendHost}/projects/api/v1/favourite`;
   const response = await fetch(applicationUrl, {  
     method: 'POST', 
     mode: 'cors', 
@@ -76,7 +76,7 @@ async function likeProject(projId: number, token: string){
 }
 
 async function unlikeProject(projId: number, token: string){
-  const applicationUrl = `/projects/api/v1/favourite/${projId}`;
+  const applicationUrl = `${backendHost}/projects/api/v1/favourite/${projId}`;
   const response = await fetch(applicationUrl, {  
     method: 'DELETE', 
     mode: 'cors', 
