@@ -2,6 +2,9 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 
+ARG VITE_BACKEND_HOST
+ENV VITE_BACKEND_HOST=$VITE_BACKEND_HOST
+
 COPY package*.json ./
 RUN npm ci
 

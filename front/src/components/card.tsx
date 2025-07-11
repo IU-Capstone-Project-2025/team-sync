@@ -20,6 +20,8 @@ interface CardProps {
   onLikeChange?: (projectId: number, isLiked: boolean) => void;
 }
 
+const backendHost = import.meta.env.VITE_BACKEND_HOST
+
 function truncateString({string, maxLength} : {string: string, maxLength: number}){
   if (string.length >  maxLength){
     return string.substring(0, maxLength-1) + "...";
@@ -33,7 +35,7 @@ async function sendApplication(projId: number, token: string){
   const applicationJson = {
     project_id: projId
   };
-  const applicationUrl = "/projects/api/v1/applications";
+  const applicationUrl = `${backendHost}/projects/api/v1/applications`;
   const response = await fetch(applicationUrl, {  
     method: 'POST', 
     mode: 'cors', 
@@ -56,7 +58,7 @@ async function likeProject(projId: number, token: string){
   const projectJson = {
     project_id: projId
   };
-  const applicationUrl = "/projects/api/v1/favourite";
+  const applicationUrl = `${backendHost}/projects/api/v1/favourite`;
   const response = await fetch(applicationUrl, {  
     method: 'POST', 
     mode: 'cors', 
@@ -74,7 +76,7 @@ async function likeProject(projId: number, token: string){
 }
 
 async function unlikeProject(projId: number, token: string){
-  const applicationUrl = `/projects/api/v1/favourite/${projId}`;
+  const applicationUrl = `${backendHost}/projects/api/v1/favourite/${projId}`;
   const response = await fetch(applicationUrl, {  
     method: 'DELETE', 
     mode: 'cors', 

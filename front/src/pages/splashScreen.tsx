@@ -5,6 +5,8 @@ import { useIsAuthenticated, useMsal } from '@azure/msal-react';
 import { useNavigate } from 'react-router-dom';
 import { loginRequest } from '../authConfig';
 
+const backendHost = import.meta.env.VITE_BACKEND_HOST
+
 async function login(msalInstance) {
   const registrationData = {
     study_group: "string",
@@ -21,7 +23,7 @@ async function login(msalInstance) {
   const accessToken = tokenResponse.accessToken;
 
   try {
-    const res = await fetch("/auth/api/v1/entra/login", {
+    const res = await fetch(`${backendHost}/auth/api/v1/entra/login`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${accessToken}`,
@@ -35,7 +37,7 @@ async function login(msalInstance) {
       console.log(loginResult.data.access_token);
     } else if (res.status === 409) {
       console.log("trying to register");
-      const regRes = await fetch("/auth/api/v1/entra/registration/student", {
+      const regRes = await fetch(`${backendHost}/auth/api/v1/entra/login`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${accessToken}`,

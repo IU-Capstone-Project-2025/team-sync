@@ -24,8 +24,11 @@ interface Application {
   status: string;
   created_at: number[];
 }
+
+const backendHost = import.meta.env.VITE_BACKEND_HOST
+
 async function getRoles(token: string) {
-  const rolesUrl = "/projects/api/v1/roles";
+  const rolesUrl = `${backendHost}/projects/api/v1/roles`;
   try {
     const response = await fetch(rolesUrl, {
       headers: {
@@ -45,7 +48,7 @@ async function getRoles(token: string) {
 }
 
 async function getSkills(token: string) {
-  const rolesUrl = "/projects/api/v1/skills";
+  const rolesUrl = `${backendHost}/projects/api/v1/skills`;
   try {
     const response = await fetch(rolesUrl, {
       headers: {
@@ -64,7 +67,7 @@ async function getSkills(token: string) {
   }
 }
 async function getLikedProjects(token: string) {
-  const projectsUrl = "/projects/api/v1/favourite/my";
+  const projectsUrl = `${backendHost}/projects/api/v1/favourite/my`;
   try {
     const response = await fetch(projectsUrl, {
       headers: {
@@ -88,7 +91,7 @@ async function likeProject(projId: number, token: string){
   const projectJson = {
     project_id: projId
   };
-  const applicationUrl = "/projects/api/v1/favourite";
+  const applicationUrl = `${backendHost}/projects/api/v1/favourite`;
   const response = await fetch(applicationUrl, {  
     method: 'POST', 
     mode: 'cors', 
@@ -106,7 +109,7 @@ async function likeProject(projId: number, token: string){
 }
 
 async function unlikeProject(projId: number, token: string){
-  const applicationUrl = `/projects/api/v1/favourite/${projId}`;
+  const applicationUrl = `${backendHost}/projects/api/v1/favourite/${projId}`;
   const response = await fetch(applicationUrl, {  
     method: 'DELETE', 
     mode: 'cors', 

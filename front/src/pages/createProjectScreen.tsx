@@ -3,46 +3,9 @@ import Footer from "../components/footer";
 import CustomizedHook from "../components/autocompleteInput";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getSkills, getRoles } from "../utils/backendFetching";
 
-async function getSkills(token) {
-  const skillsUrl = "/projects/api/v1/skills";
-  try {
-    const response = await fetch(skillsUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content.map((skill) => ({ id: skill.id, name: skill.name }));
-  }
-  catch (error) {
-    console.error(error.message);
-  }
-}
-
-async function getRoles(token) {
-  const rolesUrl = "/projects/api/v1/roles";
-  try {
-    const response = await fetch(rolesUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content.map((role) => ({ id: role.id, name: role.name }));
-  }
-  catch (error) {
-    console.error(error.message);
-  }
-}
+const backendHost = import.meta.env.VITE_BACKEND_HOST
 
 export default function CreateProjectScreen() {
   const [roles, setRoles] = useState<{id: number, name: string}[]>([]);
@@ -61,7 +24,7 @@ export default function CreateProjectScreen() {
   async function createProject(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
-    const projectUrl = "/projects/api/v1/projects";
+    const projectUrl = `${backendHost}/projects/api/v1/projects`;
     if (selectedSkills.length === 0 || selectedRoles.length === 0){
       console.error("Skills or roles empty");
       return;
