@@ -12,7 +12,7 @@ export default function ProjectScreen() {
       <div className="flex flex-col flex-1"> 
         <div className="flex flex-col px-18">
           <div className="flex flex-row justify-start items-center py-5"> 
-            <ArrowBackIosIcon sx={{ fontSize: 24 }} className="text-[color:var(--secondary-color)]"/>
+            <ArrowBackIosIcon onClick = {() => {navigate(-1)}} sx={{ fontSize: 24 }} className="cursor-pointer text-[color:var(--secondary-color)]"/>
             <h2 className="font-[Inter] text-(--primary-color) text-xl">
               All projects
             </h2>
@@ -30,7 +30,7 @@ export default function ProjectScreen() {
           </p>
           <button
             className="flex flex-row items-center px-4 mt-4 border-(--accent-color-2) border-2 rounded-xl text-(--secondary-color) cursor-pointer gap-x-2"
-            onClick={() => navigate("/create_project")}
+            onClick={() => navigate("/projects/create")}
           >
             <AddIcon fontSize="large" />
             <p className="font-[Inter] text-xl leading-none m-0 pl-4">

@@ -8,6 +8,7 @@ from models.models_merger import ModelsMerger
 from models.tag_based import TagBasedRecommender
 from models.description_based import DescriptionBasedRecommender
 from config.config import Config
+from models.role_based import RoleBasedRecommender
 from metrics.metrics_model import Metrics
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
@@ -36,6 +37,13 @@ async def lifespan(app: FastAPI):
             DBModel=app.state.db,
             logger=logger,
             model_name="description_based"
+        )
+    )
+    app.state.merger.add_model(
+        RoleBasedRecommender(
+            DBModel=app.state.db,
+            logger=logger,
+            model_name="role_based"
         )
     )
     logger.info("Recommendation models initialized successfully.")

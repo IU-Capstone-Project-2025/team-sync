@@ -7,7 +7,7 @@ import Card from "../components/card";
 import Checkbox from "@mui/material/Checkbox";
 import ClearIcon from '@mui/icons-material/Clear';
 interface Project {
-  course_name: string;
+  course_id: number;
   description: string;
   id: number;
   name: string;
@@ -15,6 +15,7 @@ interface Project {
   role_ids: number[];
   status: "DRAFT" | "OPEN" | "IN_PROGRESS" | "COMPLETE";
   team_lead_id: number;
+  required_members_count: number;
 }
 
 async function getRoles(token: string) {
@@ -57,6 +58,27 @@ async function getSkills(token: string) {
   }
 }
 
+async function getCourses(token: string) {
+  const rolesUrl = "/projects/api/v1/courses";
+  try {
+    const response = await fetch(rolesUrl, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Response error: ' + response.status.toString());
+    }
+    const json = await response.json();
+    return json.data.map((course) => ({ id: course.id, name: course.name }));
+  }
+  catch (error) {
+    console.error(error.message);
+    return [];
+  }
+}
+
 async function getProjects(
   token: string,
   filterSkills: {id: number, name: string}[],
@@ -96,6 +118,27 @@ async function getProjects(
   }
 }
 
+async function getLikedProjects(token: string) {
+  const projectsUrl = "/projects/api/v1/favourite/my";
+  try {
+    const response = await fetch(projectsUrl, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Response error: ' + response.status.toString());
+    }
+    const json = await response.json();
+    return json.data.content
+  }
+  catch (error) {
+    console.error(error.message);
+    return [];
+  }
+}
+
 function getNames(ids: number[] = [], all: {id: number, name: string}[] = []) {
   const names = ids.map(id => all.find(obj => obj.id === id)?.name ?? "Unknown");
   return names;
@@ -104,7 +147,9 @@ function getNames(ids: number[] = [], all: {id: number, name: string}[] = []) {
 export default function HomeScreen(){
   const [roles, setRoles] = useState<{id: number, name: string}[]>([]);
   const [skills, setSkills] = useState<{id: number, name: string}[]>([]);
+  const [courses, setCourses] = useState<{id: number, name: string}[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [likedProjects, setLikedProjects] = useState<{id: number, person_id: number, project: Project}[]>([]);
   const [filterCourse, setFilterCourse] = useState<string>("");
   const [filterSkills, setFilterSkills] = useState<{id: number, name: string}[]>([]);
   const [filterRoles, setFilterRoles] = useState<{id: number, name: string}[]>([]);
@@ -118,8 +163,10 @@ export default function HomeScreen(){
         setProjects(result.projects);
         setNumProjects(result.total);
       }));
+      getLikedProjects(token).then(setLikedProjects)
       getRoles(token).then(setRoles);
       getSkills(token).then(setSkills);
+      getCourses(token).then(setCourses);
     }
   }, []);
 
@@ -133,6 +180,15 @@ export default function HomeScreen(){
       console.log(projects);
     }
   }, [filterCourse, filterSkills, filterRoles]);
+
+  const handleLikeChange = async () => {
+    const token = localStorage.getItem("backendToken");
+    if (token) {
+      const updatedLikedProjects = await getLikedProjects(token);
+      setLikedProjects(updatedLikedProjects);
+    }
+  };
+
   return (
     <div className="flex flex-col justify-between min-h-screen">
       <HomeHeader />
@@ -402,19 +458,22 @@ export default function HomeScreen(){
               <p className="font-[Inter] text-lg mt-5 text-(--primary-color)">
                 {numProjects} projects found
               </p>
-              {projects.length > 0 && roles.length > 0 && projects.map((proj, idx) => (
+              {projects.length > 0 && roles.length > 0 && courses.length > 0 && projects.map((proj, idx) => (
                 <Card
                   key={proj.id || idx}
                   props={{
-                    courseName: proj.course_name,
+                    courseName: courses.at(proj.course_id-1)?.name || "",
                     description: proj.description,
                     id: proj.id,
                     projectName: proj.name,
                     roles: getNames(proj.role_ids, roles),
                     skills: getNames(proj.skill_ids, skills),
                     status: proj.status,
-                    teamLeadId: proj.team_lead_id
+                    teamLeadId: proj.team_lead_id,
+                    requiredMembersCount: proj.required_members_count,
+                    liked: likedProjects.some(likedProj => likedProj.project.id === proj.id)
                   }}
+                  onLikeChange={handleLikeChange}
                 />
               ))}
             </div>
