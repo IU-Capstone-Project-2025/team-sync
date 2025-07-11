@@ -16,16 +16,6 @@ services:
       - postgres
       - liquibase
 
-  supercronic:
-    image: hectormolinero/supercronic:latest
-    container_name: supercronic
-    volumes:
-      - ./cronjobs:/etc/cron.d
-    environment:
-      - TZ=Europe/Moscow
-    command: /etc/cron.d/cronfile
-    restart: unless-stopped
-
   backend-projects:
     build: ./back/projects
     environment:
