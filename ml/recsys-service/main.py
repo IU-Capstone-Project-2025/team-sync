@@ -7,6 +7,7 @@ from database.redis_model import RedisModel
 from models.models_merger import ModelsMerger
 from models.tag_based import TagBasedRecommender
 from models.description_based import DescriptionBasedRecommender
+from models.role_based import RoleBasedRecommender
 from metrics.metrics_model import Metrics
 from models.embedder import Embedder
 
