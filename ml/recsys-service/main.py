@@ -58,7 +58,7 @@ async def lifespan(app: FastAPI):
     app.state.scheduler.add_job(
         trigger_recommendation_job,
         'interval',
-        minutes=5,
+        minutes=Config.RECOMMENDATION_JOB_INTERVAL,
         args=[app]
     )
     app.state.scheduler.start()
