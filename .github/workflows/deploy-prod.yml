@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-s
+
       - name: Setup SSH agent and add key
         uses: webfactory/ssh-agent@v0.9.0
         with:

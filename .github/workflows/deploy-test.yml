@@ -28,9 +28,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          cd projects
           IMAGE_BASE=ghcr.io/${{ github.repository_owner }}/my-app
-          docker build -t $IMAGE_BASE:${{ steps.tag.outputs.tag }} .
+          docker build -t $IMAGE_BASE:${{ steps.tag.outputs.tag }} projects
 
       - name: Push Docker image
         run: |
