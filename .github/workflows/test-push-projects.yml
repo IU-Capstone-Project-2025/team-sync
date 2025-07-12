@@ -1,0 +1,15 @@
+name: Java Projects Service Test And Push
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  test-push:
+    uses: ./.github/workflows/templates/test-push-template.yml
+    with:
+      service-dir: back/projects
+      test-report-title: Projects Service Test Coverage
+      image-name: ts=projects
+

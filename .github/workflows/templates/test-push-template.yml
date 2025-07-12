@@ -1,0 +1,28 @@
+name: Image Push Template
+
+on:
+  workflow_call:
+    inputs:
+      service-dir:
+        required: true
+        type: string
+      test-report-title:
+        required: true
+        type: string
+      image-name:
+        required: true
+        type: string
+
+jobs:
+  test:
+    uses: ./.github/workflows/templates/test-template.yml
+    with:
+      service-dir: ${{ inputs.service-dir }}
+      report-title: ${{ inputs.test-report-title }}
+
+  image-push:
+    needs: test
+    uses: ./.github/workflows/templates/image-push-template.yml
+    with:
+      context: ${{ inputs.service-dir }}
+      image-name: ${{ inputs.image-name }}
