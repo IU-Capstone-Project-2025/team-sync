@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import ru.teamsync.projects.dto.request.ProjectCreateRequest;
 import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
+import ru.teamsync.projects.dto.request.RemoveTeamMembersRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.dto.response.ProjectResponse;
 import ru.teamsync.projects.entity.Application;
@@ -79,6 +80,21 @@ public class ProjectService {
         project.setCourse(course);
         projectRepository.save(project);
     }
+
+    public void removeMembersFromProject(Long projectId, Long currentUserId, RemoveTeamMembersRequest request) {
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
+
+        if (!project.getTeamLeadId().equals(currentUserId)) {
+            throw new ResourceAccessDeniedException("You cannot edit this project");
+        }
+
+        for (Long memberId : request.membersToRemove()) {
+            projectMemberRepository.deleteByProjectIdAndMemberId(projectId, memberId);
+        }
+    }
+
 
     public Page<ProjectResponse> getProjects(
             List<Long> skillIds, 
