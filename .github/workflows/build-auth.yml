@@ -1,4 +1,4 @@
-name: TeamSync-Auth Test And Build
+name: TeamSync-Auth Build
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
       contents: read
       packages: write
       pull-requests: write
-    uses: ./.github/workflows/test-template.yml
+    uses: ./.github/workflows/build-template.yml
     with:
       service-dir: back/auth
       image-name: ts-auth
