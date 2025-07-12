@@ -3,6 +3,8 @@ import Popup from "reactjs-popup";
 import InfoOutlineIcon from '@mui/icons-material/InfoOutline';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
+const backendHost = import.meta.env.VITE_BACKEND_HOST
+
 function truncateString({string, maxLength} : {string: string, maxLength: number}){
   if (string.length >  maxLength){
     return string.substring(0, maxLength-1) + "...";
@@ -13,7 +15,7 @@ function truncateString({string, maxLength} : {string: string, maxLength: number
 }
 
 async function deleteApplication(token: string, applicationId: number) : Promise<boolean>{
-  const applicationUrl = "https://dev.team-sync.online/projects/api/v1/applications/" + applicationId.toString();
+  const applicationUrl = `${backendHost}/projects/api/v1/applications/` + applicationId.toString();
     const appJson = {
       applicationId: applicationId
     };
@@ -138,8 +140,7 @@ export default function responseCard({props, onDelete}) {
                             }
                           })
                           .catch(error => console.error("Delete error:", error));
-                        }
-                      }}
+                        }}}
                       >
                       Yes, cancel it
                     </button>

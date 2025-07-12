@@ -2,10 +2,12 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {useMsal} from "@azure/msal-react"
 import {loginRequest} from "../authConfig"
+
 export default function SignUpButton(){
   const {instance, accounts}  = useMsal();
   const handleLogin = async () => {
     try {
+      console.log("Logging in with SSO");
       await instance.loginRedirect(loginRequest);
     } catch (error) {
       console.error("Login failed", error);
