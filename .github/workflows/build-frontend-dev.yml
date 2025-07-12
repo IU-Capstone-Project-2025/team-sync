@@ -13,7 +13,7 @@ jobs:
       pull-requests: write
     uses: ./.github/workflows/template-build-frontend.yml
     with:
-      service-dir: back/frontend
+      service-dir: front
       image-name: ts-frontend-dev
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
