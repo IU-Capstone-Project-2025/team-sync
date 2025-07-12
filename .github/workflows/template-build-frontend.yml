@@ -3,9 +3,6 @@ name: Build Frontend Template
 on:
   workflow_call:
     inputs:
-      backend-host:
-        required: true
-        type: string
       service-dir:
         required: true
         type: string
