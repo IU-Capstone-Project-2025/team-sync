@@ -80,8 +80,7 @@ public class ProjectEndpointsTest extends IntegrationEnvironment {
                 "ACTIVE",
                 null,
                 null,
-                5,
-                null
+                5
         );
 
         String json = objectMapper.writeValueAsString(projectUpdateRequest);

@@ -27,8 +27,5 @@ public record ProjectUpdateRequest(
     List<Long> roles,
     
     @JsonProperty("required_members_count")
-    Integer requiredMembersCount,
-
-    @JsonProperty("members_to_remove")
-    List<Long> membersToRemove
+    Integer requiredMembersCount
 ) {}
