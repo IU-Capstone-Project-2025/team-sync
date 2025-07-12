@@ -1,0 +1,21 @@
+name: TeamSync-Auth Test And Push
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  test-push:
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/test-push-template.yml
+    with:
+      service-dir: back/auth
+      test-report-title: Auth Service Test Coverage
+      image-name: ts-auth
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
