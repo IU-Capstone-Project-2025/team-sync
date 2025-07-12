@@ -9,7 +9,13 @@ on:
       image-name:
         required: true
         type: string
-
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
+      BACKEND_HOST:
+        required: true
 jobs:
   build-prod:
     runs-on: ubuntu-latest
