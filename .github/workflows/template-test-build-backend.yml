@@ -1,4 +1,4 @@
-name: Test Push Template
+name: Test Build Backend Template
 
 on:
   workflow_call:
@@ -24,7 +24,7 @@ jobs:
       contents: read
       packages: write
       pull-requests: write
-    uses: ./.github/workflows/test-template.yml
+    uses: ./.github/workflows/template-test-backend.yml
     with:
       service-dir: ${{ inputs.service-dir }}
       report-title: ${{ inputs.test-report-title }}
@@ -35,7 +35,7 @@ jobs:
       packages: write
       pull-requests: write
     needs: test
-    uses: ./.github/workflows/build-template.yml
+    uses: ./.github/workflows/template-build-backend.yml
     with:
       service-dir: ${{ inputs.service-dir }}
       image-name: ${{ inputs.image-name }}

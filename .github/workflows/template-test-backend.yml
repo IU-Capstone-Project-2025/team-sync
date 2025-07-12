@@ -1,4 +1,4 @@
-name: Java Service Coverage Template
+name: Test Backend Template
 
 on:
   workflow_call:

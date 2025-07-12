@@ -1,21 +1,23 @@
-name: Build Template
+name: Build Frontend Template
 
 on:
   workflow_call:
     inputs:
+      type:
+        required: true
+        type: string
+      backend-host:
+        required: true
+        type: string
       service-dir:
         required: true
         type: string
       image-name:
         required: true
         type: string
-    secrets:
-      DOCKERHUB_USERNAME:
-        required: true
-      DOCKERHUB_TOKEN:
-        required: true
+
 jobs:
-  build:
+  build-prod:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -42,6 +44,8 @@ jobs:
             FINAL_TAG="dev-$(date +%s)"
           fi
 
+          FINAL_TAG="${FINAL_TAG}-${{ inputs.backend-type }}"
+
           echo "tag=$FINAL_TAG" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
@@ -59,3 +63,5 @@ jobs:
           context: ${{ inputs.service-dir }}
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image-name }}:${{ steps.tag.outputs.tag }}
+          build-args: |
+            VITE_BACKEND_HOST=${{ inputs.backend-host }}

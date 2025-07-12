@@ -10,7 +10,7 @@ jobs:
       contents: read
       packages: write
       pull-requests: write
-    uses: ./.github/workflows/test-build-template.yml
+    uses: ./.github/workflows/template-test-build-backend.yml
     with:
       service-dir: back/resume
       test-report-title: Resume Service Test Coverage
