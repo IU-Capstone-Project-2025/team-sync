@@ -1,4 +1,4 @@
-name: TeamSync-Projects Test And Build
+name: Test Build TeamSync-Projects 
 
 on:
   push:

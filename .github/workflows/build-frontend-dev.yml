@@ -1,4 +1,4 @@
-name: Build TeamSync-Auth
+name: Build TeamSync-Frontend Dev
 
 on:
   push:
@@ -11,10 +11,11 @@ jobs:
       contents: read
       packages: write
       pull-requests: write
-    uses: ./.github/workflows/template-build-backend.yml
+    uses: ./.github/workflows/template-build-frontend.yml
     with:
-      service-dir: back/auth
-      image-name: ts-auth
+      service-dir: back/frontend
+      image-name: ts-frontend-dev
+      backend-host: ${{ secrets.BACKEND_HOST_DEV }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

@@ -3,9 +3,6 @@ name: Build Frontend Template
 on:
   workflow_call:
     inputs:
-      type:
-        required: true
-        type: string
       backend-host:
         required: true
         type: string
@@ -43,8 +40,6 @@ jobs:
           else
             FINAL_TAG="dev-$(date +%s)"
           fi
-
-          FINAL_TAG="${FINAL_TAG}-${{ inputs.backend-type }}"
 
           echo "tag=$FINAL_TAG" >> $GITHUB_OUTPUT
 

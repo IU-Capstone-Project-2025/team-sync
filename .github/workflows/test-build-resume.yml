@@ -1,4 +1,4 @@
-name: TeamSync-Resume Test And Build
+name: Test Build TeamSync-Resume 
 on:
   push:
     branches:
