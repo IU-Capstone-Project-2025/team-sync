@@ -21,4 +21,9 @@ public class RoleController {
     public BaseResponse<Page<Role>> getRoles(Pageable pageable) {
         return BaseResponse.of(roleService.getRoles(pageable));
     }
+
+    @GetMapping("/in-projects")
+    public BaseResponse<Page<Role>> getRolesInProject(Pageable pageable) {
+        return BaseResponse.of(roleService.getRolesInProjects(pageable));
+    }
 }

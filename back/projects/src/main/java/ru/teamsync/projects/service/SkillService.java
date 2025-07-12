@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import ru.teamsync.projects.entity.Skill;
 import ru.teamsync.projects.repository.SkillRepository;
 
@@ -15,5 +16,9 @@ public class SkillService {
 
     public Page<Skill> getSkills(Pageable pageable) {
         return skillRepository.findAll(pageable);
+    }
+
+    public Page<Skill> getSkillsInProjects(Pageable pageable) {
+        return skillRepository.findSkillsInProjects(pageable);
     }
 }
