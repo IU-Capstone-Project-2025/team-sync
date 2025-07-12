@@ -1,4 +1,4 @@
-name: Image Push Template
+name: Test Push Template
 
 on:
   workflow_call:
@@ -15,14 +15,14 @@ on:
 
 jobs:
   test:
-    uses: ./.github/workflows/templates/test-template.yml
+    uses: ./.github/workflows/test-template.yml
     with:
       service-dir: ${{ inputs.service-dir }}
       report-title: ${{ inputs.test-report-title }}
 
   image-push:
     needs: test
-    uses: ./.github/workflows/templates/image-push-template.yml
+    uses: ./.github/workflows/image-push-template.yml
     with:
       context: ${{ inputs.service-dir }}
       image-name: ${{ inputs.image-name }}
