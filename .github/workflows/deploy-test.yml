@@ -35,6 +35,6 @@ jobs:
       - name: Build & Push
         uses: docker/build-push-action@v5
         with:
-          context: projects
+          context: back/projects
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ts-projects:${{ steps.tag.outputs.tag }}
