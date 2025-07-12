@@ -1,4 +1,4 @@
-name: TeamSync-Resume Test And Push
+name: TeamSync-Auth Test And Build
 
 on:
   push:
@@ -6,16 +6,15 @@ on:
       - '**'
 
 jobs:
-  test-push:
+  push:
     permissions:
       contents: read
       packages: write
       pull-requests: write
-    uses: ./.github/workflows/test-push-template.yml
+    uses: ./.github/workflows/test-template.yml
     with:
-      service-dir: back/resume
-      test-report-title: Resume Service Test Coverage
-      image-name: ts-resume
+      service-dir: back/auth
+      image-name: ts-auth
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

@@ -1,21 +1,20 @@
-name: TeamSync-Projects Test And Push
-
+name: TeamSync-Resume Test And Build
 on:
   push:
     branches:
       - '**'
 
 jobs:
-  test-push:
+  test-build:
     permissions:
       contents: read
       packages: write
       pull-requests: write
-    uses: ./.github/workflows/test-push-template.yml
+    uses: ./.github/workflows/test-build-template.yml
     with:
-      service-dir: back/projects
-      test-report-title: Projects Service Test Coverage
-      image-name: ts-projects
+      service-dir: back/resume
+      test-report-title: Resume Service Test Coverage
+      image-name: ts-resume
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

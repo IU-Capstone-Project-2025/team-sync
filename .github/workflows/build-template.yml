@@ -1,9 +1,9 @@
-name: Image Push Template
+name: Build Template
 
 on:
   workflow_call:
     inputs:
-      context:
+      service-dir:
         required: true
         type: string
       image-name:
@@ -15,7 +15,7 @@ on:
       DOCKERHUB_TOKEN:
         required: true
 jobs:
-  docker-image-push:
+  build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -56,6 +56,6 @@ jobs:
       - name: Build & Push
         uses: docker/build-push-action@v5
         with:
-          context: ${{ inputs.context }}
+          context: ${{ inputs.service-dir }}
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image-name }}:${{ steps.tag.outputs.tag }}

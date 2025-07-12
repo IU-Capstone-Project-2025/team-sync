@@ -29,15 +29,15 @@ jobs:
       service-dir: ${{ inputs.service-dir }}
       report-title: ${{ inputs.test-report-title }}
 
-  image-push:
+  build:
     permissions:
       contents: read
       packages: write
       pull-requests: write
     needs: test
-    uses: ./.github/workflows/image-push-template.yml
+    uses: ./.github/workflows/build-template.yml
     with:
-      context: ${{ inputs.service-dir }}
+      service-dir: ${{ inputs.service-dir }}
       image-name: ${{ inputs.image-name }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
