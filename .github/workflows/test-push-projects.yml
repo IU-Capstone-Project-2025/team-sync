@@ -8,6 +8,8 @@ on:
 jobs:
   test-push:
     permissions:
+      contents: read
+      packages: write
       pull-requests: write
     uses: ./.github/workflows/test-push-template.yml
     with:

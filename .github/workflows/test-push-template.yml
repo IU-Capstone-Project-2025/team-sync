@@ -16,6 +16,8 @@ on:
 jobs:
   test:
     permissions:
+      contents: read
+      packages: write
       pull-requests: write
     uses: ./.github/workflows/test-template.yml
     with:
@@ -24,6 +26,8 @@ jobs:
 
   image-push:
     permissions:
+      contents: read
+      packages: write
       pull-requests: write
     needs: test
     uses: ./.github/workflows/image-push-template.yml
