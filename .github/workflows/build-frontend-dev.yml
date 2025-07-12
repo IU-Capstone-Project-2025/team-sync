@@ -15,7 +15,7 @@ jobs:
     with:
       service-dir: back/frontend
       image-name: ts-frontend-dev
-      backend-host: ${{ secrets.BACKEND_HOST_DEV }}
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      BACKEND_HOST: ${{ secrets.BACKEND_HOST_DEV }}

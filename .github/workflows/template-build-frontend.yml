@@ -59,4 +59,4 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.image-name }}:${{ steps.tag.outputs.tag }}
           build-args: |
-            VITE_BACKEND_HOST=${{ inputs.backend-host }}
+            VITE_BACKEND_HOST=${{ secrets.BACKEND_HOST }}
