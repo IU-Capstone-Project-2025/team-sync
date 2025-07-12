@@ -10,6 +10,7 @@ class ONNXInference:
         self.tokenizer = Tokenizer.from_file(tokenizer_path)
         self.tokenizer.enable_padding(pad_id=0, pad_token="[PAD]")
         self.tokenizer.enable_truncation(max_length=512)
+        self.shape = self.session.get_inputs()[0].shape
 
     def l2_normalize(self, embeddings):
         norms = np.linalg.norm(embeddings, axis=1, keepdims=True)

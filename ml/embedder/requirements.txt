@@ -3,3 +3,5 @@ fastapi
 onnxruntime
 tokenizers
 numpy
+qdrant-client
+psycopg2-binary
