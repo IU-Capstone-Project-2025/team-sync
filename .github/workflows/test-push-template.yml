@@ -15,12 +15,16 @@ on:
 
 jobs:
   test:
+    permissions:
+      pull-requests: write
     uses: ./.github/workflows/test-template.yml
     with:
       service-dir: ${{ inputs.service-dir }}
       report-title: ${{ inputs.test-report-title }}
 
   image-push:
+    permissions:
+      pull-requests: write
     needs: test
     uses: ./.github/workflows/image-push-template.yml
     with:

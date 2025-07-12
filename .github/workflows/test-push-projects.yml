@@ -7,6 +7,8 @@ on:
 
 jobs:
   test-push:
+    permissions:
+      pull-requests: write
     uses: ./.github/workflows/test-push-template.yml
     with:
       service-dir: back/projects
