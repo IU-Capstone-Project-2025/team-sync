@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request
 from api.endpoints.v1.base_models.embedding import EmbeddingRequest
+from api.endpoints.v1.base_models.qdrant import QdrantEmbeddingRequest
 
 router = APIRouter(prefix="/api/v1", tags=["embedder"])
 
@@ -13,3 +14,18 @@ async def create_embedding(req: Request, request: EmbeddingRequest):
     embeddings = req.app.state.onnx.get_embeddings(texts)
     embeddings = [emb.tolist() if hasattr(emb, 'tolist') else emb for emb in embeddings]
     return {"embeddings": embeddings}
+
+@router.post("/points")
+async def create_points(req: Request, request: QdrantEmbeddingRequest):
+    text = req.app.state.postgres.fetch_description(request.table, request.id)
+    embeddings = req.app.state.onnx.get_embeddings(text)
+    embeddings = [emb.tolist() if hasattr(emb, 'tolist') else emb for emb in embeddings]
+    req.app.state.qdrant.add_embeddings(request.table, request.id, embeddings)
+    return {"status": "points created"}
+
+@router.get("/points/{table}/{id}")
+async def get_points(req: Request, table: str, id: int):
+    if table not in ["project", "student"]:
+        return {"error": "Invalid table name. Use 'project' or 'student'."}
+    points = req.app.state.qdrant.get_embeddings(table, id)
+    return {"points": points}
