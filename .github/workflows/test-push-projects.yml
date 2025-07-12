@@ -16,4 +16,6 @@ jobs:
       service-dir: back/projects
       test-report-title: Projects Service Test Coverage
       image-name: ts-projects
-
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

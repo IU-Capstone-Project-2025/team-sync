@@ -12,6 +12,11 @@ on:
       image-name:
         required: true
         type: string
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
 
 jobs:
   test:
@@ -34,3 +39,6 @@ jobs:
     with:
       context: ${{ inputs.service-dir }}
       image-name: ${{ inputs.image-name }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
