@@ -2,6 +2,8 @@ package ru.teamsync.projects.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.validation.constraints.Min;
+
 import java.util.List;
 
 public record ProjectUpdateRequest(
@@ -26,6 +28,7 @@ public record ProjectUpdateRequest(
     @JsonProperty("roles")
     List<Long> roles,
     
+    @Min(0)
     @JsonProperty("required_members_count")
     Integer requiredMembersCount
 ) {}
