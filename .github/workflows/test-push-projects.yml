@@ -1,10 +1,9 @@
-name: Java Projects Service Test And Push
+name: TeamSync-Projects Test And Push
 
 on:
-  pull_request:
   push:
     branches:
-      - main
+      - '**'
 
 jobs:
   test-push:
@@ -12,5 +11,5 @@ jobs:
     with:
       service-dir: back/projects
       test-report-title: Projects Service Test Coverage
-      image-name: ts=projects
+      image-name: ts-projects
 
