@@ -128,7 +128,10 @@ class DBModel:
             with self.connection.cursor() as cursor:
                 query = "SELECT person_id FROM student WHERE id = %s"
                 cursor.execute(query, (id,))
-                person_id = cursor.fetchone()
+                result = cursor.fetchone()
+                person_id = result[0] if result else None
+                if person_id is None:
+                    return []
                 query = "SELECT project_id FROM student_favourite_project WHERE person_id = %s"
                 cursor.execute(query, (person_id,))
                 return [row[0] for row in cursor.fetchall()]
