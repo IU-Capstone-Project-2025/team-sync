@@ -116,3 +116,12 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ; 
+  - changeSet:
+      id: 14
+      author: Danis Sharafiev
+      changes:
+        - sqlFile:
+            path: scripts/TS-230-create-clicks-table.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ; 
