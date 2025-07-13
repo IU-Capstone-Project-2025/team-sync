@@ -108,7 +108,7 @@ async def get_metrics_map(request: Request):
 @router.get("/postgres/clicks/{user_id}")
 async def get_user_clicks(user_id: int, request: Request):
     db = request.app.state.db
-    clicks = db.get_user_clicks(user_id)
+    clicks = db.fetch_clicks(user_id)
     if not clicks:
         return {"status": "No clicks found for the user", "user_id": user_id}
     return {"status": "User clicks retrieved successfully", "user_id": user_id, "clicks": clicks}
@@ -116,7 +116,7 @@ async def get_user_clicks(user_id: int, request: Request):
 @router.get("/postgres/applications/{user_id}")
 async def get_user_applications(user_id: int, request: Request):
     db = request.app.state.db
-    applications = db.get_user_applications(user_id)
+    applications = db.fetch_applies(user_id)
     if not applications:
         return {"status": "No applications found for the user", "user_id": user_id}
     return {"status": "User applications retrieved successfully", "user_id": user_id, "applications": applications}
@@ -124,7 +124,7 @@ async def get_user_applications(user_id: int, request: Request):
 @router.get("/postgres/favorites/{user_id}")
 async def get_user_favorites(user_id: int, request: Request):
     db = request.app.state.db
-    favorites = db.get_user_favorites(user_id)
+    favorites = db.fetch_favorites(user_id)
     if not favorites:
         return {"status": "No favorites found for the user", "user_id": user_id}
     return {"status": "User favorites retrieved successfully", "user_id": user_id, "favorites": favorites}

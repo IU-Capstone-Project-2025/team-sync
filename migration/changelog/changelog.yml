@@ -125,3 +125,12 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ; 
+  - changeSet:
+      id: 15
+      author: Danis Sharafiev
+      changes:
+        - sqlFile:
+            path: scripts/TS-232-add-test-data.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ; 

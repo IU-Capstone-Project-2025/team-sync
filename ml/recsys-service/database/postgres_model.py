@@ -37,6 +37,7 @@ class DBModel:
                 return cursor.fetchall()
         except psycopg2.Error as e:
             self.logger.error(f"Error fetching data from table {table_name}: {e}")
+            self.connection.rollback()
             return []
         
     def fetch_skills(self, table_name, id):
@@ -59,6 +60,7 @@ class DBModel:
                 return [i[0] for i in cursor.fetchall()]
         except psycopg2.Error as e:
             self.logger.error(f"Error fetching skills for user or project {id}: {e}")
+            self.connection.rollback()
             return []
         
     def fetch_roles(self, table_name, id):
@@ -81,6 +83,7 @@ class DBModel:
                 return [i[0] for i in cursor.fetchall()]
         except psycopg2.Error as e:
             self.logger.error(f"Error fetching roles for user or project {id}: {e}")
+            self.connection.rollback()
             return []
 
     def fetch_ids(self, table_name):
@@ -95,6 +98,7 @@ class DBModel:
                 return [row[0] for row in cursor.fetchall()]
         except psycopg2.Error as e:
             self.logger.error(f"Error fetching IDs from table {table_name}: {e}")
+            self.connection.rollback()
             return []
 
     def fetch_description(self, table, id):
@@ -112,6 +116,7 @@ class DBModel:
                 return result[0] if result else None
         except psycopg2.Error as e:
             self.logger.error(f"Error fetching description for {table} with ID {id}: {e}")
+            self.connection.rollback()
             return None
 
     def fetch_favorites(self, id):
@@ -121,11 +126,15 @@ class DBModel:
         
         try:
             with self.connection.cursor() as cursor:
-                query = "SELECT project_id FROM student_favourite_project WHERE student_id = %s"
+                query = "SELECT person_id FROM student WHERE id = %s"
                 cursor.execute(query, (id,))
+                person_id = cursor.fetchone()
+                query = "SELECT project_id FROM student_favourite_project WHERE person_id = %s"
+                cursor.execute(query, (person_id,))
                 return [row[0] for row in cursor.fetchall()]
         except psycopg2.Error as e:
             self.logger.error(f"Error fetching favorites for user {id}: {e}")
+            self.connection.rollback()
             return []
         
     def fetch_applies(self, id):
@@ -138,14 +147,18 @@ class DBModel:
                 query = "SELECT person_id FROM student WHERE id = %s"
                 cursor.execute(query, (id,))
                 person_id = cursor.fetchone()
+                self.logger.info(f"Fetched person_id for user {id}: {person_id}")
                 if not person_id:
                     return []
                 person_id = person_id[0]
-                query = "SELECT project_id FROM application WHERE student_id = %s"
+                query = "SELECT project_id FROM application WHERE person_id = %s"
                 cursor.execute(query, (person_id,))
-                return [row[0] for row in cursor.fetchall()]
+                rows = cursor.fetchall()
+                self.logger.info(f"Fetched applies for user {id}: {rows}")
+                return [row[0] for row in rows]
         except psycopg2.Error as e:
             self.logger.error(f"Error fetching applies for user {id}: {e}")
+            self.connection.rollback()
             return []
 
     def fetch_clicks(self, id):
@@ -160,6 +173,7 @@ class DBModel:
                 return [row[0] for row in cursor.fetchall()]
         except psycopg2.Error as e:
             self.logger.error(f"Error fetching clicks for user {id}: {e}")
+            self.connection.rollback()
             return []
 
     def get_user_description(self, user_id):
@@ -215,4 +229,3 @@ class DBModel:
             self.connection.close()
             self.connection = None
         self.logger.info("Database connection closed.")
-    
