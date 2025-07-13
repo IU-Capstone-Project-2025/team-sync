@@ -155,7 +155,7 @@ class DBModel:
         
         try:
             with self.connection.cursor() as cursor:
-                query = "SELECT project_id FROM user_project_click WHERE user_id = %s"
+                query = "SELECT project_id FROM student_project_click WHERE student_id = %s"
                 cursor.execute(query, (id,))
                 return [row[0] for row in cursor.fetchall()]
         except psycopg2.Error as e:
