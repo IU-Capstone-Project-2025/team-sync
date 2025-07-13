@@ -114,6 +114,54 @@ class DBModel:
             self.logger.error(f"Error fetching description for {table} with ID {id}: {e}")
             return None
 
+    def fetch_favorites(self, id):
+        """Fetches the favorite projects for a given user."""
+        if not self.connection:
+            raise ConnectionError("Database connection is not established.")
+        
+        try:
+            with self.connection.cursor() as cursor:
+                query = "SELECT project_id FROM student_favourite_project WHERE student_id = %s"
+                cursor.execute(query, (id,))
+                return [row[0] for row in cursor.fetchall()]
+        except psycopg2.Error as e:
+            self.logger.error(f"Error fetching favorites for user {id}: {e}")
+            return []
+        
+    def fetch_applies(self, id):
+        """Fetches the applied projects for a given user."""
+        if not self.connection:
+            raise ConnectionError("Database connection is not established.")
+        
+        try:
+            with self.connection.cursor() as cursor:
+                query = "SELECT person_id FROM student WHERE id = %s"
+                cursor.execute(query, (id,))
+                person_id = cursor.fetchone()
+                if not person_id:
+                    return []
+                person_id = person_id[0]
+                query = "SELECT project_id FROM application WHERE student_id = %s"
+                cursor.execute(query, (person_id,))
+                return [row[0] for row in cursor.fetchall()]
+        except psycopg2.Error as e:
+            self.logger.error(f"Error fetching applies for user {id}: {e}")
+            return []
+
+    def fetch_clicks(self, id):
+        """Fetches the clicked projects for a given user."""
+        if not self.connection:
+            raise ConnectionError("Database connection is not established.")
+        
+        try:
+            with self.connection.cursor() as cursor:
+                query = "SELECT project_id FROM user_project_click WHERE user_id = %s"
+                cursor.execute(query, (id,))
+                return [row[0] for row in cursor.fetchall()]
+        except psycopg2.Error as e:
+            self.logger.error(f"Error fetching clicks for user {id}: {e}")
+            return []
+
     def get_user_description(self, user_id):
         """Fetches the description for a given user."""
         return self.fetch_description("student", user_id)
