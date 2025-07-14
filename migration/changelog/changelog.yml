@@ -126,7 +126,7 @@ databaseChangeLog:
             splitStatements: true
             endDelimiter: ; 
   - changeSet:
-      id: 14
+      id: 15
       author: Danis Sharafiev
       changes:
         - sqlFile:
@@ -135,7 +135,7 @@ databaseChangeLog:
             splitStatements: true
             endDelimiter: ; 
   - changeSet:
-      id: 15
+      id: 16
       author: Danis Sharafiev
       changes:
         - sqlFile:
@@ -144,7 +144,7 @@ databaseChangeLog:
             splitStatements: true
             endDelimiter: ; 
   - changeSet:
-      id: 16
+      id: 17
       author: Elizaveta Zagurskih
       changes:
         - sqlFile:
