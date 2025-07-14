@@ -126,7 +126,25 @@ databaseChangeLog:
             splitStatements: true
             endDelimiter: ; 
   - changeSet:
+      id: 14
+      author: Danis Sharafiev
+      changes:
+        - sqlFile:
+            path: scripts/TS-230-create-clicks-table.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ; 
+  - changeSet:
       id: 15
+      author: Danis Sharafiev
+      changes:
+        - sqlFile:
+            path: scripts/TS-232-add-test-data.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ; 
+  - changeSet:
+      id: 16
       author: Elizaveta Zagurskih
       changes:
         - sqlFile:

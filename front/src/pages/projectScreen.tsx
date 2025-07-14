@@ -9,11 +9,13 @@ export default function ProjectScreen() {
   const navigate = useNavigate();
   return (
     <div className="flex flex-col min-h-screen">
-      <HomeHeader />
+      <div className="mb-32">
+        <HomeHeader />
+      </div>
       <div className="flex flex-col flex-1"> 
         <div className="flex flex-col px-18">
           <div className="flex flex-row justify-start items-center py-5"> 
-            <ArrowBackIosIcon onClick = {() => {navigate(-1)}} sx={{ fontSize: 24 }} className="cursor-pointer text-[color:var(--secondary-color)]"/>
+            <ArrowBackIosIcon onClick = {() => {navigate("/home")}} sx={{ fontSize: 24 }} className="cursor-pointer text-[color:var(--secondary-color)]"/>
             <h2 className="font-[Inter] text-(--primary-color) text-xl">
               All projects
             </h2>
@@ -40,7 +42,7 @@ export default function ProjectScreen() {
           </button>
         </div>
       </div>
-      <Footer />
+      <Footer/>
     </div>
   );
 }
