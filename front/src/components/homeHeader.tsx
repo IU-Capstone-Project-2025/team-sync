@@ -13,8 +13,8 @@ export default function HomeHeader(){
   const navigate = useNavigate();
 
   return (
-    <div className="flex-0 bg-(--header-footer-color) ">
-      <div className='flex flex-row justify-between w-full h-[10%] p-10 pl-15'>
+    <div className="fixed top-0 left-0 w-full z-50 bg-(--header-footer-color) shadow-md">
+      <div className='flex flex-row justify-between items-center px-7 pr-10 pl-15 py-7'>
             <svg
               className="cursor-pointer"
               onClick={() => {
