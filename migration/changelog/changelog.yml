@@ -118,6 +118,15 @@ databaseChangeLog:
             endDelimiter: ; 
   - changeSet:
       id: 14
+      author: Danis Sharafiev
+      changes:
+        - sqlFile:
+            path: scripts/TS-214-replace-project-names.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ; 
+  - changeSet:
+      id: 15
       author: Elizaveta Zagurskih
       changes:
         - sqlFile:

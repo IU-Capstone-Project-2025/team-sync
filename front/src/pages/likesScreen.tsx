@@ -6,8 +6,9 @@ import AddIcon from '@mui/icons-material/Add';
 import ResponseCard from "../components/responseCard"
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useNavigate } from "react-router-dom";
+import Card from "../components/card";
 interface Project {
-  course_name: string;
+  course_id: number;
   description: string;
   id: number;
   name: string;
@@ -15,6 +16,7 @@ interface Project {
   role_ids: number[];
   status: "DRAFT" | "OPEN" | "IN_PROGRESS" | "COMPLETE";
   team_lead_id: number;
+  required_members_count: number;
 }
 interface Application {
   application_id: number;
@@ -64,11 +66,10 @@ async function getSkills(token: string) {
     console.error(error.message);
   }
 }
-
-async function getApplications(token: string) {
-  const applicationsUrl = `${backendHost}/projects/api/v1/applications/my`;
+async function getLikedProjects(token: string) {
+  const projectsUrl = `${backendHost}/projects/api/v1/favourite/my`;
   try {
-    const response = await fetch(applicationsUrl, {
+    const response = await fetch(projectsUrl, {
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -78,16 +79,50 @@ async function getApplications(token: string) {
       throw new Error('Response error: ' + response.status.toString());
     }
     const json = await response.json();
-    return {
-      applications: json.data.content
-    }
+    return json.data.content
   }
   catch (error) {
     console.error(error.message);
-    return {
-      applications: []
-    };
+    return [];
   }
+}
+
+async function likeProject(projId: number, token: string){
+  const projectJson = {
+    project_id: projId
+  };
+  const applicationUrl = `${backendHost}/projects/api/v1/favourite`;
+  const response = await fetch(applicationUrl, {  
+    method: 'POST', 
+    mode: 'cors', 
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify(projectJson) 
+  });
+  if (!response.ok){
+    alert("Like operation failed");
+    return false;
+  }
+  return true;
+}
+
+async function unlikeProject(projId: number, token: string){
+  const applicationUrl = `${backendHost}/projects/api/v1/favourite/${projId}`;
+  const response = await fetch(applicationUrl, {  
+    method: 'DELETE', 
+    mode: 'cors', 
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  if (!response.ok){
+    alert("Unlike operation failed");
+    return false;
+  }
+  return true;
 }
 
 function getNames(ids: number[] = [], all: {id: number, name: string}[] = []) {
@@ -99,11 +134,14 @@ export default function ResponseScreen(){
   const navigate = useNavigate();
   const [roles, setRoles] = useState<{id: number, name: string}[]>([]);
   const [skills, setSkills] = useState<{id: number, name: string}[]>([]);
-  const [applications, setApplications] = useState<Application[]>([]);
+  const [likes, setLikes] = useState<{id: number, person_id: number, project: Project}[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);
-
-  const handleApplicationDeleted = () => {
-    setRefreshKey(prev => prev + 1);
+  const handleLikeChange = async () => {
+    const token = localStorage.getItem("backendToken");
+    if (token) {
+      const updatedLikedProjects = await getLikedProjects(token);
+      setLikes(updatedLikedProjects);
+    }
   };
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
@@ -115,7 +153,7 @@ export default function ResponseScreen(){
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
-      getApplications(token).then(result => setApplications(result.applications));
+      getLikedProjects(token).then(result => setLikes(result));
     }
   }, [refreshKey]);
   return(
@@ -132,23 +170,24 @@ export default function ResponseScreen(){
           <div className="flex flex-row gap-4">
             <Pill type="Active" number={0}/>
           </div>
-          {applications.length && applications.map((app) => (
-            <ResponseCard
-              key={app.application_id}
+          {likes.length > 0 && roles.length > 0 && likes.map((project) => project.project).map((proj) => (
+            <Card
+              key={proj.id}
               props={{
-                courseName: app.project.course_name,
-                description: app.project.description,
-                applicationId: app.application_id,
-                projectName: app.project.name,
-                roles: getNames(app.project.role_ids, roles),
-                skills: getNames(app.project.skill_ids, skills),
-                appStatus: app.status,
-                projStatus: app.project.status,
-                teamLeadId: app.project.team_lead_id
+                courseName: likes.at(proj.course_id-1)?.project.name || "",
+                description: proj.description,
+                id: proj.id,
+                projectName: proj.name,
+                roles: getNames(proj.role_ids, roles),
+                skills: getNames(proj.skill_ids, skills),
+                status: proj.status,
+                teamLeadId: proj.team_lead_id,
+                requiredMembersCount: proj.required_members_count,
+                liked: true
               }}
-              onDelete = {handleApplicationDeleted}
+              onLikeChange={handleLikeChange}
             />
-            ))}
+          ))}
         </div>
       </div>
       <Footer />
