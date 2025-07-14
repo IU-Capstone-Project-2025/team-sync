@@ -47,6 +47,15 @@ public class ProjectController {
         return BaseResponse.of(myProjects);
     }
 
+    @GetMapping("{projectId}")
+    public BaseResponse<ProjectResponse> getProjectById(
+            @PathVariable Long projectId) {
+            
+        long userId = securityContextService.getCurrentUserId();
+        ProjectResponse project = projectService.getProjectById(userId, projectId);
+        return BaseResponse.of(project);
+    }
+
     @PutMapping("/{projectId}")
     public ResponseEntity<BaseResponse<Void>> updateProject(
             @PathVariable Long projectId,
