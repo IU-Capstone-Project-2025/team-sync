@@ -139,7 +139,7 @@ databaseChangeLog:
       author: Elizaveta Zagurskih
       changes:
         - sqlFile:
-            path: scripts/TS-248-update-click-count.sql
+            path: scripts/TS-246-update-click-count.sql
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ; 

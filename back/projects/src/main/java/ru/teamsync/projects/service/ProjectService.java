@@ -117,20 +117,19 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId)
             .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
 
-        inlcrementProjectClick(userId, projectId); 
+        incrementProjectClick(userId, projectId); 
 
         return projectMapper.toDto(project);
     }
 
     @Transactional
-    private void inlcrementProjectClick(Long studentId, Long projectId) {
+    private void incrementProjectClick(Long studentId, Long projectId) {
         StudentProjectClickId clickId = new StudentProjectClickId(studentId, projectId);
         StudentProjectClick click = studentProjectClickRepository.findById(clickId)
                 .orElseGet(() -> {
                     StudentProjectClick newClick = new StudentProjectClick();
                     newClick.setId(clickId);
-                    newClick.setClickCount(0);
-                    return newClick;
+                    return studentProjectClickRepository.save(newClick);
                 });
 
         click.setClickCount(click.getClickCount() + 1);
