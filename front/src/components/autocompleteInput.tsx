@@ -10,6 +10,7 @@ import { autocompleteClasses } from '@mui/material/Autocomplete';
 const Root = styled('div')(({ theme }) => ({
   color: 'rgba(0,0,0,0.85)',
   fontSize: '14px',
+  position: 'relative',
   ...theme.applyStyles('dark', {
     color: 'rgba(255,255,255,0.65)',
   }),
@@ -40,7 +41,7 @@ const InputWrapper = styled('div')(({ theme }) => ({
     }),
   },
   '& input': {
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
     color: 'rgba(0,0,0,.85)',
     height: '30px',
     boxSizing: 'border-box',
@@ -120,7 +121,17 @@ const Listbox = styled('ul')(({ theme }) => ({
   maxHeight: '250px',
   borderRadius: '4px',
   boxShadow: '0 2px 8px rgb(0 0 0 / 0.15)',
-  zIndex: 1,
+  zIndex: 3,
+  '&[data-placement="top"]': {
+    bottom: '100%',
+    top: 'auto',
+    margin: '0 0 2px 0'
+  },
+  '&[data-placement="bottom"]': {
+    top: '100%',
+    bottom: 'auto',
+    margin: '2px 0 0 0'
+  },
   ...theme.applyStyles('dark', {
     backgroundColor: '#141414',
   }),
@@ -156,6 +167,8 @@ const Listbox = styled('ul')(({ theme }) => ({
   },
 }));
 export default function CustomizedHook({ arr, value, onChange }: { arr: { id: number; name: string; }[], value: { id: number; name: string; }[], onChange: (val: { id: number; name: string; }[]) => void }) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  
   const {
     getRootProps,
     getInputLabelProps,
@@ -165,7 +178,6 @@ export default function CustomizedHook({ arr, value, onChange }: { arr: { id: nu
     getOptionProps,
     groupedOptions,
     focused,
-    setAnchorEl,
   } = useAutocomplete({
     id: 'customized-hook',
     multiple: true,
@@ -178,7 +190,12 @@ export default function CustomizedHook({ arr, value, onChange }: { arr: { id: nu
   return (
     <Root>
       <div {...getRootProps()}>
-        <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
+        <InputWrapper 
+          ref={(node) => {
+            setAnchorEl(node);
+          }} 
+          className={focused ? 'focused' : ''}
+        >
           {value.map((v: {id : number; name: string}) => v.name).map((option: string, index: number) => {
             const { key, ...tagProps } = getTagProps({ index });
             return <StyledTag key={key} {...tagProps} label={option} />;
@@ -187,7 +204,10 @@ export default function CustomizedHook({ arr, value, onChange }: { arr: { id: nu
         </InputWrapper>
       </div>
       {groupedOptions.length > 0 ? (
-        <Listbox {...getListboxProps()}>
+        <Listbox {...getListboxProps()}
+              data-placement={
+          window.innerHeight - anchorEl?.getBoundingClientRect().bottom < 250 ? 'top' : 'bottom'
+        }>
           {groupedOptions.map((option, index) => {
             const { key, ...optionProps } = getOptionProps({ option, index });
             return (

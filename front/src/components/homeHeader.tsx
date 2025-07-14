@@ -13,8 +13,8 @@ export default function HomeHeader(){
   const navigate = useNavigate();
 
   return (
-    <div className="flex-0 bg-(--header-footer-color) ">
-      <div className='flex flex-row justify-between w-full h-[10%] p-10 pl-15'>
+    <div className="fixed top-0 left-0 w-full z-50 bg-(--header-footer-color) shadow-md">
+      <div className='flex flex-row justify-between items-center px-7 pr-10 pl-15 py-7'>
             <svg
               className="cursor-pointer"
               onClick={() => {
@@ -43,7 +43,6 @@ export default function HomeHeader(){
               <NavButton text = "My responses" link = "/responses"/>
               <NavButton text = "My projects" link = "/projects"/>
               <FavoriteBorderIcon onClick = {() => {if(window.location.pathname != "/likes"){navigate("/likes")}}} sx={{ fontSize: 30 }} className="cursor-pointer text-[color:var(--secondary-color)]" />
-              <NotificationsNoneIcon sx={{ fontSize: 30 }} className="text-[color:var(--secondary-color)]"/>
               <Account name ={fullName}/>
             </span>
           </div>
