@@ -46,10 +46,7 @@ services:
       - liquibase-dev
 
   frontend-dev:
-    build: 
-      context: ./front
-      args:
-        - VITE_BACKEND_HOST=${BACKEND_HOST_TEST}
+    image: ssspamqe/ts-frontend-dev:${TS_FRONTEND_TAG}
     ports: 
       - "9004:80"
     depends_on:

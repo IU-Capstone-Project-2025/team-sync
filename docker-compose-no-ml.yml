@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   backend-auth:
+    image: ssspamqe/ts-auth:{TS-AUTH-TAG}
     build: ./back/auth
     ports: 
       - "8084:8080"
@@ -17,7 +18,7 @@ services:
       - liquibase
 
   backend-projects:
-    build: ./back/projects
+    image: ssspamqe/ts-projects:{TS-PROJECTS-TAG}
     environment:
       - TENANT_ID=${TENANT_ID}
       - JWT_KEY=${JWT_KEY}
@@ -31,7 +32,7 @@ services:
       - liquibase
       
   backend-resume:
-    build: ./back/resume
+    image: ssspamqe/ts-resume:{TS-RESUME-TAG}
     environment:
       - TENANT_ID=${TENANT_ID}
       - JWT_KEY=${JWT_KEY}
@@ -45,10 +46,7 @@ services:
       - liquibase
 
   frontend:
-    build: 
-      context: ./front
-      args:
-        - VITE_BACKEND_HOST=${BACKEND_HOST}
+    image: ssspamqe/ts-frontend-prod:{TS-FRONTEND-TAG}
     ports: 
       - "3000:80"
     depends_on:
