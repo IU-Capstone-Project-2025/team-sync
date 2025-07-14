@@ -45,7 +45,7 @@ class RoleBasedRecommender(Recommender):
         self.logger.info(f"Calculated role-based scores for user {user_id}")
         return recommendations  # [0.14, 0.1, 0.2, 0.15]
     
-    def save_data_for_calculation(self, project_ids=None):
+    def save_data_for_calculation(self, project_ids=None, user_ids=None):
         """Save data needed for score calculation."""
         if not project_ids:
             self.logger.warning("No projects available for recommendations.")

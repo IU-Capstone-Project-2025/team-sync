@@ -54,3 +54,10 @@ class Config:
     DESCRIPTION_MODEL_NAME = "all-MiniLM-L6-v2"
 
     EMBEDDER_URL = "http://ml-embedder:8000"
+
+    ALS_FACTORS = 64
+    ALS_REGULARIZATION = 0.01
+    ALS_ITERATIONS = 20
+    FAVORITE_SCORE = 5
+    CLICK_SCORE = 1
+    APPLY_SCORE = 10

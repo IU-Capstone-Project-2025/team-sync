@@ -12,7 +12,7 @@ class TagBasedRecommender(Recommender):
         self.all_skills = {}
         self.projects_with_skills = []
         
-    def calculate_scores(self, user_id, project_ids=None):
+    def calculate_scores(self, user_id, project_ids=None, user_ids=None):
         """Get project recommendations based on project skills."""
         self.logger.info(f"Fetching recommendations for user {user_id}.")
         if not project_ids:

@@ -49,7 +49,7 @@ class ModelsMerger:
             return
 
         for model in self.models:
-            model.save_data_for_calculation(project_ids=project_ids)
+            model.save_data_for_calculation(project_ids=project_ids, user_ids=user_ids)
             self.logger.info(f"Saved data for calculation for model: {model.model_name}.")
 
         for user_id in user_ids:

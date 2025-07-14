@@ -38,7 +38,7 @@ class DescriptionBasedRecommender(Recommender):
         self.logger.info(f"Calculated description-based scores for user {user_id}")
         return recommendations
 
-    def save_data_for_calculation(self, project_ids=None):
+    def save_data_for_calculation(self, project_ids=None, user_ids=None):
         """Save project descriptions for scoring."""
         if not project_ids:
             self.logger.warning("No projects available for saving descriptions.")
