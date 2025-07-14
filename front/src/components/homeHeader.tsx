@@ -43,7 +43,6 @@ export default function HomeHeader(){
               <NavButton text = "My responses" link = "/responses"/>
               <NavButton text = "My projects" link = "/projects"/>
               <FavoriteBorderIcon onClick = {() => {if(window.location.pathname != "/likes"){navigate("/likes")}}} sx={{ fontSize: 30 }} className="cursor-pointer text-[color:var(--secondary-color)]" />
-              <NotificationsNoneIcon sx={{ fontSize: 30 }} className="text-[color:var(--secondary-color)]"/>
               <Account name ={fullName}/>
             </span>
           </div>
