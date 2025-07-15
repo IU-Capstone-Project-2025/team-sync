@@ -48,10 +48,10 @@ public class ApplicationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.of(null));
     }
 
-    @DeleteMapping("/{applicationId}")
-    public ResponseEntity<BaseResponse<Void>> deleteApplication(@PathVariable Long applicationId) {
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<BaseResponse<Void>> deleteApplication(@PathVariable Long projectId) {
         long userId = securityContextService.getCurrentUserId();
-        applicationService.deleteApplication(userId, applicationId);
+        applicationService.deleteApplication(userId, projectId);
         return ResponseEntity.ok(BaseResponse.of(null));
     }
 }

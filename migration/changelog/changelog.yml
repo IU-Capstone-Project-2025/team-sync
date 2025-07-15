@@ -109,10 +109,10 @@ databaseChangeLog:
             endDelimiter: ; 
   - changeSet:
       id: 13
-      author: Danis Sharafiev
+      author: Elizaveta Zagurskih
       changes:
         - sqlFile:
-            path: scripts/TS-214-replace-project-names.sql
+            path: scripts/TS-228-add-team-size-restriction.sql
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ; 
@@ -121,7 +121,7 @@ databaseChangeLog:
       author: Danis Sharafiev
       changes:
         - sqlFile:
-            path: scripts/TS-230-create-clicks-table.sql
+            path: scripts/TS-214-replace-project-names.sql
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ; 
@@ -130,12 +130,30 @@ databaseChangeLog:
       author: Danis Sharafiev
       changes:
         - sqlFile:
-            path: scripts/TS-232-add-test-data.sql
+            path: scripts/TS-230-create-clicks-table.sql
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ; 
   - changeSet:
       id: 16
+      author: Danis Sharafiev
+      changes:
+        - sqlFile:
+            path: scripts/TS-232-add-test-data.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ; 
+  - changeSet:
+      id: 17
+      author: Elizaveta Zagurskih
+      changes:
+        - sqlFile:
+            path: scripts/TS-251-fix-favourites-fk.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ; 
+  - changeSet:
+      id: 18
       author: Elizaveta Zagurskih
       changes:
         - sqlFile:
