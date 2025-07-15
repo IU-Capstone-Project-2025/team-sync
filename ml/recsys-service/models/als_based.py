@@ -8,7 +8,8 @@ class ALSRecommender():
         self.db = DBModel
         self.logger = logger
         self.config = Config()
-        self.coefficient = self.config.BASE_COEFFICIENT
+        # TODO: Dynamic coefficient based on number of iteractions
+        self.coefficient = self.config.ALS_COEFFICIENT
         self.als_model = implicit.als.AlternatingLeastSquares(
             factors=self.config.ALS_FACTORS,
             regularization=self.config.ALS_REGULARIZATION,

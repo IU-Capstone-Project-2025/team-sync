@@ -51,6 +51,8 @@ class Config:
 
     ROLE_COEFFICIENT = 0.3
     
+    ALS_COEFFICIENT = 0.3
+
     DESCRIPTION_MODEL_NAME = "all-MiniLM-L6-v2"
 
     EMBEDDER_URL = "http://ml-embedder:8000"
