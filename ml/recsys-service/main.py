@@ -11,6 +11,7 @@ from config.config import Config
 from models.role_based import RoleBasedRecommender
 from metrics.metrics_model import Metrics
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from models.als_based import ALSRecommender
 
 async def lifespan(app: FastAPI):    
     app.state.logger = setup_logging()
@@ -44,6 +45,13 @@ async def lifespan(app: FastAPI):
             DBModel=app.state.db,
             logger=logger,
             model_name="role_based"
+        )
+    )
+    app.state.merger.add_model(
+        ALSRecommender(
+            DBModel=app.state.db,
+            logger=logger,
+            model_name="als_based"
         )
     )
     logger.info("Recommendation models initialized successfully.")

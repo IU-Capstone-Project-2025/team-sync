@@ -28,7 +28,11 @@ class ALSRecommender():
 
         if self.user_items is None:
             self.logger.error("User items data is not available. Please call save_data_for_calculation first.")
-            return [0] * len(project_ids)
+            return [0.0] * len(project_ids)
+
+        if user_id >= self.user_items.shape[0]:
+            self.logger.warning(f"User {user_id} not in ALS matrix (size: {self.user_items.shape[0]}). Returning zeros.")
+            return [0.0] * len(project_ids)
 
         raw_recommendations = self.als_model.recommend(
             user_id, 
@@ -38,13 +42,13 @@ class ALSRecommender():
         )
 
         item_ids, scores = raw_recommendations
-
+        
+        score_dict = {item_id: score for item_id, score in zip(item_ids, scores)}
+        
         recommendations = []
-        for item_id, score in zip(item_ids, scores):
-            if item_id in project_ids:
-                recommendations.append((item_id, score))
-    
-        recommendations.sort(key=lambda x: x[0])
+        for project_id in project_ids:
+            score = float(score_dict.get(project_id, 0.0))
+            recommendations.append(score)
 
         self.logger.info(f"Recommendations for user {user_id}: {recommendations}")
         return recommendations
@@ -52,6 +56,7 @@ class ALSRecommender():
     def save_data_for_calculation(self, project_ids=None, user_ids=None):
         """Save data needed for score calculation."""
         # TODO: Mapping to reduce memory usage
+        self.logger.info(f"{user_ids}")
         self.logger.info(f"Saving data for calculation in {self.model_name} recommender.")
         if not project_ids:
             self.logger.warning("No projects available for saving data.")
