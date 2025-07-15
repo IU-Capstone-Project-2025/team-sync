@@ -152,3 +152,12 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ; 
+  - changeSet:
+      id: 18
+      author: Elizaveta Zagurskih
+      changes:
+        - sqlFile:
+            path: scripts/TS-246-update-click-count.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ; 

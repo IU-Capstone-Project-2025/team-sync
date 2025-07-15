@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import ru.teamsync.projects.dto.request.ProjectCreateRequest;
 import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
@@ -22,12 +23,15 @@ import ru.teamsync.projects.entity.Course;
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.ProjectMember;
 import ru.teamsync.projects.entity.ProjectStatus;
+import ru.teamsync.projects.entity.StudentProjectClick;
+import ru.teamsync.projects.entity.StudentProjectClickId;
 import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.mapper.ProjectMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
 import ru.teamsync.projects.repository.ProjectMemberRepository;
 import ru.teamsync.projects.repository.CourseRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
+import ru.teamsync.projects.repository.StudentProjectClickRepository;
 import ru.teamsync.projects.service.exception.ApplicationNotFoundException;
 import ru.teamsync.projects.service.exception.ProjectNotFoundException;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
@@ -43,10 +47,12 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
+    private final StudentProjectClickRepository studentProjectClickRepository;
     
     private final ApplicationMapper applicationMapper;
     private final ProjectMapper projectMapper;
 
+    @Transactional
     public void createProject(ProjectCreateRequest request, Long userId) {
         Project project = projectMapper.toEntity(request, userId);
 
@@ -60,6 +66,7 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
+    @Transactional
     public void updateProject(Long projectId, ProjectUpdateRequest request, Long currentUserId) throws NotFoundException, AccessDeniedException {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
@@ -119,11 +126,35 @@ public class ProjectService {
         return projects.map(projectMapper::toDto);
     }
 
+    public ProjectResponse getProjectById(Long userId, Long projectId) {
+        Project project = projectRepository.findById(projectId)
+            .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
+
+        incrementProjectClick(userId, projectId); 
+
+        return projectMapper.toDto(project);
+    }
+
+    @Transactional
+    private void incrementProjectClick(Long studentId, Long projectId) {
+        StudentProjectClickId clickId = new StudentProjectClickId(studentId, projectId);
+        StudentProjectClick click = studentProjectClickRepository.findById(clickId)
+                .orElseGet(() -> {
+                    StudentProjectClick newClick = new StudentProjectClick();
+                    newClick.setId(clickId);
+                    return studentProjectClickRepository.save(newClick);
+                });
+
+        click.setClickCount(click.getClickCount() + 1);
+        studentProjectClickRepository.save(click);
+    } 
+
     public Page<ProjectResponse> getProjectsByTeamLead(Long teamLeadId, Pageable pageable) {
         return projectRepository.findAllByTeamLeadId(teamLeadId, pageable)
                 .map(projectMapper::toDto);
     }
 
+    @Transactional
     public void deleteProject(Long projectId, Long currentUserId) throws SecurityException {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
@@ -148,6 +179,7 @@ public class ProjectService {
         return applications.map(applicationMapper::toDto);
     }
 
+    @Transactional
     public ApplicationResponse updateApplicationStatus(
             Long projectId, 
             Long applicationId, 
