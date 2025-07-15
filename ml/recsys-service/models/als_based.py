@@ -74,19 +74,19 @@ class ALSRecommender():
             for project_id in fav_project_ids:
                 if f"{user_id}_{project_id}" not in confidence:
                     confidence[f"{user_id}_{project_id}"] = 0
-                confidence[f"{user_id}_{project_id}"] += Config.FAVORITE_SCORE
+                confidence[f"{user_id}_{project_id}"] += self.config.FAVORITE_SCORE
             # Clicked projects
             clicked_project_ids = self.db.fetch_clicks(user_id)
             for project_id in clicked_project_ids:
                 if f"{user_id}_{project_id}" not in confidence:
                     confidence[f"{user_id}_{project_id}"] = 0
-                confidence[f"{user_id}_{project_id}"] += Config.CLICK_SCORE
+                confidence[f"{user_id}_{project_id}"] += self.config.CLICK_SCORE
             # Applied projects
             applied_project_ids = self.db.fetch_applies(user_id)
             for project_id in applied_project_ids:
                 if f"{user_id}_{project_id}" not in confidence:
                     confidence[f"{user_id}_{project_id}"] = 0
-                confidence[f"{user_id}_{project_id}"] += Config.APPLY_SCORE
+                confidence[f"{user_id}_{project_id}"] += self.config.APPLY_SCORE
 
         als_user_ids = []
         als_item_ids = []
