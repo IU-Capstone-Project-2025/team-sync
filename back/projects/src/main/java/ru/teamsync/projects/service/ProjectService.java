@@ -12,7 +12,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import ru.teamsync.projects.dto.request.ProjectCreateRequest;
 import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
@@ -75,6 +74,10 @@ public class ProjectService {
             throw new ResourceAccessDeniedException("You cannot edit this project");
         }
 
+        if (project.getStatus() == ProjectStatus.COMPLETE) {
+            throw new IllegalStateException("Cannot update a completed project.");
+        }
+
         Course course = courseRepository.findByName(request.courseName())
                 .orElseGet(() -> {
                     Course newCourse = new Course();
@@ -96,9 +99,13 @@ public class ProjectService {
             throw new ResourceAccessDeniedException("You cannot edit this project");
         }
 
+        boolean exists = projectMemberRepository.existsByProjectIdAndMemberId(projectId, personId);
+        if (!exists) {
+            throw new IllegalStateException("This person is not a member of the project.");
+        }
+
         projectMemberRepository.deleteByProjectIdAndMemberId(projectId, personId);
     }
-
 
     public Page<ProjectResponse> getProjects(
             List<Long> skillIds, 
@@ -191,6 +198,10 @@ public class ProjectService {
 
         if (!project.getTeamLeadId().equals(userId)) {
             throw new ResourceAccessDeniedException("You cannot view applications for this project");
+        }
+
+        if (project.getStatus() == ProjectStatus.COMPLETE) {
+            throw new IllegalStateException("Cannot update applications for a completed project.");
         }
 
         Application application = applicationRepository.findById(applicationId)
