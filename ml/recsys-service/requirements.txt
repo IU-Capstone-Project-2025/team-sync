@@ -6,3 +6,5 @@ faiss-cpu==1.7.2
 numpy==1.26.4
 requests==2.31.0
 apscheduler==3.10.1
+scipy==1.11.4
+implicit==0.7.2
