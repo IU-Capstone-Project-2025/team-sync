@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Footer(){
   return(
-    <div className="flex-0 flex flex-row justify-between bg-(--header-footer-color) h-[5%] p-1 pr-3 pl-3 lg:pr-15 lg:pl-17">
+    <div className="bottom-0 left-0 right-0 w-full flex flex-row justify-between bg-(--header-footer-color) p-1 pr-3 pl-3 lg:pr-15 lg:pl-17">
       <p className="font-[Manrope] text-(--secondary-color)">
         © 2025 Innopolis University
       </p>

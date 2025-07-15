@@ -46,7 +46,8 @@ public abstract class IntegrationEnvironment {
             "project_role",
             "student_role",
             "project_skill",
-            "course"
+            "course",
+            "student_project_click"
     );
     private static final Logger log = LoggerFactory.getLogger(IntegrationEnvironment.class);
 

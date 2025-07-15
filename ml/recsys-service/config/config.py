@@ -41,26 +41,16 @@ class Config:
     def REDIS_PASSWORD(self):
         return os.getenv("KEY_DB_PASSWORD", "dev-keydb-psw")
 
-    @property
-    def BASE_COEFFICIENT(self):
-        return float(os.getenv("BASE_COEFFICIENT", 0.5))
+    RECOMMENDATION_JOB_INTERVAL = 5
 
-    @property
-    def TAG_COEFFICIENT(self):
-        return float(os.getenv("TAG_COEFFICIENT", 0.3))
+    BASE_COEFFICIENT = 0.5
+
+    TAG_COEFFICIENT = 0.3
+
+    DESCRIPTION_COEFFICIENT = 0.3
+
+    ROLE_COEFFICIENT = 0.3
     
-    @property
-    def ROLE_COEFFICIENT(self):
-        return float(os.getenv("ROLE_COEFFICIENT", 0.3))
+    DESCRIPTION_MODEL_NAME = "all-MiniLM-L6-v2"
 
-    @property
-    def DESCRIPTION_COEFFICIENT(self):
-        return float(os.getenv("DESCRIPTION_COEFFICIENT", 0.3))
-
-    @property
-    def DESCRIPTION_MODEL_NAME(self):
-        return os.getenv("DESCRIPTION_MODEL_NAME", "all-MiniLM-L6-v2")
-    
-    @property
-    def EMBEDDER_URL(self):
-        return os.getenv("EMBEDDER_URL", "http://ml-embedder:8000")
+    EMBEDDER_URL = "http://ml-embedder:8000"

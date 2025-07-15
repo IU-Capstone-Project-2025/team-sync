@@ -1,6 +1,7 @@
 package ru.teamsync.projects.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,4 +21,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     @Query("SELECT COUNT(a) FROM Application a WHERE a.project.id = :projectId AND a.status = 'APPROVED'")
     int countApprovedApplicationsByProjectId(Long projectId);
+    
+    Optional<Application> findByProjectIdAndPersonId(Long projectId, Long personId);
 }

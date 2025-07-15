@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api.endpoints.v1.airflow_router import router
+from api.endpoints.v1.base_router import router, trigger_recommendation_job
 from database.postgres_model import DBModel
 from config.logging import setup_logging
 from api.endpoints.v1.test_router import router as test_router
@@ -7,9 +7,10 @@ from database.redis_model import RedisModel
 from models.models_merger import ModelsMerger
 from models.tag_based import TagBasedRecommender
 from models.description_based import DescriptionBasedRecommender
+from config.config import Config
 from models.role_based import RoleBasedRecommender
 from metrics.metrics_model import Metrics
-from models.embedder import Embedder
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 async def lifespan(app: FastAPI):    
     app.state.logger = setup_logging()
@@ -46,6 +47,24 @@ async def lifespan(app: FastAPI):
         )
     )
     logger.info("Recommendation models initialized successfully.")
+
+    # scheduler initialization
+
+    # init calculations
+    await trigger_recommendation_job(app)
+
+    logger.info("Initializing scheduler...")
+    app.state.scheduler = AsyncIOScheduler()
+    app.state.scheduler.add_job(
+        trigger_recommendation_job,
+        'interval',
+        minutes=Config.RECOMMENDATION_JOB_INTERVAL,
+        args=[app]
+    )
+    app.state.scheduler.start()
+    logger.info("Scheduler initialized and started successfully.")
+
+    # metrics model initialization
     app.state.metrics = Metrics(
         relevance_matrix=[[1, 1, 1, 0, 0, 1, 1, 1, 0, 0],
                           [0, 1, 1, 1, 1, 0, 1, 0, 1, 0],
@@ -57,6 +76,7 @@ async def lifespan(app: FastAPI):
     if app.state.db and app.state.db.connection:
         logger.info("Closing database connection...")
         await app.state.db.disconnect()
+    app.state.scheduler.shutdown()
 
 app = FastAPI(lifespan=lifespan)
 

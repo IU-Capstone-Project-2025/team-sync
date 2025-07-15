@@ -16,6 +16,7 @@ interface CardProps {
     teamLeadId: number;
     requiredMembersCount: number;
     liked: boolean;
+    isApplied: boolean;
   };
   onLikeChange?: (projectId: number, isLiked: boolean) => void;
 }
@@ -46,11 +47,36 @@ async function sendApplication(projId: number, token: string){
     body: JSON.stringify(applicationJson) 
   });
   if (!response.ok){
-    alert("Application did not work");
-    return 0;
+    const json = await response.json();
+    alert(json.error.message);
+    return false;
   }
   else{
-    return 1;
+    return true;
+  }
+}
+
+async function deleteApplication(projId: number, token: string){
+  const applicationJson = {
+    project_id: projId
+  };
+  const applicationUrl = `${backendHost}/projects/api/v1/applications/${projId}`;
+  const response = await fetch(applicationUrl, {  
+    method: 'DELETE', 
+    mode: 'cors', 
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify(applicationJson) 
+  });
+  if (!response.ok){
+    const json = await response.json();
+    alert(json.error.message);
+    return true;
+  }
+  else{
+    return false;
   }
 }
 
@@ -93,7 +119,7 @@ async function unlikeProject(projId: number, token: string){
 }
 
 export default function Card({props, onLikeChange}: CardProps) {
-  const [wasSuccessful, setWasSuccessful] = useState<null | number>(0);
+  const [applied, setApplied] = useState<boolean>(props.isApplied);
   const [isLiked, setIsLiked] = useState(props.liked);
 
   useEffect(() => {
@@ -103,8 +129,14 @@ export default function Card({props, onLikeChange}: CardProps) {
   const handleClick = async () => {
     const token = localStorage.getItem("backendToken");
     if (token) {
-      const success = await sendApplication(props.id, token);
-      setWasSuccessful(success);
+      if (applied){
+        const success = await deleteApplication(props.id, token);
+        setApplied(success);
+      }
+      else{
+        const success = await sendApplication(props.id, token);
+        setApplied(success);
+      }
     }
   };
   const handleLikeClick = async (e: React.MouseEvent) => {
@@ -230,9 +262,9 @@ export default function Card({props, onLikeChange}: CardProps) {
                     onClick={async () => {
                       handleClick();
                     }}
-                    className= "mt-6 px-4 py-2 bg-(--accent-color-2)/42 text-(--secondary-color) rounded-2xl text-xl w-fit"
+                    className= {(applied ? "bg-(--secondary-color)/42 " : "bg-(--accent-color-2)/42 ") + "cursor-pointer mt-6 px-4 py-2 text-(--secondary-color) rounded-2xl text-xl w-fit"}
                   >
-                    {wasSuccessful ? "Applied" : "Apply"}
+                    {applied ? "Applied" : "Apply"}
                   </button>
                 </div>
               </div>
