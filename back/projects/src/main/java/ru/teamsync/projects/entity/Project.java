@@ -51,4 +51,7 @@ public class Project {
 
     @Column(name = "required_members_count")
     private Integer requiredMembersCount;
+
+    @Transient
+    private Integer membersCount;
 }

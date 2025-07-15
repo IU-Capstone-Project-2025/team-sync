@@ -14,5 +14,6 @@ public record ProjectResponse(
     ProjectStatus status,
     List<Long> skillIds,
     List<Long> roleIds,
-    Integer requiredMembersCount
+    Integer requiredMembersCount,
+    Integer membersCount
 ) {}

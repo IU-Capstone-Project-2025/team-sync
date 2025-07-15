@@ -3,8 +3,6 @@ package ru.teamsync.projects.service;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +20,7 @@ import ru.teamsync.projects.entity.ApplicationStatus;
 import ru.teamsync.projects.entity.Course;
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.ProjectMember;
+import ru.teamsync.projects.entity.ProjectMemberId;
 import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.entity.StudentProjectClick;
 import ru.teamsync.projects.entity.StudentProjectClickId;
@@ -96,9 +95,8 @@ public class ProjectService {
             throw new ResourceAccessDeniedException("You cannot edit this project");
         }
 
-        projectMemberRepository.deleteByProjectIdAndMemberId(projectId, personId);
+        projectMemberRepository.deleteById_ProjectIdAndId_MemberId(projectId, personId);
     }
-
 
     public Page<ProjectResponse> getProjects(
             List<Long> skillIds, 
@@ -123,6 +121,7 @@ public class ProjectService {
         }
 
         Page<Project> projects = projectRepository.findAll(spec, pageable);
+        projects.forEach(p -> p.setMembersCount((int) projectMemberRepository.countById_ProjectId(p.getId())));
         return projects.map(projectMapper::toDto);
     }
 
@@ -130,7 +129,10 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId)
             .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
 
-        incrementProjectClick(userId, projectId); 
+        incrementProjectClick(userId, projectId);
+
+        int membersCount = (int) projectMemberRepository.countById_ProjectId(projectId);
+        project.setMembersCount(membersCount);
 
         return projectMapper.toDto(project);
     }
@@ -150,8 +152,11 @@ public class ProjectService {
     } 
 
     public Page<ProjectResponse> getProjectsByTeamLead(Long teamLeadId, Pageable pageable) {
-        return projectRepository.findAllByTeamLeadId(teamLeadId, pageable)
-                .map(projectMapper::toDto);
+        Page<Project> projects = projectRepository.findAllByTeamLeadId(teamLeadId, pageable);
+
+        projects.forEach(p -> p.setMembersCount((int) projectMemberRepository.countById_ProjectId(p.getId())));
+
+        return projects.map(projectMapper::toDto);
     }
 
     @Transactional
@@ -205,11 +210,15 @@ public class ProjectService {
                 throw new IllegalStateException("Cannot approve — project is already full.");
             }
             
-            boolean alreadyMember = projectMemberRepository.existsByProjectIdAndMemberId(projectId, application.getPersonId());
+            boolean alreadyMember = projectMemberRepository.existsById_ProjectIdAndId_MemberId(projectId, application.getPersonId());
             if (!alreadyMember) {
+                ProjectMemberId memberId = new ProjectMemberId();
+                memberId.setProjectId(projectId);
+                memberId.setMemberId(application.getPersonId());
+
                 ProjectMember member = new ProjectMember();
-                member.setProjectId(projectId);
-                member.setMemberId(application.getPersonId());
+                member.setId(memberId);
+
                 projectMemberRepository.save(member);
             }
         }
