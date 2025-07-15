@@ -20,8 +20,6 @@ class ALSRecommender():
     def calculate_scores(self, user_id, project_ids=None):
         """Calculate scores for project recommendations for a given user.
         """
-        self.logger.info(f"Fetching recommendations for user {user_id}.")
-
         if project_ids is None:
             self.logger.warning("No project IDs provided for filtering recommendations.")
             return []
@@ -50,13 +48,11 @@ class ALSRecommender():
             score = float(score_dict.get(project_id, 0.0))
             recommendations.append(score)
 
-        self.logger.info(f"Recommendations for user {user_id}: {recommendations}")
         return recommendations
 
     def save_data_for_calculation(self, project_ids=None, user_ids=None):
         """Save data needed for score calculation."""
         # TODO: Mapping to reduce memory usage
-        self.logger.info(f"{user_ids}")
         self.logger.info(f"Saving data for calculation in {self.model_name} recommender.")
         if not project_ids:
             self.logger.warning("No projects available for saving data.")
