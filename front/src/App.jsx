@@ -7,6 +7,7 @@ import CreateProjectScreen from './pages/createProjectScreen';
 import ResponseScreen from './pages/responsesScreen';
 import LikesScreen from './pages/likesScreen';
 import ProfileScreen from './pages/profileScreen';
+import RegistrationScreen from './pages/registrationScreen';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Route path = "/responses" element = {<ResponseScreen/>} />
       <Route path = "/likes" element = {<LikesScreen/>} />
       <Route path = "/profile" element = {<ProfileScreen/>} />
+      <Route path = "/register" element = {<RegistrationScreen/>} />
     </Routes>
   )
 }
