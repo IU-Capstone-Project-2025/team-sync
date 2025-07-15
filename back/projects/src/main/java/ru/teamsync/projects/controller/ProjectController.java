@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import ru.teamsync.projects.dto.request.ProjectCreateRequest;
 import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
-import ru.teamsync.projects.dto.request.RemoveTeamMembersRequest;
 import ru.teamsync.projects.dto.request.UpdateApplicationStatusRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.dto.response.BaseResponse;
@@ -58,13 +57,13 @@ public class ProjectController {
         return ResponseEntity.ok(BaseResponse.of(null));
     }
 
-    @PostMapping("/{projectId}/removeMembers")
+    @PostMapping("/{projectId}/member/{personId}")
     public ResponseEntity<BaseResponse<Void>> postMethodName(
             @PathVariable Long projectId,
-            @RequestBody RemoveTeamMembersRequest request) {
+            @PathVariable Long personId) {
         
         Long userId = securityContextService.getCurrentUserId();
-        projectService.removeMembersFromProject(projectId, userId, request);
+        projectService.removeMembersFromProject(projectId, userId, personId);
         return ResponseEntity.ok(BaseResponse.of(null));
     }
     
