@@ -31,9 +31,9 @@ jobs:
         id: tag
         run: |
           if [[ "${{ github.ref_type }}" == "tag" ]]; then
-            FINAL_TAG="${{ github.ref_name }}"
+            FINAL_TAG="${{ github.head_ref }}"
           else
-            REF=${{ github.ref_name }}
+            REF=${{ github.head_ref }}
             TAG=$(echo "$REF" | grep -oE 'TS-[0-9]+' | tr '[:upper:]' '[:lower:]')
 
             if [[ -n "$TAG" ]]; then
