@@ -172,7 +172,9 @@ export default function ProfileScreen() {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <HomeHeader />
+            <div className="mb-32">
+                <HomeHeader />
+            </div>
             <div className="pl-16 pt-10 flex-1">
                 <h1 className="font-[Manrope] text-(--secondary-color) text-5xl font-bold mb-11">Your Profile</h1>
                 <form onSubmit={updateProfile}>
@@ -207,7 +209,7 @@ export default function ProfileScreen() {
                     </button>
                 </form>
             </div>
-            <Footer />
+            <Footer/>
         </div>
     );
 }

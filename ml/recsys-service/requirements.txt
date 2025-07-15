@@ -5,3 +5,4 @@ redis==4.6.0
 faiss-cpu==1.7.2
 numpy==1.26.4
 requests==2.31.0
+apscheduler==3.10.1

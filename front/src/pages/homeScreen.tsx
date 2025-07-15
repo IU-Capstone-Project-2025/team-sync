@@ -18,6 +18,13 @@ interface Project {
   required_members_count: number;
 }
 
+interface Application {
+  application_id: number;
+  project: Project;
+  status: string;
+  created_at: number[];
+}
+
 const backendHost = import.meta.env.VITE_BACKEND_HOST
 
 async function getRoles(token: string) {
@@ -33,10 +40,14 @@ async function getRoles(token: string) {
       throw new Error('Response error: ' + response.status.toString());
     }
     const json = await response.json();
-    return json.data.content.map((role) => ({ id: role.id, name: role.name }));
+    return json.data.content.map((role: { id: number; name: string }) => ({ id: role.id, name: role.name }));
   }
   catch (error) {
-    console.error(error.message);
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error(error);
+    }
   }
 }
 
@@ -53,10 +64,14 @@ async function getSkills(token: string) {
       throw new Error('Response error: ' + response.status.toString());
     }
     const json = await response.json();
-    return json.data.content.map((skill) => ({ id: skill.id, name: skill.name }));
+    return json.data.content.map((skill: { id: number; name: string }) => ({ id: skill.id, name: skill.name }));
   }
   catch (error) {
-    console.error(error.message);
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error(error);
+    }
   }
 }
 
@@ -73,10 +88,14 @@ async function getCourses(token: string) {
       throw new Error('Response error: ' + response.status.toString());
     }
     const json = await response.json();
-    return json.data.map((course) => ({ id: course.id, name: course.name }));
+    return json.data.map((course: { id: number; name: string }) => ({ id: course.id, name: course.name }));
   }
   catch (error) {
-    console.error(error.message);
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error(error);
+    }
     return [];
   }
 }
@@ -84,7 +103,8 @@ async function getCourses(token: string) {
 async function getProjects(
   token: string,
   filterSkills: {id: number, name: string}[],
-  filterRoles: {id: number, name: string}[]
+  filterRoles: {id: number, name: string}[],
+  filterCourse: string
 ) {
   let params: string[] = [];
   if (filterSkills.length > 0) {
@@ -92,6 +112,9 @@ async function getProjects(
   }
   if (filterRoles.length > 0) {
     params.push("roleIds=" + filterRoles.map(role => role.id).join(','));
+  }
+  if (filterCourse !== "") {
+    params.push("courseId=" + filterCourse);
   }
   const queryString = params.length > 0 ? "&" + params.join("&") : "";
   const projectsUrl = `${backendHost}/projects/api/v1/projects?sort=id,desc&size=50` + queryString;
@@ -112,7 +135,11 @@ async function getProjects(
     }
   }
   catch (error) {
-    console.error(error.message);
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error(error);
+    }
     return {
       projects: [],
       totalProjects: 0
@@ -136,6 +163,31 @@ async function getLikedProjects(token: string) {
     return json.data.content
   }
   catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    } else {
+      console.error(error);
+    }
+    return [];
+  }
+}
+
+async function getApplications(token: string) {
+  const applicationsUrl = `${backendHost}/projects/api/v1/applications/my`;
+  try {
+    const response = await fetch(applicationsUrl, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Response error: ' + response.status.toString());
+    }
+    const json = await response.json();
+    return json.data.content;
+  }
+  catch (error) {
     console.error(error.message);
     return [];
   }
@@ -156,12 +208,13 @@ export default function HomeScreen(){
   const [filterSkills, setFilterSkills] = useState<{id: number, name: string}[]>([]);
   const [filterRoles, setFilterRoles] = useState<{id: number, name: string}[]>([]);
   const [numProjects, setNumProjects] = useState<number>(0);
+  const [applications, setApplications] = useState<Application[]>([]);
   
 
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
-      getProjects(token, filterSkills, filterRoles).then((result => {
+      getProjects(token, filterSkills, filterRoles, filterCourse).then((result => {
         setProjects(result.projects);
         setNumProjects(result.total);
       }));
@@ -169,13 +222,14 @@ export default function HomeScreen(){
       getRoles(token).then(setRoles);
       getSkills(token).then(setSkills);
       getCourses(token).then(setCourses);
+      getApplications(token).then(setApplications);
     }
   }, []);
 
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
-      getProjects(token, filterSkills, filterRoles).then((result => {
+      getProjects(token, filterSkills, filterRoles, filterCourse).then((result => {
         setProjects(result.projects);
         setNumProjects(result.total);
       }));
@@ -193,7 +247,9 @@ export default function HomeScreen(){
 
   return (
     <div className="flex flex-col justify-between min-h-screen">
-      <HomeHeader />
+      <div className="mb-32">
+        <HomeHeader />
+      </div>
       <div className="flex flex-col px-18">
           <p className="font-[Inter] text-(--primary-color) text-xl pt-3 pb-5">
             All projects
@@ -201,15 +257,14 @@ export default function HomeScreen(){
           <h1 className="font-[Manrope] text-(--secondary-color) text-5xl font-bold">
             Projects
           </h1>
-          <div className="flex flex-row">
-            <div className="bg-(--header-footer-color) rounded-2xl p-4 mt-5 min-w-90 h-fit">
+          <div className="flex flex-row relative">
+            <div className="bg-(--header-footer-color) rounded-2xl p-4 mt-5 min-w-90 h-fit sticky top-45">
               <div className="mb-5">
-
                 <h3 className="font-[Inter] text-(--secondary-color) font-bold text-xl">
                   Courses
                 </h3>
                 <h4 className="font-[Inter] text-(--secondary-color) border-(--accent-color-2) border-3 rounded-lg mt-3 px-3 py-1 w-fit">
-                  All courses
+                  {filterCourse === "" ? "All courses" : (courses.find(c => c.id.toString() === filterCourse)?.name || "Unknown")}
                 </h4>
                 <Popup
                   trigger={
@@ -221,16 +276,60 @@ export default function HomeScreen(){
                 >
                   {
                     // @ts-ignore
-                    (close) => (
-                      <div className="modal rounded-2xl text-black bg-(--header-footer-color)">
-                        <button className="close" onClick={close}> &times;</button>
-                        <div style={{ maxHeight: '500px', overflowY: 'auto', paddingRight: '4px' }}>
-                          <h2>Choose course</h2>
-                          
-                          // TODO
+                    (close) => {
+                      const [selectedCourse, setSelectedCourse] = useState<string>(filterCourse);
+                      useEffect(() => {
+                        setSelectedCourse(filterCourse);
+                      }, [filterCourse]);
+
+                      const handleCourseSelect = (id: string) => {
+                        setSelectedCourse(id);
+                      };
+
+                      const handleSubmit = () => {
+                        setFilterCourse(selectedCourse);
+                        close();
+                      };
+
+                      return (
+                        <div className="modal rounded-2xl text-black bg-(--header-footer-color)">
+                          <button className="close" onClick={close}> &times;</button>
+                          <div style={{ maxHeight: '500px', overflowY: 'auto', paddingRight: '4px' }}>
+                            <h2>Choose course</h2>
+                            <button
+                              type="button"
+                              className={
+                                "block w-full text-left px-4 py-2 mt-2 rounded-lg " +
+                                (selectedCourse === "" ? "bg-(--accent-color-2)/42 text-(--secondary-color)" : "bg-transparent text-(--secondary-color)")
+                              }
+                              onClick={() => handleCourseSelect("")}
+                            >
+                              All courses
+                            </button>
+                            {courses.map(course => (
+                              <span key={course.id} className="flex justify-between align-center font-[Inter] text-(--secondary-color) border-(--accent-color-2) border-3 rounded-lg px-3 pr-1 py-1 w-fit gap-0.5">
+                                {course.name}
+                                <ClearIcon
+                                sx={{
+                                  padding: 0,
+                                  color: "var(--primary-color)",
+                                  '&.Mui-checked': {
+                                    color: "var(--accent-color-2)",
+                                  }
+                                  }}
+                                  onClick={() => handleCourseSelect(course.id.toString())}/>
+                              </span>
+                            ))}
+                          </div>
+                          <button
+                            className="mt-6 px-4 py-2 bg-(--accent-color-2)/42 text-(--secondary-color) rounded-2xl text-xl w-fit"
+                            onClick={handleSubmit}
+                          >
+                            Set course
+                          </button>
                         </div>
-                      </div>
-                    )
+                      );
+                    }
                   }
                 </Popup>
               </div>
@@ -456,11 +555,11 @@ export default function HomeScreen(){
                 </Popup>
               </div>
             </div>
-            <div className="flex flex-col ml-15">
+            <div className="flex flex-col ml-15 mb-5">
               <p className="font-[Inter] text-lg mt-5 text-(--primary-color)">
                 {numProjects} projects found
               </p>
-              {projects.length > 0 && roles.length > 0 && courses.length > 0 && projects.map((proj, idx) => (
+              {projects.length > 0 && roles.length > 0 && courses.length > 0 && projects.filter((proj) => proj.status == "OPEN" || proj.status == "IN_PROGRESS").map((proj, idx) => (
                 <Card
                   key={proj.id || idx}
                   props={{
@@ -473,7 +572,8 @@ export default function HomeScreen(){
                     status: proj.status,
                     teamLeadId: proj.team_lead_id,
                     requiredMembersCount: proj.required_members_count,
-                    liked: likedProjects.some(likedProj => likedProj.project.id === proj.id)
+                    liked: likedProjects.some(likedProj => likedProj.project.id === proj.id),
+                    isApplied: applications.some(project => project.project.id === proj.id)
                   }}
                   onLikeChange={handleLikeChange}
                 />

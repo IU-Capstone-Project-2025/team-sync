@@ -23,4 +23,9 @@ public class SkillController {
     public BaseResponse<Page<Skill>> getSkills(Pageable pageable) {
         return BaseResponse.of(skillService.getSkills(pageable));
     }
+
+    @GetMapping("/in-projects")
+    public BaseResponse<Page<Skill>> getSkillsInProject(Pageable pageable) {
+        return BaseResponse.of(skillService.getSkillsInProjects(pageable));
+    }
 }

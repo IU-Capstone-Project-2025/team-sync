@@ -158,7 +158,9 @@ export default function ResponseScreen(){
   }, [refreshKey]);
   return(
     <div className="flex flex-col min-h-screen">
-      <HomeHeader />
+      <div className="mb-40">
+        <HomeHeader />
+      </div>
       <div className="flex flex-col flex-1"> 
         <div className="flex flex-col px-18">
           <div className="flex flex-row justify-start items-center py-5"> 
@@ -183,14 +185,15 @@ export default function ResponseScreen(){
                 status: proj.status,
                 teamLeadId: proj.team_lead_id,
                 requiredMembersCount: proj.required_members_count,
-                liked: true
+                liked: true,
+                isApplied: false
               }}
               onLikeChange={handleLikeChange}
             />
           ))}
         </div>
       </div>
-      <Footer />
+      <Footer/>
     </div>
   );
 }

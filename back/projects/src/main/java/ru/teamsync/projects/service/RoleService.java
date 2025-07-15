@@ -15,4 +15,8 @@ public class RoleService {
     public Page<Role> getRoles(Pageable pageable) {
         return roleRepository.findAll(pageable);
     }
+
+    public Page<Role> getRolesInProjects(Pageable pageable) {
+        return roleRepository.findRolesInProjects(pageable);
+    }
 }

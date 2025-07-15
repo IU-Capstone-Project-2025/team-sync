@@ -84,8 +84,16 @@ services:
 
   ml-embedder:
     build: ./ml/embedder
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - QDRANT_API_KEY=${QDRANT_API_KEY}
     ports: 
       - "8002:8000"
+    depends_on:
+      - qdrant
+      - postgres
 
   frontend:
     build: ./front

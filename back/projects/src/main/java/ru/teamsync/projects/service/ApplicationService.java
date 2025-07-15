@@ -78,13 +78,12 @@ public class ApplicationService {
         applicationRepository.save(application);
     }
 
-    public void deleteApplication(Long userId, Long applicationId) {
-        Application application = applicationRepository.findById(applicationId)
-            .orElseThrow(() -> ApplicationNotFoundException.withId(applicationId));
+    public void deleteApplication(Long userId, Long projectId) {
+       Project project = projectRepository.findById(projectId)
+            .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
 
-        if (!application.getPersonId().equals(userId)) {
-            throw new ResourceAccessDeniedException("You have no permission to delete this application");
-        }
+        Application application = applicationRepository.findByProjectIdAndPersonId(projectId, userId)
+            .orElseThrow(() -> new ResourceAccessDeniedException("You can only delete your own applications"));
 
         applicationRepository.delete(application);
     }
