@@ -135,7 +135,6 @@ class DBModel:
                 query = "SELECT project_id FROM student_favourite_project WHERE person_id = %s"
                 cursor.execute(query, (person_id,))
                 rows = cursor.fetchall()
-                self.logger.info([row[0] for row in rows])
                 return [row[0] for row in rows]
         except psycopg2.Error as e:
             self.logger.error(f"Error fetching favorites for user {id}: {e}")
@@ -152,15 +151,12 @@ class DBModel:
                 query = "SELECT person_id FROM student WHERE id = %s"
                 cursor.execute(query, (id,))
                 person_id = cursor.fetchone()
-                self.logger.info(f"Fetched person_id for user {id}: {person_id}")
                 if not person_id:
                     return []
                 person_id = person_id[0]
                 query = "SELECT project_id FROM application WHERE person_id = %s"
                 cursor.execute(query, (person_id,))
                 rows = cursor.fetchall()
-                self.logger.info(f"Fetched applies for user {id}: {rows}")
-                self.logger.info([row[0] for row in rows])
                 return [row[0] for row in rows]
         except psycopg2.Error as e:
             self.logger.error(f"Error fetching applies for user {id}: {e}")
@@ -177,7 +173,6 @@ class DBModel:
                 query = "SELECT project_id FROM student_project_click WHERE student_id = %s"
                 cursor.execute(query, (id,))
                 rows = cursor.fetchall()
-                self.logger.info([row[0] for row in rows])
                 return [row[0] for row in rows]
         except psycopg2.Error as e:
             self.logger.error(f"Error fetching clicks for user {id}: {e}")
