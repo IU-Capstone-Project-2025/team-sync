@@ -1,12 +1,11 @@
 name: Test Build TeamSync-Resume 
+
 on:
+  pull_request:
   push:
-    pull_request:
-    push:
-      branches:
-        - main
-    tags:
-      - '**'
+    branches:
+      - main
+
 jobs:
   test-build:
     permissions:
