@@ -1,0 +1,22 @@
+name: Test Build TeamSync-Resume 
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-build:
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/template-test-build-backend.yml
+    with:
+      service-dir: back/resume
+      test-report-title: Resume Service Test Coverage
+      image-name: ts-resume
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

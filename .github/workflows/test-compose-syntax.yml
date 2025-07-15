@@ -1,4 +1,5 @@
 name: Check Docker Compose Syntax
+
 on:
   pull_request:
   push:
@@ -9,6 +10,8 @@ jobs:
   test-docker-compose-syntax:
     runs-on: ubuntu-latest
     permissions:
+      contents: read
+      packages: write
       pull-requests: write
     steps:
       - uses: actions/checkout@v2

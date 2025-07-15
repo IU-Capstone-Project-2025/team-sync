@@ -1,0 +1,22 @@
+name: Build TeamSync-Frontend Prod
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      
+jobs:
+  build:
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/template-build-frontend.yml
+    with:
+      service-dir: front
+      image-name: ts-frontend-prod
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
