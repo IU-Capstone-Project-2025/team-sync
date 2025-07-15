@@ -2,6 +2,8 @@ package ru.teamsync.auth.controllers.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
+
 public record RegisterStudentRequest(
         @JsonProperty("study_group")
         String studyGroup,
@@ -12,6 +14,10 @@ public record RegisterStudentRequest(
         String githubAlias,
 
         @JsonProperty("tg_alias")
-        String tgAlias
+        String tgAlias,
+
+        List<Long> skills,
+
+        List<Long> roles
 ) {
 }

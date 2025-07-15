@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.teamsync.auth.client.dto.PersonCreationRequest;
 
+import java.util.List;
+
 @Data
 @Builder
 @Getter
@@ -20,7 +22,7 @@ import ru.teamsync.auth.client.dto.PersonCreationRequest;
 public class StudentCreationRequest {
 
     private PersonCreationRequest person;
-    
+
     @JsonProperty("study_group")
     private String studyGroup;
 
@@ -31,6 +33,10 @@ public class StudentCreationRequest {
 
     @JsonProperty("tg_alias")
     private String tgAlias;
+
+    List<Long> skills;
+
+    List<Long> roles;
 
 }
 
