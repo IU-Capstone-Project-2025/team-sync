@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Data
 @Builder
 @Getter
@@ -24,4 +26,6 @@ public class StudentCreationRequest {
     private String description;
     private String githubAlias;
     private String tgAlias;
+    private List<Long> skills;
+    private List<Long> roles;
 }
