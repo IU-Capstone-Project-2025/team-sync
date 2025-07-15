@@ -9,7 +9,7 @@ services:
       - .env
     depends_on:
       - postgres
-      - liquibase-dev
+      - liquibase
 
   backend-projects:
     image: ssspamqe/ts-projects:${TS_PROJECTS_TAG}
