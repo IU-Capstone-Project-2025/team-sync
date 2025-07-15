@@ -8,7 +8,7 @@ services:
     env_file:
       - .env
     depends_on:
-      - postgres-dev
+      - postgres
       - liquibase-dev
 
   backend-projects:
@@ -18,8 +18,8 @@ services:
     ports: 
       - "8081:8080"
     depends_on:
-      - postgres-dev
-      - liquibase-dev
+      - postgres
+      - liquibase
 
   backend-resume:
     image: ssspamqe/ts-resume:${TS_RESUME_TAG}
@@ -28,8 +28,8 @@ services:
     ports: 
       - "8082:8080"
     depends_on:
-      - postgres-dev
-      - liquibase-dev
+      - postgres
+      - liquibase
 
   frontend:
     image: ssspamqe/ts-frontend-prod:${TS_FRONTEND_TAG}
