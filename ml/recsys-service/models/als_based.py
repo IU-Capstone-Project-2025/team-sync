@@ -8,7 +8,6 @@ class ALSRecommender():
         self.db = DBModel
         self.logger = logger
         self.config = Config()
-        # TODO: Dynamic coefficient based on number of iteractions
         self.coefficient = self.config.ALS_COEFFICIENT
         self.als_model = implicit.als.AlternatingLeastSquares(
             factors=self.config.ALS_FACTORS,
@@ -18,6 +17,15 @@ class ALSRecommender():
         self.user_items = None
         self.logger.info(f"Initialized {self.model_name} recommender with DB model.")
     
+    def _coefficient_for_projects_score(self, x):
+        """Calculate coefficient for project score based on the number of interactions."""
+        if x > 100:
+            return 1
+        elif 0 <= x <= 100:
+            return (x / 100)**0.5
+        return 0
+        
+
     def calculate_scores(self, user_id, project_ids=None):
         """Calculate scores for project recommendations for a given user.
         """
@@ -44,9 +52,13 @@ class ALSRecommender():
         
         score_dict = {item_id: score for item_id, score in zip(item_ids, scores)}
         
+        user_vector_sum = self.user_items[user_id].sum()
+
+        
+
         recommendations = []
         for project_id in project_ids:
-            score = float(score_dict.get(project_id, 0.0))
+            score = float(score_dict.get(project_id, 0.0)) * self._coefficient_for_projects_score(user_vector_sum)
             recommendations.append(score)
 
         return recommendations
