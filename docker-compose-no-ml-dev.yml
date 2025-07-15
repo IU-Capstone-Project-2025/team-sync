@@ -66,9 +66,9 @@ services:
       - postgres-dev
     command: >
       --changeLogFile=changelog/changelog.yml
-      --url=jdbc:postgresql://postgres-dev:5432/${DB_NAME_TEST}
-      --username=${DB_USER_TEST}
-      --password=${DB_PASSWORD_TEST}
+      --url=${DB_MAIN_JDBC}
+      --username=${DB_MAIN_USER}
+      --password=${DB_MAIN_PASSWORD}
       --driver=org.postgresql.Driver
       --logLevel=info
       update
