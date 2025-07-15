@@ -80,6 +80,19 @@ public class ProjectService {
         projectRepository.save(project);
     }
 
+    public void removeMembersFromProject(Long projectId, Long currentUserId, Long personId) {
+
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
+
+        if (!project.getTeamLeadId().equals(currentUserId)) {
+            throw new ResourceAccessDeniedException("You cannot edit this project");
+        }
+
+        projectMemberRepository.deleteByProjectIdAndMemberId(projectId, personId);
+    }
+
+
     public Page<ProjectResponse> getProjects(
             List<Long> skillIds, 
             List<Long> roleIds, 

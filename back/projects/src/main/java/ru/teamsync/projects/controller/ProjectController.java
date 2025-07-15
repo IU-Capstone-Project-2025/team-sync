@@ -22,6 +22,7 @@ import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.service.ProjectService;
 import ru.teamsync.projects.service.SecurityContextService;
 
+
 @RestController
 @RequestMapping("/projects")
 @RequiredArgsConstructor
@@ -55,6 +56,17 @@ public class ProjectController {
         projectService.updateProject(projectId, request, userId);
         return ResponseEntity.ok(BaseResponse.of(null));
     }
+
+    @PostMapping("/{projectId}/member/{personId}")
+    public ResponseEntity<BaseResponse<Void>> postMethodName(
+            @PathVariable Long projectId,
+            @PathVariable Long personId) {
+        
+        Long userId = securityContextService.getCurrentUserId();
+        projectService.removeMembersFromProject(projectId, userId, personId);
+        return ResponseEntity.ok(BaseResponse.of(null));
+    }
+    
 
     @GetMapping
     public BaseResponse<Page<ProjectResponse>> getProjects(
