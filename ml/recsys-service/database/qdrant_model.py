@@ -63,7 +63,11 @@ class QdrantModel:
 
 
     def get_embedding(self, collection_name: str, id) -> Optional[list[float]]:
-        """Check if an ID exists in a collection."""
+        """Retrieve embeddings for a given ID from a specified collection.
+        
+        If the embeddings are missing, the method attempts to update them
+        using the embedder service and retrieves them again.
+        """
         if not self.collection_exists(collection_name):
             self.logger.warning(f"Collection '{collection_name}' does not exist.")
             return None
