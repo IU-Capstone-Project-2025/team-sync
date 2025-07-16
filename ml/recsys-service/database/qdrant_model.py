@@ -37,16 +37,19 @@ class QdrantModel:
             self.logger.warning("ID is None or invalid, cannot retrieve embedding.")
             return None
         emb = self.client.retrieve(collection_name, [id], with_vectors=True)
-        result = emb.tolist() if hasattr(emb, 'tolist') else []
+        if not emb or len(emb) == 0:
+            self.logger.warning(f"1 No embedding found for ID {id} in collection '{collection_name}'.")
+            return None
+        record = emb[0]
+        if hasattr(record, 'vector'):
+            result = list(record.vector) if record.vector is not None else []
+        else:
+            result = []
         if not result:
-            self.logger.warning(f"No embedding found for ID {id} in collection '{collection_name}'.")
+            self.logger.warning(f"2 No embedding found for ID {id} in collection '{collection_name}'.")
             return None
         return result
-    # http://ml-embedder:8000/api/v1/points
-    # {
-    # id : int
-    # table : Literal["student", "project"]
-    # }
+
     def _update_embeddings(self, collection_name, id) -> bool:
         request_data = {"id": id, "table": collection_name}
         response = requests.post(f"{Config.EMBEDDER_URL}/api/v1/points", json=request_data, timeout=5)
