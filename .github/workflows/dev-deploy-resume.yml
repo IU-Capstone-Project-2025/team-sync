@@ -1,10 +1,10 @@
-name: Deploy Test
+name: Dev Deploy Resume
 
 on:
   workflow_dispatch:
 
 jobs:
-  deploy-dev:
+  dev-deploy-resume:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,4 +17,4 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no githubci@shqcore.ru "cd test && bash ./deploy.sh ${{ github.ref_name }}"
+          ssh -o StrictHostKeyChecking=no githubci@team-sync.online "cd deploy/dev && bash ./deploy-backend-service.sh resume ${{ github.ref_name }}"

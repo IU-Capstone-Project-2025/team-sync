@@ -15,7 +15,6 @@ class DescriptionBasedRecommender(Recommender):
 
     def calculate_scores(self, user_id, project_ids=None):
         """Get project recommendations based on project descriptions."""
-        self.logger.info(f"Fetching recommendations for user {user_id}.")
         if not project_ids:
             self.logger.warning("No projects available for recommendations.")
             return []
@@ -35,10 +34,9 @@ class DescriptionBasedRecommender(Recommender):
             else:
                 self.logger.warning(f"No embeddings available for project {project_id}.")
             recommendations.append(score)
-        self.logger.info(f"Calculated description-based scores for user {user_id}")
         return recommendations
 
-    def save_data_for_calculation(self, project_ids=None):
+    def save_data_for_calculation(self, project_ids=None, user_ids=None):
         """Save project descriptions for scoring."""
         if not project_ids:
             self.logger.warning("No projects available for saving descriptions.")

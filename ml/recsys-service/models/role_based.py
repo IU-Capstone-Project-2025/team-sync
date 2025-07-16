@@ -14,7 +14,6 @@ class RoleBasedRecommender(Recommender):
         
     def calculate_scores(self, user_id, project_ids=None):
         """Get project recommendations based on project roles."""
-        self.logger.info(f"Fetching recommendations for user {user_id}.")
         if not project_ids:
             self.logger.warning("No projects available for recommendations.")
             return []
@@ -42,10 +41,9 @@ class RoleBasedRecommender(Recommender):
             recommendations.append((project_ids[i], score))
         recommendations = [i[1] for i in sorted(recommendations, key=lambda x: x[0])]
 
-        self.logger.info(f"Calculated role-based scores for user {user_id}")
         return recommendations  # [0.14, 0.1, 0.2, 0.15]
     
-    def save_data_for_calculation(self, project_ids=None):
+    def save_data_for_calculation(self, project_ids=None, user_ids=None):
         """Save data needed for score calculation."""
         if not project_ids:
             self.logger.warning("No projects available for recommendations.")

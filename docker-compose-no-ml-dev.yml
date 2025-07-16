@@ -2,28 +2,19 @@ version: '3.8'
 
 services:
   backend-auth-dev:
-    build: ./back/auth
+    image: ssspamqe/ts-auth:${TS_AUTH_TAG}
     ports: 
       - "9000:8080"
-    environment:
-      - TENANT_ID=${TENANT_ID}
-      - JWT_KEY=${JWT_KEY_TEST}
-      - DB_MAIN_JDBC=jdbc:postgresql://postgres-dev:5432/${DB_NAME_TEST}
-      - DB_MAIN_USER=${DB_USER_TEST}
-      - DB_MAIN_PASSWORD=${DB_PASSWORD_TEST}
-      - RESUME_HOST=${RESUME_HOST_TEST}
+    env_file:
+      - .env
     depends_on:
       - postgres-dev
       - liquibase-dev
   
   backend-projects-dev:
-    build: ./back/projects
-    environment:
-      - TENANT_ID=${TENANT_ID}
-      - JWT_KEY=${JWT_KEY_TEST}
-      - DB_MAIN_JDBC=jdbc:postgresql://postgres-dev:5432/${DB_NAME_TEST}
-      - DB_MAIN_USER=${DB_USER_TEST}
-      - DB_MAIN_PASSWORD=${DB_PASSWORD_TEST}
+    image: ssspamqe/ts-projects:${TS_PROJECTS_TAG}
+    env_file:
+      - .env
     ports: 
       - "9001:8080"
     depends_on:
@@ -31,14 +22,9 @@ services:
       - liquibase-dev
       
   backend-resume-dev:
-    build: ./back/resume
-    environment:
-      - TENANT_ID=${TENANT_ID}
-      - JWT_KEY=${JWT_KEY_TEST}
-      - DB_MAIN_JDBC=jdbc:postgresql://postgres-dev:5432/${DB_NAME_TEST}
-      - DB_MAIN_USER=${DB_USER_TEST}
-      - DB_MAIN_PASSWORD=${DB_PASSWORD_TEST}
-      - RESUME_HOST=${RESUME_HOST_TEST}
+    image: ssspamqe/ts-resume:${TS_RESUME_TAG}
+    env_file:
+      - .env
     ports: 
       - "9002:8080"
     depends_on:
@@ -46,23 +32,13 @@ services:
       - liquibase-dev
 
   frontend-dev:
-    build: 
-      context: ./front
-      args:
-        - VITE_BACKEND_HOST=${BACKEND_HOST_TEST}
+    image: ssspamqe/ts-frontend-dev:${TS_FRONTEND_TAG}
     ports: 
       - "9004:80"
-    depends_on:
-      - backend-auth-dev
-      - backend-projects-dev
 
   postgres-dev:
     image: postgres:16
     restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${DB_NAME_TEST}
-      POSTGRES_USER: ${DB_USER_TEST}
-      POSTGRES_PASSWORD: ${DB_PASSWORD_TEST}
     ports:
       - "9006:5432"
     volumes:
@@ -71,9 +47,6 @@ services:
   pgadmin-dev:
     image: dpage/pgadmin4:9.4.0
     restart: unless-stopped
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_USER_TEST}
-      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD_TEST}
     ports:
       - "9007:80"
     volumes:
@@ -90,9 +63,9 @@ services:
       - postgres-dev
     command: >
       --changeLogFile=changelog/changelog.yml
-      --url=jdbc:postgresql://postgres-dev:5432/${DB_NAME_TEST}
-      --username=${DB_USER_TEST}
-      --password=${DB_PASSWORD_TEST}
+      --url=${DB_MAIN_JDBC}
+      --username=${DB_MAIN_USER}
+      --password=${DB_MAIN_PASSWORD}
       --driver=org.postgresql.Driver
       --logLevel=info
       update

@@ -1,0 +1,44 @@
+name: Test Build Backend Template
+
+on:
+  workflow_call:
+    inputs:
+      service-dir:
+        required: true
+        type: string
+      test-report-title:
+        required: true
+        type: string
+      image-name:
+        required: true
+        type: string
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+      DOCKERHUB_TOKEN:
+        required: true
+
+jobs:
+  test:
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/template-test-backend.yml
+    with:
+      service-dir: ${{ inputs.service-dir }}
+      report-title: ${{ inputs.test-report-title }}
+
+  build:
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    needs: test
+    uses: ./.github/workflows/template-build-backend.yml
+    with:
+      service-dir: ${{ inputs.service-dir }}
+      image-name: ${{ inputs.image-name }}
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

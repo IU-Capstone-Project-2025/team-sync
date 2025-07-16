@@ -21,6 +21,6 @@ class Recommender(ABC):
         pass
 
     @abstractmethod
-    def save_data_for_calculation(self, project_ids=None):
+    def save_data_for_calculation(self, project_ids=None, user_ids=None):
         """Save data needed for score calculation."""
         pass

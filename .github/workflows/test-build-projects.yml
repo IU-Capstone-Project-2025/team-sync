@@ -1,0 +1,22 @@
+name: Test Build TeamSync-Projects 
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-build:
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/template-test-build-backend.yml
+    with:
+      service-dir: back/projects
+      test-report-title: Projects Service Test Coverage
+      image-name: ts-projects
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

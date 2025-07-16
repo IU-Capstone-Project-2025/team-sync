@@ -2,42 +2,29 @@ version: '3.8'
 
 services:
   backend-auth:
-    build: ./back/auth
+    image: ssspamqe/ts-auth:${TS_AUTH_TAG}
     ports: 
       - "8084:8080"
-    environment:
-      - TENANT_ID=${TENANT_ID}
-      - JWT_KEY=${JWT_KEY}
-      - DB_MAIN_JDBC=jdbc:postgresql://postgres:5432/${DB_NAME}
-      - DB_MAIN_USER=${DB_USER}
-      - DB_MAIN_PASSWORD=${DB_PASSWORD}
-      - RESUME_HOST=${RESUME_HOST}
+    env_file:
+      - .env
     depends_on:
       - postgres
       - liquibase
 
   backend-projects:
-    build: ./back/projects
-    environment:
-      - TENANT_ID=${TENANT_ID}
-      - JWT_KEY=${JWT_KEY}
-      - DB_MAIN_JDBC=jdbc:postgresql://postgres:5432/${DB_NAME}
-      - DB_MAIN_USER=${DB_USER}
-      - DB_MAIN_PASSWORD=${DB_PASSWORD}
+    image: ssspamqe/ts-projects:${TS_PROJECTS_TAG}
+    env_file:
+      - .env
     ports: 
       - "8081:8080"
     depends_on:
       - postgres
       - liquibase
-      
+
   backend-resume:
-    build: ./back/resume
-    environment:
-      - TENANT_ID=${TENANT_ID}
-      - JWT_KEY=${JWT_KEY}
-      - DB_MAIN_JDBC=jdbc:postgresql://postgres:5432/${DB_NAME}
-      - DB_MAIN_USER=${DB_USER}
-      - DB_MAIN_PASSWORD=${DB_PASSWORD}
+    image: ssspamqe/ts-resume:${TS_RESUME_TAG}
+    env_file:
+      - .env
     ports: 
       - "8082:8080"
     depends_on:
@@ -45,23 +32,13 @@ services:
       - liquibase
 
   frontend:
-    build: 
-      context: ./front
-      args:
-        - VITE_BACKEND_HOST=${BACKEND_HOST}
+    image: ssspamqe/ts-frontend-prod:${TS_FRONTEND_TAG}
     ports: 
       - "3000:80"
-    depends_on:
-      - backend-auth
-      - backend-projects
 
   postgres:
     image: postgres:16
     restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -70,9 +47,6 @@ services:
   pgadmin:
     image: dpage/pgadmin4:9.4.0
     restart: unless-stopped
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_USER}
-      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
     ports:
       - "5050:80"
     volumes:
@@ -89,9 +63,9 @@ services:
       - postgres
     command: >
       --changeLogFile=changelog/changelog.yml
-      --url=jdbc:postgresql://postgres:5432/${DB_NAME}
-      --username=${DB_USER}
-      --password=${DB_PASSWORD}
+      --url=${DB_MAIN_JDBC}
+      --username=${DB_MAIN_USER}
+      --password=${DB_MAIN_PASSWORD}
       --driver=org.postgresql.Driver
       --logLevel=info
       update

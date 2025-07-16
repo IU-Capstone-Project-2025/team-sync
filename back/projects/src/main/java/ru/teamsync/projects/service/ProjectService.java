@@ -74,6 +74,10 @@ public class ProjectService {
             throw new ResourceAccessDeniedException("You cannot edit this project");
         }
 
+        if (project.getStatus() == ProjectStatus.COMPLETE) {
+            throw new IllegalStateException("Cannot update a completed project.");
+        }
+
         Course course = courseRepository.findByName(request.courseName())
                 .orElseGet(() -> {
                     Course newCourse = new Course();
@@ -93,6 +97,11 @@ public class ProjectService {
 
         if (!project.getTeamLeadId().equals(currentUserId)) {
             throw new ResourceAccessDeniedException("You cannot edit this project");
+        }
+
+        boolean exists = projectMemberRepository.existsById_ProjectIdAndId_MemberId(projectId, personId);
+        if (!exists) {
+            throw new IllegalStateException("This person is not a member of the project.");
         }
 
         projectMemberRepository.deleteById_ProjectIdAndId_MemberId(projectId, personId);
@@ -196,6 +205,10 @@ public class ProjectService {
 
         if (!project.getTeamLeadId().equals(userId)) {
             throw new ResourceAccessDeniedException("You cannot view applications for this project");
+        }
+
+        if (project.getStatus() == ProjectStatus.COMPLETE) {
+            throw new IllegalStateException("Cannot update applications for a completed project.");
         }
 
         Application application = applicationRepository.findById(applicationId)

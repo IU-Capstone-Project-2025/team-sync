@@ -1,10 +1,10 @@
-name: Deploy Prod
+name: Dev Deploy Projects
 
 on:
   workflow_dispatch:
 
 jobs:
-  deploy-prod:
+  dev-deploy-projects:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -17,4 +17,4 @@ jobs:
 
       - name: Deploy to server
         run: |
-          ssh -o StrictHostKeyChecking=no githubci@shqcore.ru "cd prod && bash ./deploy.sh ${{ github.ref_name }}"
+          ssh -o StrictHostKeyChecking=no githubci@team-sync.online "cd deploy/dev && bash ./deploy-backend-service.sh projects ${{ github.ref_name }}"

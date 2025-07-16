@@ -40,20 +40,16 @@ class ModelsMerger:
     
     async def iterate_all_users(self):
         """Iterate through all users and merge scores for each."""
-        self.logger.info("Starting to iterate through all users to merge scores.")
         project_ids = self.db.get_project_ids()
-        self.logger.info("Iterating through all users to merge scores.")
         user_ids = self.db.get_student_ids()
         if not user_ids:
             self.logger.warning("No user IDs found in the database.")
             return
 
         for model in self.models:
-            model.save_data_for_calculation(project_ids=project_ids)
-            self.logger.info(f"Saved data for calculation for model: {model.model_name}.")
+            model.save_data_for_calculation(project_ids=project_ids, user_ids=user_ids)
 
         for user_id in user_ids:
             value = self.merge_scores_for_user(user_id, project_ids)
             value.sort(key=lambda x: x["score"], reverse=True)
             await self.redis.set_list(user_id, value)
-            self.logger.info(f"Merged scores for user {user_id}.")

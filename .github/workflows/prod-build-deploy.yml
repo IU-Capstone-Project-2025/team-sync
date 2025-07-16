@@ -1,0 +1,77 @@
+name: Prod Deploy All
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-projects:
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/template-build-backend.yml
+    with:
+      service-dir: back/projects
+      image-name: ts-projects
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  build-resume:
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/template-build-backend.yml
+    with:
+      service-dir: back/resume
+      image-name: ts-resume
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  build-auth:
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/template-build-backend.yml
+    with:
+      service-dir: back/auth
+      image-name: ts-auth
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  build-frontend:
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/template-build-frontend.yml
+    with:
+      service-dir: front
+      image-name: ts-frontend-prod
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      BACKEND_HOST: ${{ secrets.BACKEND_HOST }}
+
+
+  prod-deploy-all:
+    needs: [build-projects, build-resume, build-auth, build-frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH agent and add key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no githubci@team-sync.online "cd deploy/prod && bash ./deploy-all.sh ${{ github.ref_name }}"
