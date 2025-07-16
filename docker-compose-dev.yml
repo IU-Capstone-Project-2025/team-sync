@@ -37,14 +37,14 @@ services:
       - "9004:80"
 
   ml-recsys-dev:
-    image: ssspamqe/ts-ml-recsys:${TS_ML_RECSYS_TAG}
+    image: ssspamqe/ts-recsys:${TS_ML_RECSYS_TAG}
     env_file:
       - .env
     ports: 
       - "8000:8000"
   
   ml-embedder-dev:
-    image: ssspamqe/ts-ml-embedder:${TS_ML_EMBEDDER_TAG}
+    image: ssspamqe/ts-embedder:${TS_ML_EMBEDDER_TAG}
     env_file:
       - .env
     ports: 
@@ -78,6 +78,8 @@ services:
     restart: unless-stopped
     ports:
       - "9006:5432"
+    env_file:
+      - .env
     volumes:
       - pgdata-dev:/var/lib/postgresql/data
 
@@ -88,6 +90,8 @@ services:
       - "9007:80"
     volumes:
       - pgadmin_data-dev:/var/lib/pgadmin
+    env_file:
+      - .env
     depends_on:
       - postgres-dev
 

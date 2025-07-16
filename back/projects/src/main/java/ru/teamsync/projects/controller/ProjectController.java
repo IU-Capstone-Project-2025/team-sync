@@ -58,12 +58,16 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}")
-    public BaseResponse<ProjectResponse> getProjectById(
-            @PathVariable Long projectId) {
-            
+    public BaseResponse<ProjectResponse> getProjectById(@PathVariable Long projectId) {
         long userId = securityContextService.getCurrentUserId();
         ProjectResponse project = projectService.getProjectById(userId, projectId);
         return BaseResponse.of(project);
+    }
+
+    @GetMapping("/recommendations")
+    public BaseResponse<ProjectResponse> getProjectRecommendations(){
+        long userId = securityContextService.getCurrentUserId();
+
     }
 
     @PutMapping("/{projectId}")
