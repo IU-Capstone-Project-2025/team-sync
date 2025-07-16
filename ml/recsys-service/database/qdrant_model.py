@@ -33,7 +33,7 @@ class QdrantModel:
         if not self.collection_exists(collection_name):
             self.logger.warning(f"Collection '{collection_name}' does not exist.")
             return None
-        if id is None or isinstance(id, str) or isinstance(id, list):
+        if id is None or not (isinstance(id, int) or isinstance(id, str)):
             self.logger.warning("ID is None or invalid, cannot retrieve embedding.")
             return None
         emb = self.client.retrieve(collection_name, [id], with_vectors=True)
