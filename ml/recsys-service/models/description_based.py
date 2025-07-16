@@ -26,12 +26,8 @@ class DescriptionBasedRecommender(Recommender):
             embedding = self.sbert.encode(user_description)[0]
         for index, project_id in enumerate(project_ids):
             score = 0
-            if not embedding:
-                recommendations.append(score)
-                self.logger.warning(f"No description found for user {user_id}.")
-                continue
             if self.embeddings:
-                score = np.dot(self.embeddings[index], embedding) / (np.linalg.norm(self.embeddings[index]) * np.linalg.norm(embedding))
+                score = np.dot(self.embeddings[index], embedding) / (np.linalg.norm(self.embeddings[index]) * np.linalg.norm(embedding) + 1e-8)
             else:
                 self.logger.warning(f"No embeddings available for project {project_id}.")
             recommendations.append(score)
