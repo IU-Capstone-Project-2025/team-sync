@@ -31,6 +31,17 @@ services:
       - postgres-dev
       - liquibase-dev
 
+  backend-recommendations-dev:
+    image: ssspamqe/ts-recommendations:${TS_RECOMMENDATIONS_TAG}
+    env_file:
+      - .env
+    ports: 
+      - "9003:8080"
+    depends_on:
+      - postgres-dev
+      - liquibase-dev
+
+
   frontend-dev:
     image: ssspamqe/ts-frontend-dev:${TS_FRONTEND_TAG}
     ports: 
