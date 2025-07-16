@@ -14,8 +14,8 @@ jobs:
       pull-requests: write
     uses: ./.github/workflows/template-build-backend.yml
     with:
-      service-dir: back/recommendations
-      image-name: ts-auth
+      service-dir: back/recommendation
+      image-name: ts-recommendations
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
