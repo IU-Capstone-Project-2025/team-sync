@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.dto.response.BaseResponse;
 import ru.teamsync.projects.dto.response.ProjectResponse;
 import ru.teamsync.projects.entity.ProjectStatus;
+import ru.teamsync.projects.service.ProjectRecommendationsService;
 import ru.teamsync.projects.service.ProjectService;
 import ru.teamsync.projects.service.SecurityContextService;
 
@@ -39,6 +41,7 @@ public class ProjectController {
 
     private final ProjectService projectService;
     private final SecurityContextService securityContextService;
+    private final ProjectRecommendationsService projectRecommendationsService;
 
     @PostMapping
     public ResponseEntity<BaseResponse<Void>> createProject(
@@ -50,8 +53,7 @@ public class ProjectController {
     }
 
     @GetMapping("/my")
-    public BaseResponse<Page<ProjectResponse>> getMyProjects(
-            Pageable pageable) {
+    public BaseResponse<Page<ProjectResponse>> getMyProjects(Pageable pageable) {
         long userId = securityContextService.getCurrentUserId();
         Page<ProjectResponse> myProjects = projectService.getProjectsByTeamLead(userId, pageable);
         return BaseResponse.of(myProjects);
@@ -65,9 +67,10 @@ public class ProjectController {
     }
 
     @GetMapping("/recommendations")
-    public BaseResponse<ProjectResponse> getProjectRecommendations(){
+    public BaseResponse<Page<ProjectResponse>> getProjectRecommendations(Pageable pageable) {
         long userId = securityContextService.getCurrentUserId();
-
+        var projectsPage = new PageImpl<>(projectRecommendationsService.getProjectRecommendationsForUser(userId, pageable));
+        return BaseResponse.of(projectsPage);
     }
 
     @PutMapping("/{projectId}")
@@ -83,12 +86,12 @@ public class ProjectController {
     public ResponseEntity<BaseResponse<Void>> postMethodName(
             @PathVariable Long projectId,
             @PathVariable Long personId) {
-        
+
         Long userId = securityContextService.getCurrentUserId();
         projectService.removeMembersFromProject(projectId, userId, personId);
         return ResponseEntity.ok(BaseResponse.of(null));
     }
-    
+
 
     @GetMapping
     public BaseResponse<Page<ProjectResponse>> getProjects(
@@ -118,16 +121,16 @@ public class ProjectController {
     public Page<ApplicationResponse> getApplicationsForProject(
             @PathVariable Long projectId,
             Pageable pageable) {
-        
+
         Long userId = securityContextService.getCurrentUserId();
         return projectService.getApplicationsForProject(projectId, userId, pageable);
     }
 
     @PatchMapping("/{projectId}/applications/{applicationId}")
     public ApplicationResponse updateApplication(
-        @PathVariable Long projectId,
-        @PathVariable Long applicationId,
-        @RequestBody UpdateApplicationStatusRequest request) {
+            @PathVariable Long projectId,
+            @PathVariable Long applicationId,
+            @RequestBody UpdateApplicationStatusRequest request) {
 
         Long userId = securityContextService.getCurrentUserId();
         return projectService.updateApplicationStatus(projectId, applicationId, userId, request.status());

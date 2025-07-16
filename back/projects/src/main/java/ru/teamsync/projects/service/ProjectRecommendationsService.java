@@ -1,6 +1,7 @@
 package ru.teamsync.projects.service;
 
 import lombok.RequiredArgsConstructor;
+import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectRecommendationsService {
 
-    private final ProjectsRecommendationsGrpc.ProjectsRecommendationsBlockingStub projectsRecommendationsStub;
+    @GrpcClient("project-recommendations-service")
+    private  ProjectsRecommendationsGrpc.ProjectsRecommendationsBlockingStub projectsRecommendationsStub;
+
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
 
-    public List<ProjectResponse> getProjectRecommendationsForUser(int userId, Pageable pageable) {
+    public List<ProjectResponse> getProjectRecommendationsForUser(long userId, Pageable pageable) {
         int readStart = pageable.getPageSize() * pageable.getPageNumber();
         int amount = pageable.getPageSize();
         var request = RecommendationProto.ProjectsRecommendationsRequest

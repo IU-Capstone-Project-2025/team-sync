@@ -12,6 +12,13 @@ server:
   servlet:
     context-path: /projects/api/v1
 
+grpc:
+  client:
+    project-recommendations-service:
+      address: ${RECOMMENDATIONS-HOST}
+      negotiationType: plaintext
+
+
 teamsync:
   security:
     jwt:
