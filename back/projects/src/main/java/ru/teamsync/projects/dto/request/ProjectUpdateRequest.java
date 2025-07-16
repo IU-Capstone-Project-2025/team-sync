@@ -11,7 +11,7 @@ public record ProjectUpdateRequest(
     String name,
 
     @JsonProperty("course_name")
-     String courseName,
+    String courseName,
 
     @JsonProperty("description")
     String description,
