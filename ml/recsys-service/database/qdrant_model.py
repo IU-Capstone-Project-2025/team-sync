@@ -38,7 +38,7 @@ class QdrantModel:
             return None
         emb = self.client.retrieve(collection_name, [id], with_vectors=True)
         if not emb or len(emb) == 0:
-            self.logger.warning(f"1 No embedding found for ID {id} in collection '{collection_name}'.")
+            self.logger.warning(f"No embedding found for ID {id} in collection '{collection_name}'.")
             return None
         record = emb[0]
         if hasattr(record, 'vector'):
