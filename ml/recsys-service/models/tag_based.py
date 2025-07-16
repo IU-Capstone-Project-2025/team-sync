@@ -54,6 +54,6 @@ class TagBasedRecommender(Recommender):
 
         self.projects_with_skills = np.zeros(shape=(num_projects, num_skills), dtype=np.float32)
         for i in range(num_projects):
-            for skill in self.db.get_project_skills(project_ids[i]):
-                self.projects_with_skills[i][self.all_skills[skill]] = 1
+            for skill_id in self.db.get_project_skills(project_ids[i]):
+                self.projects_with_skills[i][self.all_skills[skill_id]] = 1
         
