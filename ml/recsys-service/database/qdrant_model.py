@@ -46,7 +46,7 @@ class QdrantModel:
         else:
             result = []
         if not result:
-            self.logger.warning(f"2 No embedding found for ID {id} in collection '{collection_name}'.")
+            self.logger.warning(f"No embedding found for ID {id} in collection '{collection_name}'.")
             return None
         return result
 
