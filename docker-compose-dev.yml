@@ -36,16 +36,6 @@ services:
     ports: 
       - "9004:80"
 
-  keydb-dev:
-    image: bitnami/keydb:6.3.4
-    env_file:
-      - .env
-    ports:
-      - "6379:6379"
-    volumes:
-      - keydb_data-dev:/data
-    restart: unless-stopped
-
   ml-recsys-dev:
     image: ssspamqe/ts-ml-recsys:${TS_ML_RECSYS_TAG}
     env_file:
@@ -53,11 +43,6 @@ services:
     ports: 
       - "8000:8000"
   
-  ml-search-dev:
-    image: ssspamqe/ts-ml-search:${TS_ML_SEARCH_TAG}
-    ports: 
-      - "8001:8000"
-
   ml-embedder-dev:
     image: ssspamqe/ts-ml-embedder:${TS_ML_EMBEDDER_TAG}
     env_file:
@@ -67,6 +52,16 @@ services:
     depends_on:
       - qdrant-dev
       - postgres-dev
+
+  keydb-dev:
+    image: bitnami/keydb:6.3.4
+    env_file:
+      - .env
+    ports:
+      - "6379:6379"
+    volumes:
+      - keydb_data-dev:/data
+    restart: unless-stopped
 
   qdrant-dev:
     image: qdrant/qdrant:v1.2.0
