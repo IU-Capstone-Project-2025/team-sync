@@ -26,7 +26,6 @@ async def lifespan(app: FastAPI):
     logger.info("Database connection established successfully.")
 
     # recommendation models initialization
-
     logger.info("Initializing recommendation models...")
     app.state.merger = ModelsMerger(logger, app.state.db, app.state.redis)
     app.state.merger.add_model(
