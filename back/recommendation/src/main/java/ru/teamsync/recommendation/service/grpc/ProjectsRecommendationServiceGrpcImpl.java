@@ -2,7 +2,6 @@ package ru.teamsync.recommendation.service.grpc;
 
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import net.devh.boot.grpc.server.service.GrpcService;
 import ru.teamsync.grpc.ProjectsRecommendationsGrpc;
