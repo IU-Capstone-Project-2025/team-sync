@@ -141,6 +141,8 @@ public class ProfileService {
                 .description(request.getDescription())
                 .githubAlias(request.getGithubAlias())
                 .tgAlias(request.getTgAlias())
+                .skills(request.getSkills())
+                .roles(request.getRoles())
                 .build();
 
         studentRepository.save(student);
