@@ -128,3 +128,11 @@ async def get_user_favorites(user_id: int, request: Request):
     if not favorites:
         return {"status": "No favorites found for the user", "user_id": user_id}
     return {"status": "User favorites retrieved successfully", "user_id": user_id, "favorites": favorites}
+
+@router.get("/qdrant/embedding/{collection_name}/{id}")
+async def get_qdrant_embedding(collection_name: str, id: int, request: Request):
+    qdrant = request.app.state.qdrant
+    embedding = qdrant.get_embedding(collection_name, id)
+    if not embedding:
+        return {"status": "No embedding found for the ID", "collection_name": collection_name, "id": id}
+    return {"status": "Embedding retrieved successfully", "collection_name": collection_name, "id": id, "embedding": embedding}

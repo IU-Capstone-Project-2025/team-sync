@@ -8,3 +8,4 @@ requests==2.31.0
 apscheduler==3.10.1
 scipy==1.11.4
 implicit==0.7.2
+qdrant-client==1.7.0

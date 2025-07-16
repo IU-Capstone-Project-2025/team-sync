@@ -41,6 +41,13 @@ class Config:
     def REDIS_PASSWORD(self):
         return os.getenv("KEY_DB_PASSWORD", "dev-keydb-psw")
 
+    @property
+    def QDRANT_API_KEY(self):
+        return os.getenv("QDRANT_API_KEY", "dev-qdrant-api-key")
+
+    QDRANT_HOST = "qdrant"
+    QDRANT_PORT = 6333
+
     RECOMMENDATION_JOB_INTERVAL = 5
 
     BASE_COEFFICIENT = 0.5

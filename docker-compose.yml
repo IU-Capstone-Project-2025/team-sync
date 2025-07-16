@@ -74,6 +74,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - KEY_DB_PASSWORD=${KEY_DB_PASSWORD}
+      - QDRANT_API_KEY=${QDRANT_API_KEY}
     ports: 
       - "8000:8000"
   

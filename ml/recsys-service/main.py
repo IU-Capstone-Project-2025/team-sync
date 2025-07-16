@@ -12,6 +12,7 @@ from models.role_based import RoleBasedRecommender
 from metrics.metrics_model import Metrics
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from models.als_based import ALSRecommender
+from database.qdrant_model import QdrantModel
 
 async def lifespan(app: FastAPI):    
     app.state.logger = setup_logging()
@@ -19,11 +20,13 @@ async def lifespan(app: FastAPI):
     logger.info("Application startup")
     app.state.db = DBModel(logger=logger)
     app.state.redis = RedisModel(logger=logger)
+    app.state.qdrant = QdrantModel(logger=logger)
     await app.state.redis.connect()
     await app.state.db.connect()
     logger.info("Database connection established successfully.")
 
     # recommendation models initialization
+
     logger.info("Initializing recommendation models...")
     app.state.merger = ModelsMerger(logger, app.state.db, app.state.redis)
     app.state.merger.add_model(
@@ -36,6 +39,7 @@ async def lifespan(app: FastAPI):
     app.state.merger.add_model(
         DescriptionBasedRecommender(
             DBModel=app.state.db,
+            qdrant_model=app.state.qdrant,
             logger=logger,
             model_name="description_based"
         )
