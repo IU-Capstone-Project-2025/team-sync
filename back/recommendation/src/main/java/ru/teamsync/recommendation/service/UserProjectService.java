@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.teamsync.recommendation.model.ProjectScore;
 
 import java.util.List;
+import java.util.stream.Collectors;
 //import java.util.stream.Collectors;
 
 @Service
@@ -20,15 +21,13 @@ public class UserProjectService {
     }
 
     public List<ProjectScore> getProjectScores(int userId) {
-        return List.of();
+        String key = String.valueOf(userId);
+        log.info("Fetching project scores for user: {}", key);
+        List<Object> rawList = listOps.range(key, 0, -1);
 
-//        String key = String.valueOf(userId);
-//        log.info("Fetching project scores for user: {}", key);
-//        List<Object> rawList = listOps.range(key, 0, -1);
-//
-//        return rawList.stream()
-//                .map(obj -> (ProjectScore) obj)
-//                .collect(Collectors.toList());
+        return rawList.stream()
+                .map(obj -> (ProjectScore) obj)
+                .collect(Collectors.toList());
     }
 
 }

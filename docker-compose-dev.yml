@@ -1,0 +1,119 @@
+version: '3.8'
+
+services:
+  backend-auth-dev:
+    image: ssspamqe/ts-auth:${TS_AUTH_TAG}
+    ports: 
+      - "9000:8080"
+    env_file:
+      - .env
+    depends_on:
+      - postgres-dev
+      - liquibase-dev
+  
+  backend-projects-dev:
+    image: ssspamqe/ts-projects:${TS_PROJECTS_TAG}
+    env_file:
+      - .env
+    ports: 
+      - "9001:8080"
+    depends_on:
+      - postgres-dev
+      - liquibase-dev
+      
+  backend-resume-dev:
+    image: ssspamqe/ts-resume:${TS_RESUME_TAG}
+    env_file:
+      - .env
+    ports: 
+      - "9002:8080"
+    depends_on:
+      - postgres-dev
+      - liquibase-dev
+
+  frontend-dev:
+    image: ssspamqe/ts-frontend-dev:${TS_FRONTEND_TAG}
+    ports: 
+      - "9004:80"
+
+  keydb-dev:
+    image: bitnami/keydb:6.3.4
+    env_file:
+      - .env
+    ports:
+      - "6379:6379"
+    volumes:
+      - keydb_data-dev:/data
+    restart: unless-stopped
+
+  ml-recsys-dev:
+    image: ssspamqe/ts-ml-recsys:${TS_ML_RECSYS_TAG}
+    env_file:
+      - .env
+    ports: 
+      - "8000:8000"
+  
+  ml-search-dev:
+    image: ssspamqe/ts-ml-search:${TS_ML_SEARCH_TAG}
+    ports: 
+      - "8001:8000"
+
+  ml-embedder-dev:
+    image: ssspamqe/ts-ml-embedder:${TS_ML_EMBEDDER_TAG}
+    env_file:
+      - .env
+    ports: 
+      - "8002:8000"
+    depends_on:
+      - qdrant-dev
+      - postgres-dev
+
+  qdrant-dev:
+    image: qdrant/qdrant:v1.2.0
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant_data-dev:/qdrant/storage
+    env_file:
+      - .env
+    restart: unless-stopped
+
+  postgres-dev:
+    image: postgres:16
+    restart: unless-stopped
+    ports:
+      - "9006:5432"
+    volumes:
+      - pgdata-dev:/var/lib/postgresql/data
+
+  pgadmin-dev:
+    image: dpage/pgadmin4:9.4.0
+    restart: unless-stopped
+    ports:
+      - "9007:80"
+    volumes:
+      - pgadmin_data-dev:/var/lib/pgadmin
+    depends_on:
+      - postgres-dev
+
+  liquibase-dev:
+    image: liquibase/liquibase:4.32.0
+    volumes:
+      - ./migration:/migration
+    working_dir: /migration
+    depends_on:
+      - postgres-dev
+    command: >
+      --changeLogFile=changelog/changelog.yml
+      --url=${DB_MAIN_JDBC}
+      --username=${DB_MAIN_USER}
+      --password=${DB_MAIN_PASSWORD}
+      --driver=org.postgresql.Driver
+      --logLevel=info
+      update
+
+volumes:
+  pgdata-dev:
+  pgadmin_data-dev:
+  keydb_data-dev:
+  qdrant_data-dev:
