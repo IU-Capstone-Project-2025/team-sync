@@ -15,6 +15,7 @@ import ru.teamsync.projects.entity.Project;
 public interface ProjectMapper {
 
     @Mapping(target = "courseId", source = "course.id")
+    @Mapping(target = "membersCount", ignore = true)
     ProjectResponse toDto(Project project);
 
     @Mapping(target = "id", ignore = true)
@@ -27,7 +28,6 @@ public interface ProjectMapper {
     @Mapping(target = "skillIds", source = "request.skills")
     @Mapping(target = "roleIds", source = "request.roles")
     @Mapping(target = "requiredMembersCount", source = "request.requiredMembersCount")
-    @Mapping(target = "membersCount", ignore = true)
     Project toEntity(ProjectCreateRequest request, Long userId);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
@@ -39,6 +39,5 @@ public interface ProjectMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "teamLeadId", ignore = true) 
     @Mapping(target = "course", ignore = true)
-    @Mapping(target = "membersCount", ignore = true)
     void updateEntity(ProjectUpdateRequest request, @MappingTarget Project project);
 }

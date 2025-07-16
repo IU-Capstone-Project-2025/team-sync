@@ -99,12 +99,13 @@ public class ProjectService {
             throw new ResourceAccessDeniedException("You cannot edit this project");
         }
 
-        boolean exists = projectMemberRepository.existsById_ProjectIdAndId_MemberId(projectId, personId);
+        ProjectMemberId memberId = new ProjectMemberId(projectId, personId);
+        boolean exists = projectMemberRepository.existsById(memberId);
         if (!exists) {
             throw new IllegalStateException("This person is not a member of the project.");
         }
 
-        projectMemberRepository.deleteById_ProjectIdAndId_MemberId(projectId, personId);
+        projectMemberRepository.deleteById(memberId);
     }
 
     public Page<ProjectResponse> getProjects(
@@ -130,8 +131,7 @@ public class ProjectService {
         }
 
         Page<Project> projects = projectRepository.findAll(spec, pageable);
-        projects.forEach(p -> p.setMembersCount((int) projectMemberRepository.countById_ProjectId(p.getId())));
-        return projects.map(projectMapper::toDto);
+        return projects.map(this::enrichWithMemberCount);
     }
 
     public ProjectResponse getProjectById(Long userId, Long projectId) {
@@ -140,32 +140,13 @@ public class ProjectService {
 
         incrementProjectClick(userId, projectId);
 
-        int membersCount = (int) projectMemberRepository.countById_ProjectId(projectId);
-        project.setMembersCount(membersCount);
-
-        return projectMapper.toDto(project);
+        return enrichWithMemberCount(project);
     }
-
-    @Transactional
-    private void incrementProjectClick(Long studentId, Long projectId) {
-        StudentProjectClickId clickId = new StudentProjectClickId(studentId, projectId);
-        StudentProjectClick click = studentProjectClickRepository.findById(clickId)
-                .orElseGet(() -> {
-                    StudentProjectClick newClick = new StudentProjectClick();
-                    newClick.setId(clickId);
-                    return studentProjectClickRepository.save(newClick);
-                });
-
-        click.setClickCount(click.getClickCount() + 1);
-        studentProjectClickRepository.save(click);
-    } 
 
     public Page<ProjectResponse> getProjectsByTeamLead(Long teamLeadId, Pageable pageable) {
         Page<Project> projects = projectRepository.findAllByTeamLeadId(teamLeadId, pageable);
 
-        projects.forEach(p -> p.setMembersCount((int) projectMemberRepository.countById_ProjectId(p.getId())));
-
-        return projects.map(projectMapper::toDto);
+        return projects.map(this::enrichWithMemberCount);
     }
 
     @Transactional
@@ -222,20 +203,49 @@ public class ProjectService {
             if (approvedCount >= project.getRequiredMembersCount()) {
                 throw new IllegalStateException("Cannot approve — project is already full.");
             }
-            
-            boolean alreadyMember = projectMemberRepository.existsById_ProjectIdAndId_MemberId(projectId, application.getPersonId());
-            if (!alreadyMember) {
-                ProjectMemberId memberId = new ProjectMemberId();
-                memberId.setProjectId(projectId);
-                memberId.setMemberId(application.getPersonId());
 
+            ProjectMemberId memberId = new ProjectMemberId(projectId, application.getPersonId());
+
+            boolean alreadyMember = projectMemberRepository.existsById(memberId);
+            if (!alreadyMember) {
                 ProjectMember member = new ProjectMember();
                 member.setId(memberId);
-
                 projectMemberRepository.save(member);
             }
         }
 
         return applicationMapper.toDto(application);
+    }
+
+    @Transactional
+    private void incrementProjectClick(Long studentId, Long projectId) {
+        StudentProjectClickId clickId = new StudentProjectClickId(studentId, projectId);
+        StudentProjectClick click = studentProjectClickRepository.findById(clickId)
+                .orElseGet(() -> {
+                    StudentProjectClick newClick = new StudentProjectClick();
+                    newClick.setId(clickId);
+                    return studentProjectClickRepository.save(newClick);
+                });
+
+        click.setClickCount(click.getClickCount() + 1);
+        studentProjectClickRepository.save(click);
+    } 
+
+    private ProjectResponse enrichWithMemberCount(Project project) {
+        int count = (int) projectMemberRepository.countById_ProjectId(project.getId());
+        ProjectResponse dto = projectMapper.toDto(project);
+        return new ProjectResponse(
+            dto.id(),
+            dto.name(),
+            dto.courseId(),
+            dto.teamLeadId(),
+            dto.description(),
+            dto.projectLink(),
+            dto.status(),
+            dto.skillIds(),
+            dto.roleIds(),
+            dto.requiredMembersCount(),
+            count
+        );
     }
 }
