@@ -119,11 +119,11 @@ export default function ProfileScreen() {
                         setUserRoles(roles.map(role => ({ id: role.id, name: role.name })))
                     })
 
-                    getSkills(token).then(skills => {
+                    getSkills().then(skills => {
                         setSkills(skills.map(skill => ({ id: skill.id, name: skill.name })))
                     })
 
-                    getRoles(token).then(roles => {
+                    getRoles().then(roles => {
                         setRoles(roles.map(role => ({ id: role.id, name: role.name })))
                     })
                 })
@@ -179,16 +179,16 @@ export default function ProfileScreen() {
                 <h1 className="font-[Manrope] text-(--secondary-color) text-5xl font-bold mb-11">Your Profile</h1>
                 <form onSubmit={updateProfile}>
                     <p className="mb-2">Telegram Alias</p>
-                    <input name="tgAlias" required value={tgAlias} onChange={e => setTgAlias(e.target.value)} className="focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 min-w-50 p-1 text-(--secondary-color) font-[Inter] text-md" />
+                    <input name="tgAlias" required value={tgAlias} onChange={e => setTgAlias(e.target.value)} className="focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 w-[24%] p-1 text-(--secondary-color) font-[Inter] text-md" />
 
                     <p className="mb-2">GitHub Alias</p>
-                    <input name="githubAlias" required value={githubAlias} onChange={e => setGithubAlias(e.target.value)} className="focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 min-w-50 p-1 text-(--secondary-color) font-[Inter] text-md" />
+                    <input name="githubAlias" required value={githubAlias} onChange={e => setGithubAlias(e.target.value)} className="focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 w-[30%] p-1 text-(--secondary-color) font-[Inter] text-md" />
 
                     <p className="mb-2">Study Group</p>
-                    <input name="studyGroup" required value={studyGroupName} onChange={e => setStudyGroupName(e.target.value)} className="focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 min-w-50 p-1 text-(--secondary-color) font-[Inter] text-md" />
+                    <input name="studyGroup" required value={studyGroupName} onChange={e => setStudyGroupName(e.target.value)} className="focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 w-[10%] p-1 text-(--secondary-color) font-[Inter] text-md" />
 
                     <p className="mb-2">About</p>
-                    <input name="description" required value={description} onChange={e => setDescription(e.target.value)} className="focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 min-w-50 p-1 text-(--secondary-color) font-[Inter] text-md" />
+                    <textarea name="description" required value={description} onChange={e => setDescription(e.target.value)} className="focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 w-[40%] max-h-40 p-1 text-(--secondary-color) font-[Inter] text-md" />
 
                     <p className="mb-2">Your roles</p>
                     <CustomizedHook
