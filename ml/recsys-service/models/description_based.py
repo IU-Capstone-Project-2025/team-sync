@@ -19,11 +19,14 @@ class DescriptionBasedRecommender(Recommender):
             self.logger.warning("No projects available for recommendations.")
             return []
         recommendations = []
-        user_description = self.db.get_user_description(user_id)
-        embedding = self.sbert.encode(user_description)[0] # [[0.1, 0.2, 0.3, ...]]
+        embedding = self.qdrant.get_embedding("student", user_id)
+        if not embedding:
+            self.logger.warning(f"No embedding found for user {user_id}.")
+            user_description = self.db.get_user_description(user_id)
+            embedding = self.sbert.encode(user_description)[0]
         for index, project_id in enumerate(project_ids):
             score = 0
-            if not user_description:
+            if not embedding:
                 recommendations.append(score)
                 self.logger.warning(f"No description found for user {user_id}.")
                 continue
