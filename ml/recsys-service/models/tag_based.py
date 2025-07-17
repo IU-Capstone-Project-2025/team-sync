@@ -1,8 +1,6 @@
 import faiss
 import numpy as np
 from models.base_recommender import Recommender
-from config.config import Config
-
 
 class TagBasedRecommender(Recommender):
     def __init__(self, DBModel, logger, model_name):
