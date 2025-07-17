@@ -42,23 +42,23 @@ class Config:
 
     @property
     def REDIS_HOST(self):
-        host = os.getenv("REDIS_HOST")
+        host = os.getenv("KEY_DB_HOST")
         if not host:
-            raise RuntimeError("REDIS_HOST environment variable is not set!")
+            raise RuntimeError("KEY_DB_HOST environment variable is not set!")
         return host
 
     @property
     def REDIS_PORT(self):
-        port = os.getenv("REDIS_PORT")
+        port = os.getenv("KEY_DB_PORT")
         if not port:
-            raise RuntimeError("REDIS_PORT environment variable is not set!")
+            raise RuntimeError("KEY_DB_PORT environment variable is not set!")
         return int(port)
 
     @property
     def REDIS_DB(self):
-        db = os.getenv("REDIS_DB")
+        db = os.getenv("KEY_DB_DB")
         if not db:
-            raise RuntimeError("REDIS_DB environment variable is not set!")
+            raise RuntimeError("KEY_DB_DB environment variable is not set!")
         return int(db)
 
     @property
