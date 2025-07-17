@@ -4,18 +4,13 @@ from typing import Optional
 import requests
 
 class QdrantModel:
-    def __init__(self, host: str = None, port: int = None, 
-                 api_key: str = None, logger=None):
+    def __init__(self, url: str = None, logger=None):
         self.config = Config()
-        if not host:
-            host = self.config.QDRANT_HOST
-        if not port:
-            port = self.config.QDRANT_PORT
-        if not api_key:
-            api_key = self.config.QDRANT_API_KEY
-        if not host or not port or not api_key:
-            raise ValueError("Host, port, and API key must be provided for Qdrant connection.")
-        self.client = QdrantClient(url=f"http://{host}:{port}", api_key=api_key)
+        if not url:
+            url = self.config.QDRANT_URL
+        if not url:
+            raise ValueError("Qdrant URL is not set in the configuration.")
+        self.client = QdrantClient(url=url, api_key=self.config.QDRANT_API_KEY)
         self.logger = logger
 
     def _create_collection(self, collection_name: str, embedding_shape: int = None, distance = "Cosine"):
