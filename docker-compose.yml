@@ -97,6 +97,9 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - QDRANT_API_KEY=${QDRANT_API_KEY}
+      - QDRANT_URL=${QDRANT_URL}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
     ports: 
       - "8002:8000"
     depends_on:

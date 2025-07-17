@@ -3,17 +3,14 @@ from psycopg2 import sql
 from config.config import Config
 
 class PostgresModel:
-    def __init__(self, host: str = Config.POSTGRES_HOST, 
-                 port: int = Config.POSTGRES_PORT, 
-                 user: str = Config().POSTGRES_USER, 
-                 password: str = Config().POSTGRES_PASSWORD, 
-                 dbname: str = Config().POSTGRES_DBNAME):
+    def __init__(self):
+        self.config = Config()
         self.connection = psycopg2.connect(
-            host=host,
-            port=port,
-            user=user,
-            password=password,
-            dbname=dbname
+            host=self.config.POSTGRES_HOST,
+            port=self.config.POSTGRES_PORT,
+            user=self.config.POSTGRES_USER,
+            password=self.config.POSTGRES_PASSWORD,
+            dbname=self.config.POSTGRES_DBNAME
         )
         self.cursor = self.connection.cursor()
 
