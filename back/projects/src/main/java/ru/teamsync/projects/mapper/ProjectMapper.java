@@ -21,7 +21,7 @@ public interface ProjectMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "name", source = "request.name")
     @Mapping(target = "teamLeadId", source = "userId")
-    @Mapping(target = "status", expression = "java(ProjectStatus.valueOf(request.status().toUpperCase()))")
+    @Mapping(target = "status", expression = "java(ru.teamsync.projects.entity.ProjectStatus.valueOf(request.status().toUpperCase()))")
     @Mapping(target = "course", ignore = true)
     @Mapping(target = "description", source = "request.description")
     @Mapping(target = "projectLink", source = "request.projectLink")
@@ -31,7 +31,7 @@ public interface ProjectMapper {
     Project toEntity(ProjectCreateRequest request, Long userId);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "status", expression = "java(request.status() != null ? ProjectStatus.valueOf(request.status().toUpperCase()) : null)")
+    @Mapping(target = "status", expression = "java(request.status() != null ? ru.teamsync.projects.entity.ProjectStatus.valueOf(request.status().toUpperCase()) : null)")
     @Mapping(source = "skills", target = "skillIds")
     @Mapping(source = "roles", target = "roleIds")
     @Mapping(target = "name", source = "request.name")

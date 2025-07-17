@@ -234,18 +234,7 @@ public class ProjectService {
     private ProjectResponse enrichWithMemberCount(Project project) {
         int count = (int) projectMemberRepository.countById_ProjectId(project.getId());
         ProjectResponse dto = projectMapper.toDto(project);
-        return new ProjectResponse(
-            dto.id(),
-            dto.name(),
-            dto.courseId(),
-            dto.teamLeadId(),
-            dto.description(),
-            dto.projectLink(),
-            dto.status(),
-            dto.skillIds(),
-            dto.roleIds(),
-            dto.requiredMembersCount(),
-            count
-        );
+        dto.setMembersCount(count);
+        return dto;
     }
 }
