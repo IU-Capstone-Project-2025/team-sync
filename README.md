@@ -6,7 +6,7 @@
 
 
 ### Deployment
-Production: https://team-sync.online
+Production: https://team-sync.online  
 Development: https://dev.team-sync.online
 
 # Access 
