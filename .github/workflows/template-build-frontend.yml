@@ -31,18 +31,16 @@ jobs:
       - name: Determine tag
         id: tag
         run: |
-          if [[ "${{ github.ref_type }}" == "tag" ]]; then
-            FINAL_TAG="${{ github.head_ref }}"
+          if [[ "${{ github.ref_name }}" == "main" ]]; then
+            FINAL_TAG="${{ github.ref_name }}"
+          elif [[ "${{ github.ref_type }}" == "tag" ]]; then
+            FINAL_TAG="${{ github.ref_name }}"
           else
             REF=${{ github.head_ref }}
             TAG=$(echo "$REF" | grep -oE 'TS-[0-9]+' | tr '[:upper:]' '[:lower:]')
 
             if [[ -n "$TAG" ]]; then
-              if [[ "$REF" == "main" ]]; then
-                FINAL_TAG="main-$TAG"
-              else
                 FINAL_TAG="$TAG"
-              fi
             else
               FINAL_TAG="dev-$(date +%s)"
             fi

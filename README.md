@@ -5,28 +5,22 @@
 **TeamSync** aims to improve the quality and balance of student teams by offering a data-driven, user-friendly experience for discovering, evaluating, and matching with potential teammates.
 
 
-### Quick start
-
-```bash
-# Clone repository
-git clone https://github.com/IU-Capstone-Project-2025/team-sync
-cd team-sync
-
-# Build and start containers via docker-compose (try to turn on/off VPN, if you can't download some dependencies)
-docker-compose up --build
-```
+### Deployment
+Production: https://team-sync.online  
+Development: https://dev.team-sync.online
 
 # Access 
 Default ports and sample endpoints
-| **Service** | **Port** | **Sample endpoint** | **localhost curl** |
-| --- | --- | --- | --- |
-| frontent | 80 | `/` | `curl 'http://localhost'` or `curl 'http://localhost:80'` |                              
-| backend-projects | 80 | `/projects/api/v1/swagger-ui/index.html` | `curl 'http://localhost:80/projects/api/v1/swagger-ui/index.html'` |
-| backend-auth | 80 | `/auth/api/v1/swagger-ui/index.html` | `curl 'http://localhost:80/auth/api/v1/swagger-ui/index.html'` |
-| backend-resume | - | - | - |
-| backend-recommendation | 8083 | only gRPC | only gRPC |
-| ml-search | 8001 | `/api/searh` | `curl 'http://localhost:8001/api/search'` |
-| ml-recsys | 8000 | `/api/v1/airflow` | `curl 'http://localhost:8000/api/v1/airflow'` |
+| **Service** | **Swagger or url** |
+| --- | --- |
+| frontend | https://team-sync.online or https://dev.team-sync.online |
+| backend-projects | https://team-sync.online/projects/api/v1/swagger-ui/index.html or https://dev.team-sync.online/projects/api/v1/swagger-ui/index.html |
+| backend-resume | https://team-sync.online/resume/api/v1/swagger-ui/index.html or https://dev.team-sync.online/resume/api/v1/swagger-ui/index.html |
+| backend-auth | https://team-sync.online/auth/api/v1/swagger-ui/index.html or https://dev.team-sync.online/auth/api/v1/swagger-ui/index.html |
+| ml-recsys |  https://team-sync.online/recsys/api/v1/docs or https://dev.team-sync.online/recsys/api/v1/docs |
+| ml-embedder |  https://team-sync.online/embedder/api/v1/docs or https://dev.team-sync.online/embedder/api/v1/docs |
+
+It's planned to use the _api_ and _api.dev_ subdomain for backend and ml services
 
 ## Tech Stack
 
