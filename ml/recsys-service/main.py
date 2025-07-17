@@ -26,6 +26,7 @@ async def lifespan(app: FastAPI):
     logger.info("Database connection established successfully.")
 
     # recommendation models initialization
+
     logger.info("Initializing recommendation models...")
     app.state.merger = ModelsMerger(logger, app.state.db, app.state.redis)
     app.state.merger.add_model(
@@ -75,6 +76,21 @@ async def lifespan(app: FastAPI):
     app.state.scheduler.start()
     logger.info("Scheduler initialized and started successfully.")
 
+
+    test_users = [0, 1, 2] #ids
+    relevance = {}
+    for user in test_users:
+        relevance[user] = {}
+        for project in app.state.db.get_project_ids():
+            # todo: add code
+            relevance[user][project] = 0
+
+    test_users_range_lists = {}
+    for user in test_users:
+        test_users_range_lists[user] = []
+        for project in app.state.redis.get(user)[:10]: # first ten relevant 
+            test_users_range_lists[user].append(relevance[user][project["project_id"]])
+
     # metrics model initialization
     app.state.metrics = Metrics(
         relevance_matrix=[[1, 1, 1, 0, 0, 1, 1, 1, 0, 0],
@@ -82,6 +98,8 @@ async def lifespan(app: FastAPI):
                           [1, 0, 1, 1, 0, 1, 1, 1, 0, 0]], # calculated for 3 random users :o
         logger=logger
     )
+    logger.info(app.state.metrics.get_metrics())
+
     yield
     logger.info("Application shutdown")
     if app.state.db and app.state.db.connection:
