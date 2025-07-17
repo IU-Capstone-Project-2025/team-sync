@@ -4,8 +4,17 @@ from typing import Optional
 import requests
 
 class QdrantModel:
-    def __init__(self, host: str = Config.QDRANT_HOST, port: int = Config.QDRANT_PORT, 
-                 api_key: str = Config().QDRANT_API_KEY, logger=None):
+    def __init__(self, host: str = None, port: int = None, 
+                 api_key: str = None, logger=None):
+        self.config = Config()
+        if not host:
+            host = self.config.QDRANT_HOST
+        if not port:
+            port = self.config.QDRANT_PORT
+        if not api_key:
+            api_key = self.config.QDRANT_API_KEY
+        if not host or not port or not api_key:
+            raise ValueError("Host, port, and API key must be provided for Qdrant connection.")
         self.client = QdrantClient(url=f"http://{host}:{port}", api_key=api_key)
         self.logger = logger
 

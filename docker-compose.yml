@@ -70,11 +70,20 @@ services:
   ml-recsys:
     build: ./ml/recsys-service
     environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
       - KEY_DB_PASSWORD=${KEY_DB_PASSWORD}
+      - QDRANT_HOST=${QDRANT_HOST}
+      - QDRANT_PORT=${QDRANT_PORT}
       - QDRANT_API_KEY=${QDRANT_API_KEY}
+      - EMBEDDER_URL=${EMBEDDER_PROTOCOL}://${EMBEDDER_HOST}:${EMBEDDER_PORT}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_DB=${REDIS_DB}
     ports: 
       - "8000:8000"
   
