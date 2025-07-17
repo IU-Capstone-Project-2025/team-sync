@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,9 @@ import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
 import ru.teamsync.projects.dto.request.UpdateApplicationStatusRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.dto.response.BaseResponse;
+import ru.teamsync.projects.dto.response.PageResponse;
 import ru.teamsync.projects.dto.response.ProjectResponse;
+import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.service.ProjectRecommendationsService;
 import ru.teamsync.projects.service.ProjectService;
@@ -67,10 +70,11 @@ public class ProjectController {
     }
 
     @GetMapping("/recommendations")
-    public BaseResponse<Page<ProjectResponse>> getProjectRecommendations(Pageable pageable) {
+    public BaseResponse<PageResponse<ProjectResponse>> getProjectRecommendations(Pageable pageable) {
         long userId = securityContextService.getCurrentUserId();
-        var projectsPage = new PageImpl<>(projectRecommendationsService.getProjectRecommendationsForUser(userId, pageable));
-        return BaseResponse.of(projectsPage);
+        var projects = projectRecommendationsService.getProjectRecommendationsForUser(userId, pageable);
+        var page = PageResponse.withContent(projects);
+        return BaseResponse.of(page);
     }
 
     @PutMapping("/{projectId}")

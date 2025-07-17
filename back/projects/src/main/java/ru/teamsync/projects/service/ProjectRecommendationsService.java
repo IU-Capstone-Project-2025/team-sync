@@ -13,13 +13,16 @@ import ru.teamsync.projects.mapper.ProjectMapper;
 import ru.teamsync.projects.repository.ProjectRepository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectRecommendationsService {
 
     @GrpcClient("project-recommendations-service")
-    private  ProjectsRecommendationsGrpc.ProjectsRecommendationsBlockingStub projectsRecommendationsStub;
+    private ProjectsRecommendationsGrpc.ProjectsRecommendationsBlockingStub projectsRecommendationsStub;
 
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
@@ -42,8 +45,16 @@ public class ProjectRecommendationsService {
                 .map(Integer::longValue)
                 .toList();
 
-        var projects = projectRepository.findAllById(projectIds);
+        var projects = findAllProjectsInOrder(projectIds);
 
         return projects.stream().map(projectMapper::toDto).toList();
+    }
+
+    private List<Project> findAllProjectsInOrder(List<Long> ids) {
+        Map<Long, Project> projectById = projectRepository.findAllById(ids)
+                .stream()
+                .collect(Collectors.toMap(Project::getId, Function.identity()));
+
+        return ids.stream().map(projectById::get).toList();
     }
 }

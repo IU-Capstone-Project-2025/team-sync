@@ -7,3 +7,5 @@ spring:
       port: 6379
       password: dev-keydb-psw
       username: default
+server:
+  port: 8085
