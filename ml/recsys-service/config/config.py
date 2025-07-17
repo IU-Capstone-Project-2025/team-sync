@@ -64,6 +64,10 @@ class Config:
 
     EMBEDDER_URL = "http://ml-embedder:8000"
 
+    TAG_L2_COEFFICIENT = 0.2
+    TAG_IP_COEFFICIENT = 0.1
+    TAG_IOU_COEFFICIENT = 0.7
+
     ALS_FACTORS = 64
     ALS_REGULARIZATION = 0.01
     ALS_ITERATIONS = 20
