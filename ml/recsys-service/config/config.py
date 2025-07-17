@@ -83,18 +83,11 @@ class Config:
         return embedder_url
 
     @property
-    def QDRANT_HOST(self):
-        host = os.getenv("QDRANT_HOST")
-        if not host:
-            raise RuntimeError("QDRANT_HOST environment variable is not set!")
-        return host
-
-    @property
-    def QDRANT_PORT(self):
-        port = os.getenv("QDRANT_PORT")
-        if not port:
-            raise RuntimeError("QDRANT_PORT environment variable is not set!")
-        return int(port)
+    def QDRANT_URL(self):
+        qdrant_url = os.getenv("QDRANT_URL")
+        if not qdrant_url:
+            raise RuntimeError("QDRANT_URL environment variable is not set!")
+        return qdrant_url
 
     RECOMMENDATION_JOB_INTERVAL = 5
 
