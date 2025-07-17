@@ -52,14 +52,14 @@ services:
     env_file:
       - .env
     ports: 
-      - "8000:8000"
+      - "9005:8000"
   
   ml-embedder-dev:
     image: ssspamqe/ts-embedder:${TS_ML_EMBEDDER_TAG}
     env_file:
       - .env
     ports: 
-      - "8002:8000"
+      - "9008:8000"
     depends_on:
       - qdrant-dev
       - postgres-dev
@@ -68,16 +68,12 @@ services:
     image: bitnami/keydb:6.3.4
     env_file:
       - .env
-    ports:
-      - "6379:6379"
     volumes:
       - keydb_data-dev:/data
     restart: unless-stopped
 
   qdrant-dev:
     image: qdrant/qdrant:v1.2.0
-    ports:
-      - "6333:6333"
     volumes:
       - qdrant_data-dev:/qdrant/storage
     env_file:
