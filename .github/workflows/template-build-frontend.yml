@@ -31,21 +31,21 @@ jobs:
       - name: Determine tag
         id: tag
         run: |
-          REF=${{ github.ref_name }}
-      
-          if [[ "$REF" == "main" ]]; then
-            FINAL_TAG="main"
+          if [[ "${{ github.ref_name }}" == "main" ]]; then
+            FINAL_TAG="${{ github.ref_name }}"
           elif [[ "${{ github.ref_type }}" == "tag" ]]; then
             FINAL_TAG="${{ github.ref_name }}"
           else
+            REF=${{ github.head_ref }}
             TAG=$(echo "$REF" | grep -oE 'TS-[0-9]+' | tr '[:upper:]' '[:lower:]')
+
             if [[ -n "$TAG" ]]; then
-              FINAL_TAG="$TAG"
+                FINAL_TAG="$TAG"
             else
               FINAL_TAG="dev-$(date +%s)"
             fi
           fi
-      
+
           echo "tag=$FINAL_TAG" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
