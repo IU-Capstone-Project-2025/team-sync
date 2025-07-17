@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Card from "../components/card";
 import Checkbox from "@mui/material/Checkbox";
 import ClearIcon from '@mui/icons-material/Clear';
+import { getProjects, getRoles, getSkills, getCourses, getLikedProjects, getApplications, getNames } from "../utils/backendFetching";
 interface Project {
   course_id: number;
   description: string;
@@ -26,177 +27,6 @@ interface Application {
 }
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
-
-async function getRoles(token: string) {
-  const rolesUrl = `${backendHost}/projects/api/v1/roles`;
-  try {
-    const response = await fetch(rolesUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content.map((role: { id: number; name: string }) => ({ id: role.id, name: role.name }));
-  }
-  catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    } else {
-      console.error(error);
-    }
-  }
-}
-
-async function getSkills(token: string) {
-  const rolesUrl = `${backendHost}/projects/api/v1/skills`;
-  try {
-    const response = await fetch(rolesUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content.map((skill: { id: number; name: string }) => ({ id: skill.id, name: skill.name }));
-  }
-  catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    } else {
-      console.error(error);
-    }
-  }
-}
-
-async function getCourses(token: string) {
-  const rolesUrl = `${backendHost}/projects/api/v1/courses`;
-  try {
-    const response = await fetch(rolesUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.map((course: { id: number; name: string }) => ({ id: course.id, name: course.name }));
-  }
-  catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    } else {
-      console.error(error);
-    }
-    return [];
-  }
-}
-
-async function getProjects(
-  token: string,
-  filterSkills: {id: number, name: string}[],
-  filterRoles: {id: number, name: string}[],
-  filterCourse: string
-) {
-  let params: string[] = [];
-  if (filterSkills.length > 0) {
-    params.push("skillIds=" + filterSkills.map(skill => skill.id).join(','));
-  }
-  if (filterRoles.length > 0) {
-    params.push("roleIds=" + filterRoles.map(role => role.id).join(','));
-  }
-  if (filterCourse !== "") {
-    params.push("courseId=" + filterCourse);
-  }
-  const queryString = params.length > 0 ? "&" + params.join("&") : "";
-  const projectsUrl = `${backendHost}/projects/api/v1/projects?sort=id,desc&size=50` + queryString;
-  try {
-    const response = await fetch(projectsUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return {
-      projects: json.data.content,
-      total: json.data.number_of_elements
-    }
-  }
-  catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    } else {
-      console.error(error);
-    }
-    return {
-      projects: [],
-      totalProjects: 0
-    };
-  }
-}
-
-async function getLikedProjects(token: string) {
-  const projectsUrl = `${backendHost}/projects/api/v1/favourite/my`;
-  try {
-    const response = await fetch(projectsUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content
-  }
-  catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    } else {
-      console.error(error);
-    }
-    return [];
-  }
-}
-
-async function getApplications(token: string) {
-  const applicationsUrl = `${backendHost}/projects/api/v1/applications/my`;
-  try {
-    const response = await fetch(applicationsUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content;
-  }
-  catch (error) {
-    console.error(error.message);
-    return [];
-  }
-}
-
-function getNames(ids: number[] = [], all: {id: number, name: string}[] = []) {
-  const names = ids.map(id => all.find(obj => obj.id === id)?.name ?? "Unknown");
-  return names;
-}
 
 export default function HomeScreen(){
   const [roles, setRoles] = useState<{id: number, name: string}[]>([]);
@@ -219,8 +49,8 @@ export default function HomeScreen(){
         setNumProjects(result.total);
       }));
       getLikedProjects(token).then(setLikedProjects)
-      getRoles(token).then(setRoles);
-      getSkills(token).then(setSkills);
+      getRoles().then(setRoles);
+      getSkills().then(setSkills);
       getCourses(token).then(setCourses);
       getApplications(token).then(setApplications);
     }

@@ -1,11 +1,10 @@
 const backendHost = import.meta.env.VITE_BACKEND_HOST
 
-export async function getSkills(token:string) {
-  const skillsUrl = `${backendHost}/projects/api/v1/skills`;
+export async function getSkills() {
+  const skillsUrl = `${backendHost}/resume/api/v1/skills`;
   try {
     const response = await fetch(skillsUrl, {
       headers: {
-        "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
       }
     });
@@ -13,17 +12,38 @@ export async function getSkills(token:string) {
       throw new Error('Response error: ' + response.status.toString());
     }
     const json = await response.json();
-    return json.data.content.map((skill) => ({ id: skill.id, name: skill.name }));
+    return json.content.map((skill) => ({ id: skill.id, name: skill.name, description: skill.description}));
   }
   catch (error) {
     console.error(error.message);
+    return [];
   }
 }
 
-export async function getRoles(token:string) {
-  const rolesUrl = `${backendHost}/projects/api/v1/roles`;
+export async function getRoles() {
+  const rolesUrl = `${backendHost}/resume/api/v1/roles`;
   try {
     const response = await fetch(rolesUrl, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Response error: ' + response.status.toString());
+    }
+    const json = await response.json();
+    return json.content.map((role) => ({ id: role.id, name: role.name, description: role.description}));
+  }
+  catch (error) {
+    console.error(error.message);
+    return [];
+  }
+}
+
+export async function getCourses(token: string) {
+  const coursesUrl = `${backendHost}/projects/api/v1/courses`;
+  try {
+    const response = await fetch(coursesUrl, {
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
@@ -33,9 +53,100 @@ export async function getRoles(token:string) {
       throw new Error('Response error: ' + response.status.toString());
     }
     const json = await response.json();
-    return json.data.content.map((role) => ({ id: role.id, name: role.name }));
+    return json.data.map((course) => ({ id: course.id, name: course.name }));
   }
   catch (error) {
     console.error(error.message);
+    return [];
   }
+}
+
+export async function getProjects(
+  token: string,
+  filterSkills: {id: number, name: string}[],
+  filterRoles: {id: number, name: string}[],
+  filterCourse: string
+) {
+  let params: string[] = [];
+  if (filterSkills.length > 0) {
+    params.push("skillIds=" + filterSkills.map(skill => skill.id).join(','));
+  }
+  if (filterRoles.length > 0) {
+    params.push("roleIds=" + filterRoles.map(role => role.id).join(','));
+  }
+  if (filterCourse !== "") {
+    params.push("courseId=" + filterCourse);
+  }
+  const queryString = params.length > 0 ? "&" + params.join("&") : "";
+  const projectsUrl = `${backendHost}/projects/api/v1/projects?sort=id,desc&size=50` + queryString;
+  try {
+    const response = await fetch(projectsUrl, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Response error: ' + response.status.toString());
+    }
+    const json = await response.json();
+    return {
+      projects: json.data.content,
+      total: json.data.number_of_elements
+    }
+  }
+  catch (error) {
+    console.error(error.message);
+    return {
+      projects: [],
+      total: 0
+    };
+  }
+}
+
+export async function getLikedProjects(token: string) {
+  const projectsUrl = `${backendHost}/projects/api/v1/favourite/my`;
+  try {
+    const response = await fetch(projectsUrl, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Response error: ' + response.status.toString());
+    }
+    const json = await response.json();
+    return json.data.content;
+  }
+  catch (error) {
+    console.error(error.message);
+    return [];
+  }
+}
+
+export async function getApplications(token: string) {
+  const applicationsUrl = `${backendHost}/projects/api/v1/applications/my`;
+  try {
+    const response = await fetch(applicationsUrl, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Response error: ' + response.status.toString());
+    }
+    const json = await response.json();
+    return json.data.content;
+  }
+  catch (error) {
+    console.error(error.message);
+    return [];
+  }
+}
+
+export function getNames(ids: number[] = [], all: {id: number, name: string}[] = []) {
+  const names = ids.map(id => all.find(obj => obj.id === id)?.name ?? "Unknown");
+  return names;
 }

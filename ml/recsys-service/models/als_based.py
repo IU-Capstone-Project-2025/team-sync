@@ -1,13 +1,10 @@
+from models.base_recommender import Recommender
 from scipy.sparse import coo_matrix
 import implicit
-from config.config import Config
 
-class ALSRecommender():
+class ALSRecommender(Recommender):
     def __init__(self, DBModel, logger, model_name):
-        self.model_name = model_name
-        self.db = DBModel
-        self.logger = logger
-        self.config = Config()
+        super().__init__(DBModel, logger, model_name)
         self.coefficient = self.config.ALS_COEFFICIENT
         self.als_model = implicit.als.AlternatingLeastSquares(
             factors=self.config.ALS_FACTORS,

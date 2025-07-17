@@ -47,3 +47,73 @@ form>p {
   border: transparent !important;
   animation: fadeIn 0.3s;
 }
+
+.step-semicircle-container {
+  position: fixed;
+  right: -50vh;
+  top: 50%;
+  width: 100vh;
+  height: 100vh;
+  transform: translateY(-50%);
+  z-index: 10;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.step-semicircle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.step-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 110px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+  background: #4a6bff;
+  border-radius: 25px;
+  opacity: 0.7;
+  transition: font-size 0.5s, opacity 0.5s, background 0.5s, color 0.5s, transform 0.8s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.step-label.active {
+  font-size: 2rem;
+  opacity: 1;
+  background: #FFC100;
+  color: #484848;
+  z-index: 2;
+  box-shadow: 0 0 40px 10px #FFC10044;
+}
+
+.revolver-label {
+  transition: font-size 0.2s, font-weight 0.2s, transform 0.6s cubic-bezier(0.77,0,0.175,1) !important;
+  will-change: transform;
+}
+.revolver-label:hover {
+  transform: scale(1.2) !important;
+}
+
+.revolver-label-vanilla {
+  transition: transform 0.6s cubic-bezier(0.77,0,0.175,1) !important;
+}
+
+@media (max-width: 900px) {
+  .step-semicircle-container {
+    width: 100vw;
+    height: 100vw;
+    right: 0;
+  }
+}

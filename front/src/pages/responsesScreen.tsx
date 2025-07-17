@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ResponseCard from "../components/responseCard"
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useNavigate } from "react-router-dom";
+import { getRoles, getSkills, getApplications, getNames } from "../utils/backendFetching";
 interface Project {
   course_name: string;
   description: string;
@@ -24,76 +25,6 @@ interface Application {
 }
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
-
-async function getRoles(token: string) {
-  const rolesUrl = `${backendHost}/projects/api/v1/roles`;
-  try {
-    const response = await fetch(rolesUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content.map((role) => ({ id: role.id, name: role.name }));
-  }
-  catch (error) {
-    console.error(error.message);
-  }
-}
-
-async function getSkills(token: string) {
-  const rolesUrl = `${backendHost}/projects/api/v1/skills`;
-  try {
-    const response = await fetch(rolesUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content.map((skill) => ({ id: skill.id, name: skill.name }));
-  }
-  catch (error) {
-    console.error(error.message);
-  }
-}
-
-async function getApplications(token: string) {
-  const applicationsUrl = `${backendHost}/projects/api/v1/applications/my`;
-  try {
-    const response = await fetch(applicationsUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return {
-      applications: json.data.content
-    }
-  }
-  catch (error) {
-    console.error(error.message);
-    return {
-      applications: []
-    };
-  }
-}
-
-function getNames(ids: number[] = [], all: {id: number, name: string}[] = []) {
-  const names = ids.map(id => all.find(obj => obj.id === id)?.name ?? "Unknown");
-  return names;
-}
 
 export default function ResponseScreen(){
   const navigate = useNavigate();
