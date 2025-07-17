@@ -56,7 +56,7 @@ class QdrantModel:
 
     def _update_embeddings(self, collection_name, id) -> bool:
         request_data = {"id": id, "table": collection_name}
-        response = requests.post(f"{Config.EMBEDDER_URL}/api/v1/points", json=request_data, timeout=5)
+        response = requests.post(f"{self.config.EMBEDDER_URL}/api/v1/points", json=request_data, timeout=5)
         if response.status_code != 200:
             self.logger.error(f"Embedder service returned error: {response.text}")
             return False
