@@ -44,7 +44,7 @@ It's planned to use the _api_ and _api.dev_ subdomain for backend and ml service
 |  | Tailwind CSS | A utility-first CSS framework for rapid UI development with consistent and responsive design. |
 | **Backend** | Java/Spring Boot | Robust REST APIs, team expertise |
 | **Database** | PostgreSQL | ACID compliance for user/project data |
-|  | Redis | Fast session/matching-cache access |
+|  | KeyDB (uses redis client) | Fast session/matching-cache access |
 | **ML** | Python  | For its simplicity and extensive libraries for data processing and machine learning. |
 | **Infra** | Docker + Docker Compose | Environment consistency, TA reproducibility |
 |  | GitHub Actions (CI/CD) | Automated testing/deployment |
