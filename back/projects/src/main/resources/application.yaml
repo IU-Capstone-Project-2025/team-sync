@@ -38,6 +38,9 @@ teamsync:
     default:
       page-number: 0
       page-size: 100
+  client:
+    embedder:
+      api-url: ${EMBEDDER_HOST}
 
 logging:
   level:
