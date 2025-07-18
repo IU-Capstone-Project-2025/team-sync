@@ -12,12 +12,16 @@
 
 ## This project helps people find teams by interests.
 
+**TeamSync** is a collaborative platform where students can create projects, apply to join other teams, add interesting projects to their favorites, and edit their profiles. The recommendation system uses your profile and activity to suggest the most relevant projects and teammates. You can review applications, select who joins your team, and build effective teams based on interests and skills.
+
 <p align="center">
 <img src="https://raw.githubusercontent.com/IU-Capstone-Project-2025/team-sync/refs/heads/main/docs/gif/project_highlights.gif" width="600"/>
 </p>
 
 # Access 
-We provide default ports and sample endpoints.
+
+The table below lists the default ports and example endpoints for each service in the platform. You can use these URLs to access the web interface, API documentation, or Swagger UI for each component in both production and development environments.
+
 | **Service** | **Swagger or url** |
 | --- | --- |
 | frontend | https://team-sync.online or https://dev.team-sync.online |
@@ -42,7 +46,6 @@ It's planned to use the _api_ and _api.dev_ subdomain for backend and ml service
 | **Database** | PostgreSQL | ACID compliance for user/project data |
 |  | Redis | Fast session/matching-cache access |
 | **ML** | Python  | For its simplicity and extensive libraries for data processing and machine learning. |
-|  | Airflow | Pipeline orchestration |
 | **Infra** | Docker + Docker Compose | Environment consistency, TA reproducibility |
 |  | GitHub Actions (CI/CD) | Automated testing/deployment |
 
@@ -53,7 +56,7 @@ It's planned to use the _api_ and _api.dev_ subdomain for backend and ml service
 
 | Team member | Telegram alias | Innopolis Email | Responcibilities |
 | --- | --- | --- | --- |
-| Diana MInnakhmetova (Lead) | @diana_minn | d.minnakhmetova@innopolis.university | Product management, design, Report writing |
+| Diana Minnakhmetova (Lead) | @diana_minn | d.minnakhmetova@innopolis.university | Product management, design, Report writing |
 | Danis Sharafiev | @HarneMer | d.sharafiev@innopolis.university | ML + MLOps |
 | Daria Alexandrova | @ae_quor | d.alexandrova@innopolis.university | Frontend |
 | Stepan Dementev | @dementevssstepan | s.dementev@innopolis.university | Backend + DevOps |
