@@ -36,5 +36,5 @@ teamsync:
         - https://team-sync.online
         - https://dev.team-sync.online
   client:
-    resume:
+    embedder:
       api-url: ${EMBEDDER_HOST}
