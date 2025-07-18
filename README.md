@@ -1,17 +1,23 @@
 <p align="center">
 <img src="https://raw.githubusercontent.com/IU-Capstone-Project-2025/team-sync/refs/heads/main/docs/img/main.png" width="600"/>
 </p>
+
 ## Overview
 
 **TeamSync** aims to improve the quality and balance of student teams by offering a data-driven, user-friendly experience for discovering, evaluating, and matching with potential teammates.
 
+<p align="center">
+<img src="https://raw.githubusercontent.com/IU-Capstone-Project-2025/team-sync/refs/heads/main/docs/gif/registration.gif" width="600"/>
+</p>
 
-### Deployment
-Production: https://team-sync.online  
-Development: https://dev.team-sync.online
+## This project helps people find teams by interests.
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/IU-Capstone-Project-2025/team-sync/refs/heads/main/docs/gif/project_highlights.gif" width="600"/>
+</p>
 
 # Access 
-Default ports and sample endpoints
+We provide default ports and sample endpoints.
 | **Service** | **Swagger or url** |
 | --- | --- |
 | frontend | https://team-sync.online or https://dev.team-sync.online |
@@ -53,6 +59,10 @@ It's planned to use the _api_ and _api.dev_ subdomain for backend and ml service
 | Stepan Dementev | @dementevssstepan | s.dementev@innopolis.university | Backend + DevOps |
 | Elizaveta Zagurskih | @wkwthigo | e.zagurskih@innopolis.university | Backend |
 | Kamilya Shakirova | @hugecatwithacheburek | k.shakirova@innopolis.university | ML |
+
+### Deployment
+Production: https://team-sync.online  
+Development: https://dev.team-sync.online
 
 ## Third-party Models
 This project uses the `all-MiniLM-L6-v2` model from UKPLab:
