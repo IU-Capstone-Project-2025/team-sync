@@ -57,14 +57,14 @@ It's planned to use the _api_ and _api.dev_ subdomain for backend and ml service
 
 ```
 team-sync/
-├── back/         # Backend microservices (auth, projects, recommendation, resume)
-├── front/        # Frontend (React app)
-├── ml/           # Machine learning services (embedder, recsys, search)
-├── migration/    # Database migration scripts (Liquibase)
-├── docs/         # Docs (images, gifs, md)
+├── back/               # Backend microservices (auth, projects, recommendation, resume)
+├── front/              # Frontend (React app)
+├── ml/                 # Machine learning services (embedder, recsys, search)
+├── migration/          # Database migration scripts (Liquibase)
+├── docs/               # Docs (images, gifs, md)
 ├── docker-compose.yml  # Docker Compose configs
-├── README.md     # Project documentation
-└── ...           # Other configuration and documentation files
+├── README.md           # Project documentation
+└── ...                 # Other configuration and documentation files
 ```
 
 ##  Team
