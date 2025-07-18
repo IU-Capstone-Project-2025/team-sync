@@ -4,7 +4,7 @@ services:
   backend-auth-dev:
     image: ssspamqe/ts-auth:${TS_AUTH_TAG}
     ports: 
-      - "9000:8080"
+      - "9091:8080"
     env_file:
       - .env
     depends_on:
@@ -16,7 +16,7 @@ services:
     env_file:
       - .env
     ports: 
-      - "9001:8080"
+      - "9092:8080"
     depends_on:
       - postgres-dev
       - liquibase-dev
@@ -26,21 +26,67 @@ services:
     env_file:
       - .env
     ports: 
-      - "9002:8080"
+      - "9093:8080"
     depends_on:
       - postgres-dev
       - liquibase-dev
 
+  backend-recommendations-dev:
+    image: ssspamqe/ts-recommendations:${TS_RECOMMENDATIONS_TAG}
+    env_file:
+      - .env
+    ports: 
+      - "9094:9090"
+    depends_on:
+      - postgres-dev
+      - liquibase-dev
+
+
   frontend-dev:
     image: ssspamqe/ts-frontend-dev:${TS_FRONTEND_TAG}
     ports: 
-      - "9004:80"
+      - "4000:80"
+
+  ml-recsys-dev:
+    image: ssspamqe/ts-recsys:${TS_RECSYS_TAG}
+    env_file:
+      - .env
+    ports: 
+      - "9001:8000"
+  
+  ml-embedder-dev:
+    image: ssspamqe/ts-embedder:${TS_EMBEDDER_TAG}
+    env_file:
+      - .env
+    ports: 
+      - "9002:8000"
+    depends_on:
+      - qdrant-dev
+      - postgres-dev
+
+  keydb-dev:
+    image: bitnami/keydb:6.3.4
+    env_file:
+      - .env
+    volumes:
+      - keydb_data-dev:/data
+    restart: unless-stopped
+
+  qdrant-dev:
+    image: qdrant/qdrant:v1.2.0
+    volumes:
+      - qdrant_data-dev:/qdrant/storage
+    env_file:
+      - .env
+    restart: unless-stopped
 
   postgres-dev:
     image: postgres:16
     restart: unless-stopped
     ports:
-      - "9006:5432"
+      - "6432:5432"
+    env_file:
+      - .env
     volumes:
       - pgdata-dev:/var/lib/postgresql/data
 
@@ -48,9 +94,11 @@ services:
     image: dpage/pgadmin4:9.4.0
     restart: unless-stopped
     ports:
-      - "9007:80"
+      - "6060:80"
     volumes:
       - pgadmin_data-dev:/var/lib/pgadmin
+    env_file:
+      - .env
     depends_on:
       - postgres-dev
 
@@ -73,3 +121,5 @@ services:
 volumes:
   pgdata-dev:
   pgadmin_data-dev:
+  keydb_data-dev:
+  qdrant_data-dev:

@@ -1,0 +1,21 @@
+name: Build TeamSync-Embedder
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/template-build-backend.yml
+    with:
+      service-dir: ml/embedder
+      image-name: ts-embedder
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

@@ -2,140 +2,100 @@ version: '3.8'
 
 services:
   backend-auth:
-    build: ./back/auth
-    ports: 
-      - "8084:8080"
-    environment:
-      - TENANT_ID=${TENANT_ID}
-      - JWT_KEY=${JWT_KEY}
-      - DB_MAIN_JDBC=jdbc:postgresql://postgres:5432/${DB_NAME}
-      - DB_MAIN_USER=${DB_USER}
-      - DB_MAIN_PASSWORD=${DB_PASSWORD}
-      - RESUME_HOST=${RESUME_HOST}
-    depends_on:
-      - postgres
-      - liquibase
-
-  backend-projects:
-    build: ./back/projects
-    environment:
-      - TENANT_ID=${TENANT_ID}
-      - JWT_KEY=${JWT_KEY}
-      - DB_MAIN_JDBC=jdbc:postgresql://postgres:5432/${DB_NAME}
-      - DB_MAIN_USER=${DB_USER}
-      - DB_MAIN_PASSWORD=${DB_PASSWORD}
+    image: ssspamqe/ts-auth:${TS_AUTH_TAG}
     ports: 
       - "8081:8080"
+    env_file:
+      - .env
     depends_on:
       - postgres
       - liquibase
-      
-  backend-resume:
-    build: ./back/resume
-    environment:
-      - TENANT_ID=${TENANT_ID}
-      - JWT_KEY=${JWT_KEY}
-      - DB_MAIN_JDBC=jdbc:postgresql://postgres:5432/${DB_NAME}
-      - DB_MAIN_USER=${DB_USER}
-      - DB_MAIN_PASSWORD=${DB_PASSWORD}
+  
+  backend-projects:
+    image: ssspamqe/ts-projects:${TS_PROJECTS_TAG}
+    env_file:
+      - .env
     ports: 
       - "8082:8080"
     depends_on:
       - postgres
       - liquibase
+      
+  backend-resume:
+    image: ssspamqe/ts-resume:${TS_RESUME_TAG}
+    env_file:
+      - .env
+    ports: 
+      - "8083:8080"
+    depends_on:
+      - postgres
+      - liquibase
 
-  qdrant:
-    image: qdrant/qdrant:v1.2.0
-    container_name: qdrant
-    ports:
-      - "6333:6333"
-    volumes:
-      - qdrant_data:/qdrant/storage
-    environment:
-      - QDRANT__STORAGE__PATH=/qdrant/storage
-      - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY}
-    restart: unless-stopped
+  backend-recommendations:
+    image: ssspamqe/ts-recommendations:${TS_RECOMMENDATIONS_TAG}
+    env_file:
+      - .env
+    ports: 
+      - "8084:9090"
+    depends_on:
+      - postgres
+      - liquibase
 
-  keydb:
-    image: bitnami/keydb:6.3.4
-    container_name: keydb
-    ports:
-      - "6379:6379"
-    volumes:
-      - keydb_data:/data
-    environment:
-      - KEYDB_PASSWORD=${KEY_DB_PASSWORD}
-    restart: unless-stopped
+  frontend:
+    image: ssspamqe/ts-frontend-prod:${TS_FRONTEND_TAG}
+    ports: 
+      - "3000:80"
 
   ml-recsys:
-    build: ./ml/recsys-service
-    environment:
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - QDRANT_URL=${QDRANT_URL}
-      - EMBEDDER_URL=${EMBEDDER_URL}
-      - QDRANT_API_KEY=${QDRANT_API_KEY}
-      - KEY_DB_HOST=${KEY_DB_HOST}
-      - KEY_DB_PORT=${KEY_DB_PORT}
-      - KEY_DB_PASSWORD=${KEY_DB_PASSWORD}
-      - KEY_DB_DB=${KEY_DB_DB}
-    ports: 
-      - "8000:8000"
-  
-  ml-search:
-    build: ./ml/search-service
+    image: ssspamqe/ts-recsys:${TS_RECSYS_TAG}
+    env_file:
+      - .env
     ports: 
       - "8001:8000"
-
+  
   ml-embedder:
-    build: ./ml/embedder
-    environment:
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - QDRANT_URL=${QDRANT_URL}
-      - QDRANT_API_KEY=${QDRANT_API_KEY}
+    image: ssspamqe/ts-embedder:${TS_EMBEDDER_TAG}
+    env_file:
+      - .env
     ports: 
       - "8002:8000"
     depends_on:
       - qdrant
       - postgres
 
-  frontend:
-    build: ./front
-    ports: 
-      - "3000:80"
-    depends_on:
-      - backend-auth
-      - backend-projects
+  keydb:
+    image: bitnami/keydb:6.3.4
+    env_file:
+      - .env
+    volumes:
+      - keydb_data:/data
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:v1.2.0
+    volumes:
+      - qdrant_data:/qdrant/storage
+    env_file:
+      - .env
+    restart: unless-stopped
 
   postgres:
     image: postgres:16
     restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "5432:5432"
-    volumes:
+    env_file:
+      - .env
+    volumes:      
       - pgdata:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4:9.4.0
     restart: unless-stopped
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_USER}
-      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
     ports:
       - "5050:80"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
+    env_file:
+      - .env
     depends_on:
       - postgres
 
@@ -148,9 +108,9 @@ services:
       - postgres
     command: >
       --changeLogFile=changelog/changelog.yml
-      --url=jdbc:postgresql://postgres:5432/${DB_NAME}
-      --username=${DB_USER}
-      --password=${DB_PASSWORD}
+      --url=${DB_MAIN_JDBC}
+      --username=${DB_MAIN_USER}
+      --password=${DB_MAIN_PASSWORD}
       --driver=org.postgresql.Driver
       --logLevel=info
       update

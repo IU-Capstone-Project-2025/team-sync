@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import ru.teamsync.projects.client.EmbedderClient;
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.mapper.ProjectMapper;
@@ -31,7 +32,8 @@ public class ProjectServiceTest {
     private ApplicationMapper applicationMapperMock;
     private ProjectMemberRepository projectMemberRepositoryMock;
     private StudentProjectClickRepository studentProjectClickRepositoryMock;
-    
+    private EmbedderClient embedderClientMock;
+
     private ProjectRepository projectRepositoryMock;
     private ProjectMapper projectMapperMock;
 
@@ -44,7 +46,15 @@ public class ProjectServiceTest {
         projectMemberRepositoryMock = Mockito.mock(ProjectMemberRepository.class);
         studentProjectClickRepositoryMock = Mockito.mock(StudentProjectClickRepository.class);
 
-        projectService = new ProjectService(applicationRepositoryMock, courseRepositoryMock, projectRepositoryMock, projectMemberRepositoryMock, studentProjectClickRepositoryMock, applicationMapperMock, projectMapperMock);
+        projectService = new ProjectService(
+                applicationRepositoryMock,
+                courseRepositoryMock,
+                projectRepositoryMock,
+                projectMemberRepositoryMock,
+                studentProjectClickRepositoryMock,
+                embedderClientMock,
+                applicationMapperMock,
+                projectMapperMock);
     }
 
     @Test

@@ -13,11 +13,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ru.teamsync.projects.client.EmbedderClient;
 import ru.teamsync.projects.integration.utils.JwtUtilityService;
 import ru.teamsync.projects.integration.utils.PersonUtilityService;
 import ru.teamsync.projects.integration.utils.ProjectsUtilityService;
@@ -74,6 +76,9 @@ public abstract class IntegrationEnvironment {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @MockitoBean
+    protected EmbedderClient embedderClient;
 
     static {
         try {

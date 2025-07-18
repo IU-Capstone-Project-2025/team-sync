@@ -2,6 +2,13 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:db/changelog.yml
+
+grpc:
+  client:
+    project-recommendations-service:
+      address: static://localhost:9090
+      negotiationType: plaintext
+
 teamsync:
   security:
     jwt:

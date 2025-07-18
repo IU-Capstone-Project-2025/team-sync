@@ -2,7 +2,7 @@ from qdrant_client import QdrantClient
 from config.config import Config
 
 class QdrantModel:
-    def __init__(self, url: str = Config().QDRANT_URL, 
+    def __init__(self, url: str = Config().QDRANT_URL,
                  api_key: str = Config().QDRANT_API_KEY, embedding_shape = 384, logger=None):
         self.client = QdrantClient(url=url, api_key=api_key)
         self.logger = logger

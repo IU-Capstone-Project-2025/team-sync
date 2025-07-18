@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import ru.teamsync.projects.client.EmbedderClient;
 import lombok.RequiredArgsConstructor;
 import ru.teamsync.projects.dto.request.ProjectCreateRequest;
 import ru.teamsync.projects.dto.request.ProjectUpdateRequest;
@@ -41,13 +42,12 @@ import ru.teamsync.projects.specification.ProjectSpecifications;
 public class ProjectService {
 
     private final ApplicationRepository applicationRepository;
-
     private final CourseRepository courseRepository;
-
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
     private final StudentProjectClickRepository studentProjectClickRepository;
-    
+    private final EmbedderClient embedderClient;
+
     private final ApplicationMapper applicationMapper;
     private final ProjectMapper projectMapper;
 
@@ -63,6 +63,7 @@ public class ProjectService {
                 });
         project.setCourse(course);
         projectRepository.save(project);
+        embedderClient.recalculateProjectPoints(project.getId());
     }
 
     @Transactional
@@ -88,6 +89,9 @@ public class ProjectService {
         projectMapper.updateEntity(request, project);
         project.setCourse(course);
         projectRepository.save(project);
+        if (request.description() != null) {
+            embedderClient.recalculateProjectPoints(project.getId());
+        }
     }
 
     public void removeMembersFromProject(Long projectId, Long currentUserId, Long personId) {
@@ -109,12 +113,12 @@ public class ProjectService {
     }
 
     public Page<ProjectResponse> getProjects(
-            List<Long> skillIds, 
-            List<Long> roleIds, 
-            List<Long> courseIds, 
-            ProjectStatus status, 
+            List<Long> skillIds,
+            List<Long> roleIds,
+            List<Long> courseIds,
+            ProjectStatus status,
             Pageable pageable) {
-    
+
         Specification<Project> spec = Specification.where(null);
 
         if (courseIds != null && !courseIds.isEmpty()) {
@@ -136,7 +140,7 @@ public class ProjectService {
 
     public ProjectResponse getProjectById(Long userId, Long projectId) {
         Project project = projectRepository.findById(projectId)
-            .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
+                .orElseThrow(() -> ProjectNotFoundException.withId(projectId));
 
         incrementProjectClick(userId, projectId);
 
@@ -176,9 +180,9 @@ public class ProjectService {
 
     @Transactional
     public ApplicationResponse updateApplicationStatus(
-            Long projectId, 
-            Long applicationId, 
-            Long userId, 
+            Long projectId,
+            Long applicationId,
+            Long userId,
             ApplicationStatus status) {
 
         Project project = projectRepository.findById(projectId)
@@ -229,7 +233,7 @@ public class ProjectService {
 
         click.setClickCount(click.getClickCount() + 1);
         studentProjectClickRepository.save(click);
-    } 
+    }
 
     private ProjectResponse enrichWithMemberCount(Project project) {
         int count = (int) projectMemberRepository.countById_ProjectId(project.getId());
