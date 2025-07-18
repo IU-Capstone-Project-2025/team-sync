@@ -55,7 +55,7 @@ It's planned to use the _api_ and _api.dev_ subdomain for backend and ml service
 
 ---
 
-```
+```bash
 team-sync/
 ├── back/               # Backend microservices (auth, projects, recommendation, resume)
 ├── front/              # Frontend (React app)
