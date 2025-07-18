@@ -36,7 +36,7 @@ services:
     env_file:
       - .env
     ports: 
-      - "8084:8080"
+      - "8084:9090"
     depends_on:
       - postgres
       - liquibase
