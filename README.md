@@ -1,5 +1,6 @@
+<p align="center">
 <img src="https://raw.githubusercontent.com/IU-Capstone-Project-2025/team-sync/refs/heads/main/docs/img/main.png" width="600"/>
-
+</p>
 ## Overview
 
 **TeamSync** aims to improve the quality and balance of student teams by offering a data-driven, user-friendly experience for discovering, evaluating, and matching with potential teammates.
