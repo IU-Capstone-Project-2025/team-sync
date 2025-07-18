@@ -90,7 +90,7 @@ async def lifespan(app: FastAPI):
         await app.state.db.disconnect()
     app.state.scheduler.shutdown()
 
-app = FastAPI(lifespan=lifespan, root_path="/recsys")
+app = FastAPI(lifespan=lifespan, root_path="/recsys/api/v1")
 
 app.include_router(router=router)
 app.include_router(router=test_router)

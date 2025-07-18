@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request
 from api.endpoints.v1.base_models.embedding import EmbeddingRequest
 import asyncio
 
-router = APIRouter(prefix="/api/v1", tags=["embedder"])
+router = APIRouter(prefix="", tags=["embedder"])
 
 @router.get("/health")
 async def health_check():
