@@ -12,6 +12,6 @@ async def lifespan(app: FastAPI):
     app.state.postgres = PostgresModel()
     yield
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan, root_path="/embedder/api/v1")
 
 app.include_router(router=router)
