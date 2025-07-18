@@ -1,4 +1,4 @@
-[Project photo](https://raw.githubusercontent.com/IU-Capstone-Project-2025/team-sync/refs/heads/main/docs/img/main.png)
+![Project photo](https://raw.githubusercontent.com/IU-Capstone-Project-2025/team-sync/refs/heads/main/docs/img/main.png)
 
 ## Overview
 
