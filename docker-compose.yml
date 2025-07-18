@@ -47,14 +47,14 @@ services:
       - "3000:80"
 
   ml-recsys:
-    image: ssspamqe/ts-recsys:${TS_ML_RECSYS_TAG}
+    image: ssspamqe/ts-recsys:${TS_RECSYS_TAG}
     env_file:
       - .env
     ports: 
       - "8001:8000"
   
   ml-embedder:
-    image: ssspamqe/ts-embedder:${TS_ML_EMBEDDER_TAG}
+    image: ssspamqe/ts-embedder:${TS_EMBEDDER_TAG}
     env_file:
       - .env
     ports: 
