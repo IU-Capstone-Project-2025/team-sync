@@ -5,5 +5,5 @@ spring:
     redis:
       host: ${KEY_DB_HOST}
       port: ${KEY_DB_PORT}
-      password: $KEY_DB_PASSWORD}
+      password: ${KEY_DB_PASSWORD}
       username: ${KEY_DB_USER}
