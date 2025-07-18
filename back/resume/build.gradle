@@ -57,6 +57,8 @@ dependencies {
 	testImplementation 'org.testcontainers:postgresql:1.21.3'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers:3.5.3'
 	testImplementation 'org.liquibase:liquibase-core:4.32.0'
+
+	implementation 'io.github.danielliu1123:httpexchange-spring-boot-starter:3.5.0.1'
 }
 
 test {
