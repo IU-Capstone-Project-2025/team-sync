@@ -1,9 +1,9 @@
-package ru.teamsync.projects.service;
+package ru.teamsync.projects.service.projects;
 
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.client.inject.GrpcClient;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import ru.teamsync.grpc.ProjectsRecommendationsGrpc;
 import ru.teamsync.grpc.RecommendationProto;
@@ -11,9 +11,12 @@ import ru.teamsync.projects.dto.response.ProjectResponse;
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.mapper.ProjectMapper;
 import ru.teamsync.projects.repository.ProjectRepository;
+import ru.teamsync.projects.service.dto.FiltrationParameters;
+import ru.teamsync.projects.service.projects.utils.ProjectUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -26,35 +29,54 @@ public class ProjectRecommendationsService {
 
     private final ProjectRepository projectRepository;
     private final ProjectMapper projectMapper;
+    private final ProjectUtils projectUtils;
 
-    public List<ProjectResponse> getProjectRecommendationsForUser(long userId, Pageable pageable) {
+
+    public List<ProjectResponse> getProjectRecommendationsForStudent(
+            int studentId,
+            FiltrationParameters filterParams,
+            Pageable pageable
+    ) {
+        List<Long> projectIds = fetchProjectIdsForStudent(studentId, pageable);
+        Specification<Project> specs = projectUtils.buildSpecification(filterParams);
+
+        List<Project> projects = findAllProjectsInOrder(projectIds, specs);
+        return projects.stream()
+                .map(projectMapper::toDto)
+                .map(projectUtils::enrichWithMemberCount)
+                .toList();
+    }
+
+    private List<Long> fetchProjectIdsForStudent(Integer studentId, Pageable pageable) {
         int readStart = pageable.getPageSize() * pageable.getPageNumber();
         int amount = pageable.getPageSize();
         var request = RecommendationProto.ProjectsRecommendationsRequest
                 .newBuilder()
-                .setUserId(userId)
+                .setStudentId(studentId)
                 .setReadStart(readStart)
                 .setAmount(amount)
                 .build();
 
-        var projectIds = projectsRecommendationsStub
+        return projectsRecommendationsStub
                 .fetchRecommendation(request)
                 .getProjectScoresList()
                 .stream()
                 .map(RecommendationProto.ProjectScore::getProjectId)
                 .map(Integer::longValue)
                 .toList();
-
-        var projects = findAllProjectsInOrder(projectIds);
-
-        return projects.stream().map(projectMapper::toDto).toList();
     }
 
-    private List<Project> findAllProjectsInOrder(List<Long> ids) {
-        Map<Long, Project> projectById = projectRepository.findAllById(ids)
-                .stream()
+    private List<Project> findAllProjectsInOrder(List<Long> ids, Specification<Project> specs) {
+        Specification<Project> combinedSpec = specs.and((root, query, cb) -> root.get("id").in(ids));
+
+        List<Project> filteredProjects = projectRepository.findAll(combinedSpec);
+
+        Map<Long, Project> projectById = filteredProjects.stream()
                 .collect(Collectors.toMap(Project::getId, Function.identity()));
 
-        return ids.stream().map(projectById::get).toList();
+        return ids.stream()
+                .map(projectById::get)
+                .filter(Objects::nonNull)
+                .toList();
     }
 }

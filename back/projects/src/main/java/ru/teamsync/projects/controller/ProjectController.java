@@ -5,10 +5,8 @@ import java.util.List;
 
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,10 +28,9 @@ import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.dto.response.BaseResponse;
 import ru.teamsync.projects.dto.response.PageResponse;
 import ru.teamsync.projects.dto.response.ProjectResponse;
-import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.ProjectStatus;
-import ru.teamsync.projects.service.ProjectRecommendationsService;
-import ru.teamsync.projects.service.ProjectService;
+import ru.teamsync.projects.service.projects.ProjectRecommendationsService;
+import ru.teamsync.projects.service.projects.ProjectService;
 import ru.teamsync.projects.service.SecurityContextService;
 
 
@@ -69,14 +66,6 @@ public class ProjectController {
         return BaseResponse.of(project);
     }
 
-    @GetMapping("/recommendations")
-    public BaseResponse<PageResponse<ProjectResponse>> getProjectRecommendations(Pageable pageable) {
-        long userId = securityContextService.getCurrentUserId();
-        var projects = projectRecommendationsService.getProjectRecommendationsForUser(userId, pageable);
-        var page = PageResponse.withContent(projects);
-        return BaseResponse.of(page);
-    }
-
     @PutMapping("/{projectId}")
     public ResponseEntity<BaseResponse<Void>> updateProject(
             @PathVariable Long projectId,
@@ -87,7 +76,7 @@ public class ProjectController {
     }
 
     @PostMapping("/{projectId}/member/{personId}")
-    public ResponseEntity<BaseResponse<Void>> postMethodName(
+    public ResponseEntity<BaseResponse<Void>> addUserToProject(
             @PathVariable Long projectId,
             @PathVariable Long personId) {
 
@@ -103,11 +92,26 @@ public class ProjectController {
             @RequestParam(required = false) List<Long> roleIds,
             @RequestParam(required = false) List<Long> courseIds,
             @RequestParam(required = false) ProjectStatus status,
-            Pageable pageable) {
+            Pageable pageable
+    ) {
         Page<ProjectResponse> projects = projectService.getProjects(
                 skillIds, roleIds, courseIds, status, pageable
         );
         return BaseResponse.of(projects);
+    }
+
+    @GetMapping("/recommendations")
+    public BaseResponse<PageResponse<ProjectResponse>> getProjectRecommendations(
+            @RequestParam(required = false) List<Long> skillIds,
+            @RequestParam(required = false) List<Long> roleIds,
+            @RequestParam(required = false) List<Long> courseIds,
+            @RequestParam(required = false) ProjectStatus status,
+            Pageable pageable
+    ) {
+        long userId = securityContextService.getCurrentUserId();
+        var projects = projectRecommendationsService.getProjectRecommendationsForUser(userId, pageable);
+        var page = PageResponse.withContent(projects);
+        return BaseResponse.of(page);
     }
 
     @DeleteMapping("/{projectId}")

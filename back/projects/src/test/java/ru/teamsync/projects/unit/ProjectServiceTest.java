@@ -13,7 +13,7 @@ import ru.teamsync.projects.repository.ProjectMemberRepository;
 import ru.teamsync.projects.repository.CourseRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.repository.StudentProjectClickRepository;
-import ru.teamsync.projects.service.ProjectService;
+import ru.teamsync.projects.service.projects.ProjectService;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
 
 import java.util.Optional;
