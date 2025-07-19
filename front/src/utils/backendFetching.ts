@@ -104,6 +104,35 @@ export async function getProjects(
   }
 }
 
+export async function getRecs(
+  token: string
+) {
+  const projectsUrl = `${backendHost}/projects/api/v1/projects/recommendations`;
+  try {
+    const response = await fetch(projectsUrl, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Response error: ' + response.status.toString());
+    }
+    const json = await response.json();
+    return {
+      projects: json.data.content,
+      total: json.data.number_of_elements
+    }
+  }
+  catch (error) {
+    console.error(error.message);
+    return {
+      projects: [],
+      total: 0
+    };
+  }
+}
+
 export async function getLikedProjects(token: string) {
   const projectsUrl = `${backendHost}/projects/api/v1/favourite/my`;
   try {
