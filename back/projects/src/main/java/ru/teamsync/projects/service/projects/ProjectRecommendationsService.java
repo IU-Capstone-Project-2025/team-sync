@@ -11,7 +11,6 @@ import ru.teamsync.projects.dto.response.ProjectResponse;
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.mapper.ProjectMapper;
 import ru.teamsync.projects.repository.ProjectRepository;
-import ru.teamsync.projects.service.dto.FiltrationParameters;
 import ru.teamsync.projects.service.projects.utils.ProjectUtils;
 
 import java.util.List;

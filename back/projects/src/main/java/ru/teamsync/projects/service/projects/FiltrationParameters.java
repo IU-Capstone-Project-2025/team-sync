@@ -1,4 +1,4 @@
-package ru.teamsync.projects.service.dto;
+package ru.teamsync.projects.service.projects;
 
 import ru.teamsync.projects.entity.ProjectStatus;
 
