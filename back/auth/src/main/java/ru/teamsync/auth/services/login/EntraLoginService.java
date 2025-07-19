@@ -5,7 +5,9 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import ru.teamsync.auth.model.SecurityUser;
 import ru.teamsync.auth.model.SecurityUserRepository;
-import ru.teamsync.auth.services.JwtService;
+import ru.teamsync.auth.services.jwt.JwtService;
+import ru.teamsync.auth.services.jwt.JwtUserClaims;
+import ru.teamsync.auth.services.jwt.JwtUserClaimsMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +17,7 @@ public class EntraLoginService implements LoginService {
 
     private final SecurityUserRepository securityUserRepository;
     private final JwtService jwtService;
+    private final JwtUserClaimsMapper claimsMapper;
 
     @Override
     public String generateInternalJwt(Jwt externalJwt) {
@@ -24,7 +27,9 @@ public class EntraLoginService implements LoginService {
                 .findByEmail(email)
                 .orElseThrow(() -> UserIsNotRegisteredException.withEmail(email));
 
-        return jwtService.generateTokenWithInternalId(securityUser.getInternalUserId());
+        var claims = claimsMapper.toClaims(securityUser);
+
+        return jwtService.generateToken(claims);
     }
 
 }

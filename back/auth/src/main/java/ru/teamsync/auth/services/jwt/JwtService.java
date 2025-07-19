@@ -1,23 +1,32 @@
-package ru.teamsync.auth.services;
+package ru.teamsync.auth.services.jwt;
 
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.teamsync.auth.config.properties.JwtProperties;
 
 import java.util.Date;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class JwtService {
 
-    private final JwtProperties jwtProperties;
+    private static final TypeReference<Map<String, Object>> MAP_TYPE_REFENCE = new TypeReference<>() {
+    };
 
-    public String generateTokenWithInternalId(int internalId) {
+    private final JwtProperties jwtProperties;
+    private final ObjectMapper objectMapper;
+
+    public String generateToken(JwtUserClaims claimsDto) {
+        Map<String, Object> claims = objectMapper.convertValue(claimsDto, MAP_TYPE_REFENCE);
+
         return Jwts.builder()
-                .claim(jwtProperties.userIdClaim(), internalId)
+                .claims(claims)
                 .issuer(jwtProperties.issuer())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.expirationTimeMs()))
@@ -42,10 +51,4 @@ public class JwtService {
             return false;
         }
     }
-
-    /*@PostConstruct
-    public void printTestToken() {
-        String token = generateTokenWithInternalId(123);
-        System.out.println("Internal test token: " + token);
-    } */
 }

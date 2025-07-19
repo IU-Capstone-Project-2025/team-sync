@@ -16,8 +16,9 @@ import ru.teamsync.auth.controllers.request.RegisterProfessorRequest;
 import ru.teamsync.auth.controllers.request.RegisterStudentRequest;
 import ru.teamsync.auth.model.SecurityUser;
 import ru.teamsync.auth.model.SecurityUserRepository;
-import ru.teamsync.auth.services.JwtService;
+import ru.teamsync.auth.services.jwt.JwtService;
 import ru.teamsync.auth.services.ResumeClientMapper;
+import ru.teamsync.auth.services.jwt.JwtUserClaimsMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class EntraRegistrationService implements RegistrationService {
     private final SecurityUserRepository securityUserRepository;
     private final JwtService jwtService;
     private final ResumeClientMapper resumeClientMapper;
+    private final JwtUserClaimsMapper claimsMapper;
 
     @Transactional
     @Override
@@ -54,8 +56,9 @@ public class EntraRegistrationService implements RegistrationService {
             securityUser.setRole(Role.STUDENT);
 
             securityUserRepository.save(securityUser);
+            var claims = claimsMapper.toClaims(securityUser);
 
-            return jwtService.generateTokenWithInternalId(internalId);
+            return jwtService.generateToken(claims);
         } else {
             String errorMessage = response.getBody() == null ? "Failed to create student, no response body" : response.getBody().error().toString();
             throw new ResumeClientException(errorMessage);
@@ -81,8 +84,9 @@ public class EntraRegistrationService implements RegistrationService {
             securityUser.setRole(Role.PROFESSOR);
 
             securityUserRepository.save(securityUser);
+            var claims = claimsMapper.toClaims(securityUser);
 
-            return jwtService.generateTokenWithInternalId(internalId);
+            return jwtService.generateToken(claims);
         } else {
             String errorMessage = response.getBody() == null ? "Failed to create professor, no response body" : response.getBody().error().toString();
             throw new ResumeClientException(errorMessage);
