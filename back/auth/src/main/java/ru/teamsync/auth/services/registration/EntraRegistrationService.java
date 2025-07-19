@@ -1,11 +1,10 @@
 package ru.teamsync.auth.services.registration;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import ru.teamsync.auth.client.ResumeClient;
 import ru.teamsync.auth.client.ResumeClientException;
 import ru.teamsync.auth.client.dto.PersonCreationRequest;
@@ -16,8 +15,8 @@ import ru.teamsync.auth.controllers.request.RegisterProfessorRequest;
 import ru.teamsync.auth.controllers.request.RegisterStudentRequest;
 import ru.teamsync.auth.model.SecurityUser;
 import ru.teamsync.auth.model.SecurityUserRepository;
-import ru.teamsync.auth.services.jwt.JwtService;
 import ru.teamsync.auth.services.ResumeClientMapper;
+import ru.teamsync.auth.services.jwt.JwtService;
 import ru.teamsync.auth.services.jwt.JwtUserClaimsMapper;
 
 @Service
@@ -47,12 +46,14 @@ public class EntraRegistrationService implements RegistrationService {
         var response = resumeClient.createStudent(studentCreationRequest);
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             Integer internalId = response.getBody().data().personId();
+            Integer profileId = response.getBody().data().personId();
             log.info("Got id {}", internalId);
 
             SecurityUser securityUser = new SecurityUser();
             securityUser.setEmail(person.getEmail());
             securityUser.setExternalUserId(entraJwt.getClaimAsString(EXTERNAL_ID_CLAIM));
             securityUser.setInternalUserId(internalId);
+            securityUser.setProfileId(profileId);
             securityUser.setRole(Role.STUDENT);
 
             securityUserRepository.save(securityUser);
@@ -75,14 +76,15 @@ public class EntraRegistrationService implements RegistrationService {
         var response = resumeClient.createProfessor(professorCreationRequest);
         if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
             Integer internalId = response.getBody().data().personId();
+            Integer profileId = response.getBody().data().professorId();
             log.info("Got id {}", internalId);
 
             SecurityUser securityUser = new SecurityUser();
             securityUser.setEmail(person.getEmail());
             securityUser.setExternalUserId(entraJwt.getClaimAsString(EXTERNAL_ID_CLAIM));
             securityUser.setInternalUserId(internalId);
+            securityUser.setProfileId(profileId);
             securityUser.setRole(Role.PROFESSOR);
-
             securityUserRepository.save(securityUser);
             var claims = claimsMapper.toClaims(securityUser);
 
