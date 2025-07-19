@@ -5,7 +5,7 @@ import ru.teamsync.auth.config.security.userdetails.Role;
 import java.util.List;
 
 public record JwtUserClaims(
-        Integer internalId,
+        Integer userId,
         Integer profileId,
         List<Role> roles,
         String email

@@ -10,7 +10,7 @@ import java.util.Date;
 @Service
 public class JwtUtilityService {
 
-    private static final String INTERNAL_ID_CLAIM = "internal_id";
+    private static final String INTERNAL_ID_CLAIM = "user_id";
 
     @Autowired
     private JwtProperties jwtProperties;

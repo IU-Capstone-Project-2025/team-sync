@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 public class SecurityContextService {
 
     public Long getCurrentUserId() {
-        return getCurrentUser().internalId();
+        return getCurrentUser().userId();
     }
 
     public Long getCurrentUserProfileId() {

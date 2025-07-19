@@ -3,7 +3,7 @@ package ru.teamsync.projects.service.security;
 import java.util.List;
 
 public record SecurityUser(
-        Long internalId,
+        Long userId,
         Long profileId,
         List<SecurityRole> roles,
         String email
