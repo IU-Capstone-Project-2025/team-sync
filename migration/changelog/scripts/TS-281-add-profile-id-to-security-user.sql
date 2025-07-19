@@ -1,9 +1,8 @@
-ALTER TABLE security.security_user RENAME to security.user;
 
-ALTER TABLE security.user ADD COLUMN profile_id INTEGER;
+ALTER TABLE security.security_user ADD COLUMN profile_id INTEGER;
 
-UPDATE security.user 
+UPDATE security.security_user
 SET profile_id = student.id
 FROM person, student
-WHERE security.user.person_id = person.id
+WHERE security.security_user.internal_user_id = person.id
     and student.person_id = person.id;
