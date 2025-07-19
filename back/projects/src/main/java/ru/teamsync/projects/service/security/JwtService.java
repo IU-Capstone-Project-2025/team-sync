@@ -22,6 +22,8 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+        log.info("parsed claims: {}", claims);
+        var mappedUser = objectMapper.convertValue(claims, SecurityUser.class);
         return objectMapper.convertValue(claims, SecurityUser.class);
     }
 
