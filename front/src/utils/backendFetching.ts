@@ -138,11 +138,38 @@ export async function getApplications(token: string) {
       throw new Error('Response error: ' + response.status.toString());
     }
     const json = await response.json();
+    if (json.data.total_elements == 0){return [];}
     return json.data.content;
   }
   catch (error) {
     console.error(error.message);
     return [];
+  }
+}
+
+export async function getMyProjects(token: string) {
+  let params: string[] = [];
+  const projectsUrl = backendHost + "/projects/api/v1/projects/my";
+  try {
+    const response = await fetch(projectsUrl, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Response error: ' + response.status.toString());
+    }
+    const json = await response.json();
+    return {
+      projects: json.data.content
+    }
+  }
+  catch (error) {
+    console.error(error.message);
+    return {
+      projects: []
+    };
   }
 }
 

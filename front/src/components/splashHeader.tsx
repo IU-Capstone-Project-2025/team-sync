@@ -4,7 +4,12 @@ import NavButton from './navButton'
 import SignUpButton from './signUp'
 import { useNavigate } from 'react-router-dom';
 
-export default function SplashHeader() {
+// Add prop type for onSSOClick
+interface SplashHeaderProps {
+  onSSOClick?: () => void;
+}
+
+export default function SplashHeader({ onSSOClick }: SplashHeaderProps) {
   const navigate = useNavigate();
   return (
     <div className='flex flex-col lg:flex-row justify-between items-center w-full lg:pt-15 lg:pl-15 lg:pr-15'>
@@ -25,7 +30,7 @@ export default function SplashHeader() {
         <NavButton text = "For students" link='google.com'/>
         <NavButton text = "For teachers" link='google.com'/>
         <NavButton text = "Help" link='google.com'/>
-        <SignUpButton/>
+        <SignUpButton onSSOClick={onSSOClick}/>
       </span>
     </div>
   );
