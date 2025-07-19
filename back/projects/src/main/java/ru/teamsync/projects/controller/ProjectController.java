@@ -5,10 +5,8 @@ import java.util.List;
 
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import ru.teamsync.projects.dto.request.ProjectCreateRequest;
@@ -30,7 +31,6 @@ import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.dto.response.BaseResponse;
 import ru.teamsync.projects.dto.response.PageResponse;
 import ru.teamsync.projects.dto.response.ProjectResponse;
-import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.service.ProjectRecommendationsService;
 import ru.teamsync.projects.service.ProjectService;
@@ -46,6 +46,11 @@ public class ProjectController {
     private final SecurityContextService securityContextService;
     private final ProjectRecommendationsService projectRecommendationsService;
 
+    @Operation(summary = "Create a new project")
+    @ApiResponses({
+        @ApiResponse(responseCode = "201", description = "Project successfully created"),
+        @ApiResponse(responseCode = "400", description = "Invalid project data")
+    })
     @PostMapping
     public ResponseEntity<BaseResponse<Void>> createProject(
             @RequestBody @Valid ProjectCreateRequest request) {
@@ -55,6 +60,8 @@ public class ProjectController {
                 .body(BaseResponse.of(null));
     }
 
+    @Operation(summary = "Get current user's projects")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved projects")
     @GetMapping("/my")
     public BaseResponse<Page<ProjectResponse>> getMyProjects(Pageable pageable) {
         long userId = securityContextService.getCurrentUserId();
@@ -62,6 +69,11 @@ public class ProjectController {
         return BaseResponse.of(myProjects);
     }
 
+    @Operation(summary = "Get project by ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Successfully retrieved project"),
+        @ApiResponse(responseCode = "404", description = "Project not found")
+    })
     @GetMapping("/{projectId}")
     public BaseResponse<ProjectResponse> getProjectById(@PathVariable Long projectId) {
         long userId = securityContextService.getCurrentUserId();
@@ -69,6 +81,8 @@ public class ProjectController {
         return BaseResponse.of(project);
     }
 
+    @Operation(summary = "Get recommended projects for current user")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved recommendations")
     @GetMapping("/recommendations")
     public BaseResponse<PageResponse<ProjectResponse>> getProjectRecommendations(Pageable pageable) {
         long userId = securityContextService.getCurrentUserId();
@@ -77,6 +91,13 @@ public class ProjectController {
         return BaseResponse.of(page);
     }
 
+    @Operation(summary = "Update a project by ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Project successfully updated"),
+        @ApiResponse(responseCode = "403", description = "Access denied - user is not the team lead"),
+        @ApiResponse(responseCode = "404", description = "Project not found"),
+        @ApiResponse(responseCode = "409", description = "Project is already completed")
+    })
     @PutMapping("/{projectId}")
     public ResponseEntity<BaseResponse<Void>> updateProject(
             @PathVariable Long projectId,
@@ -86,8 +107,15 @@ public class ProjectController {
         return ResponseEntity.ok(BaseResponse.of(null));
     }
 
+    @Operation(summary = "Remove a member from a project")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Member removed successfully"),
+        @ApiResponse(responseCode = "403", description = "Access denied - user is not the team lead"),
+        @ApiResponse(responseCode = "404", description = "Project not found"),
+        @ApiResponse(responseCode = "409", description = "Member does not exist in the project")
+    })
     @PostMapping("/{projectId}/member/{personId}")
-    public ResponseEntity<BaseResponse<Void>> postMethodName(
+    public ResponseEntity<BaseResponse<Void>> removeMemberFromProject(
             @PathVariable Long projectId,
             @PathVariable Long personId) {
 
@@ -96,7 +124,8 @@ public class ProjectController {
         return ResponseEntity.ok(BaseResponse.of(null));
     }
 
-
+    @Operation(summary = "Get all projects with optional filters")
+    @ApiResponse(responseCode = "200", description = "Projects successfully retrieved")
     @GetMapping
     public BaseResponse<Page<ProjectResponse>> getProjects(
             @RequestParam(required = false) List<Long> skillIds,
@@ -118,9 +147,12 @@ public class ProjectController {
         return ResponseEntity.ok(BaseResponse.of(null));
     }
 
-    /*
-     * Project owner can see applications to their project
-     */
+    @Operation(summary = "Delete a project by ID")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Project successfully deleted"),
+        @ApiResponse(responseCode = "403", description = "Access denied - not the owner"),
+        @ApiResponse(responseCode = "404", description = "Project not found")
+    })
     @GetMapping("/{projectId}/applications")
     public Page<ApplicationResponse> getApplicationsForProject(
             @PathVariable Long projectId,
@@ -130,6 +162,12 @@ public class ProjectController {
         return projectService.getApplicationsForProject(projectId, userId, pageable);
     }
 
+    @Operation(summary = "Get applications for a specific project (team lead only)")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Applications retrieved successfully"),
+        @ApiResponse(responseCode = "403", description = "Access denied"),
+        @ApiResponse(responseCode = "404", description = "Project not found")
+    })
     @PatchMapping("/{projectId}/applications/{applicationId}")
     public ApplicationResponse updateApplication(
             @PathVariable Long projectId,
