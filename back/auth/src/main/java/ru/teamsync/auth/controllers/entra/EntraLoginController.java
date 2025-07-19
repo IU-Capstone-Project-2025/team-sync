@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import ru.teamsync.auth.controllers.response.AccessTokenResponse;
 import ru.teamsync.auth.controllers.response.BaseResponse;
 import ru.teamsync.auth.services.login.EntraLoginService;
@@ -16,6 +19,14 @@ public class EntraLoginController {
 
     private final EntraLoginService entraLoginService;
 
+    @Operation(
+        summary = "Login with Entra JWT",
+        description = "Generates internal JWT based on the provided Entra JWT"
+    )
+    @ApiResponse(
+        responseCode = "200",
+        description = "Internal JWT token successfully generated"
+    )
     @GetMapping
     public BaseResponse<AccessTokenResponse> login(@AuthenticationPrincipal Jwt jwt) {
         String token = entraLoginService.generateInternalJwt(jwt);
