@@ -5,12 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import ru.teamsync.resume.dto.request.UpdateStudentProfileRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import ru.teamsync.resume.dto.response.BaseResponse;
 import ru.teamsync.resume.dto.response.SkillResponse;
 import ru.teamsync.resume.dto.response.RoleResponse;
@@ -23,19 +21,11 @@ public class StudentProfileController {
 
     private final ProfileService profileService;
 
-    /*
-     * @PutMapping("/{personId}")
-    public ResponseEntity<BaseResponse<Void>> updateStudentProfile(
-            @PathVariable Long personId, 
-            @RequestBody UpdateStudentProfileRequest request,
-            @AuthenticationPrincipal Jwt jwt) throws NotFoundException, AccessDeniedException {
-
-        Long currentUserId = jwt.getClaim("internal_id");
-        profileService.updateStudentProfile(personId, request, currentUserId);
-        return ResponseEntity.ok(BaseResponse.of(null));
-    }
-     */
-
+    @Operation(
+        summary = "Get student's skills",
+        description = "Returns a paginated list of student's selected skills"
+    )
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved student skills")
     @GetMapping("/{personId}/skills")
     public ResponseEntity<BaseResponse<Page<SkillResponse>>> getStudentSkills(
             @PathVariable Long personId,
@@ -44,6 +34,11 @@ public class StudentProfileController {
         return ResponseEntity.ok(BaseResponse.of(skills));
     }
 
+    @Operation(
+        summary = "Get student's preferred roles",
+        description = "Returns a paginated list of roles selected by the student"
+    )
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved student roles")
     @GetMapping("/{personId}/roles")
     public ResponseEntity<BaseResponse<Page<RoleResponse>>> getStudentRoles(
             @PathVariable Long personId,
