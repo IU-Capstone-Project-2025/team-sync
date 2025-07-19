@@ -6,7 +6,9 @@ import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import MyCard from "../components/myProjectCard";
+import { getMyProjects } from "../utils/backendFetching"
 
+const backendHost = import.meta.env.VITE_BACKEND_HOST
 interface Project {
   course_name: string;
   description: string;
@@ -17,31 +19,6 @@ interface Project {
   status: "DRAFT" | "OPEN" | "IN_PROGRESS" | "COMPLETE";
   team_lead_id: number;
 }
-async function getProjects(token: string) {
-  let params: string[] = [];
-  const projectsUrl = "https://dev.team-sync.online/projects/api/v1/projects/my";
-  try {
-    const response = await fetch(projectsUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return {
-      projects: json.data.content
-    }
-  }
-  catch (error) {
-    console.error(error.message);
-    return {
-      projects: []
-    };
-  }
-}
 export default function ProjectScreen() {
   const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
@@ -49,7 +26,7 @@ export default function ProjectScreen() {
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
-      getProjects(token).then(result => setProjects(result.projects));
+      getMyProjects(token).then(result => setProjects(result.projects));
     }
   }, [refreshKey]);
 

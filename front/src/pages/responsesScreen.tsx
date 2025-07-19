@@ -20,8 +20,8 @@ interface Project {
 interface Application {
   application_id: number;
   project: Project;
-  status: string;
-  created_at: number[];
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  created_at: string;
 }
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
@@ -39,14 +39,15 @@ export default function ResponseScreen(){
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
-      getRoles(token).then(setRoles);
-      getSkills(token).then(setSkills);
+      getRoles().then(setRoles);
+      getSkills().then(setSkills);
+      getApplications(token).then(result => setApplications(result));
     }
   }, []);
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
-      getApplications(token).then(result => setApplications(result.applications));
+      getApplications(token).then(result => setApplications(result));
     }
   }, [refreshKey]);
   return(
@@ -65,7 +66,7 @@ export default function ResponseScreen(){
           <div className="flex flex-row gap-4">
             <Pill type="Active" number={0}/>
           </div>
-          {applications.length && applications.map((app) => (
+          {applications.length > 0 && applications.map((app) => (
             <ResponseCard
               key={app.application_id}
               props={{

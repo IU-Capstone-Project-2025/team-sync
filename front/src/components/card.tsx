@@ -209,7 +209,7 @@ export default function Card({props, onLikeChange}: CardProps) {
             // @ts-ignore
             (close) => (
               <div className="modal flex flex-col items-start rounded-2xl bg-(--header-footer-color) pl-20 pr-12.5 py-12.5 gap-2 text-(--secondary-color)">
-                <button className="text-2xl close self-end" onClick={close}> &times;</button>
+                <button className="text-2xl close self-end cursor-pointer" onClick={close}> &times;</button>
                 <h2 className="font-[Inter] font-bold text-4xl text-(--secondary-color)">{props.projectName}</h2>
                 <div>
                   <h3 className="font-[Inter] text-lg text-(--secondary-color)/48">PROJECT DESCRIPTION</h3>
@@ -221,7 +221,7 @@ export default function Card({props, onLikeChange}: CardProps) {
                 </div>
                 <div>
                   <h3 className="font-[Inter] text-lg text-(--secondary-color)/48">REQUIRED ROLES</h3>
-                  <span style={{ maxHeight: '10vh', overflowY: 'auto', paddingRight: '4px' }} className="flex flex-row flex-wrap mt-0.5 flex gap-1">
+                  <span style={{ maxHeight: '10vh', overflowY: 'auto', paddingRight: '4px' }} className="flex-row flex-wrap mt-0.5 flex gap-1">
                     {props.roles.length > 0 && props.roles.map((role) => {
                       return (
                         <button
@@ -238,7 +238,7 @@ export default function Card({props, onLikeChange}: CardProps) {
                 </div>
                 <div>
                   <h3 className="font-[Inter] text-lg text-(--secondary-color)/48">REQUIRED SKILLS</h3>
-                  <span style={{ maxHeight: '10vh', overflowY: 'auto', paddingRight: '4px' }} className="flex flex-row flex-wrap mt-0.5 flex gap-1">
+                  <span style={{ maxHeight: '10vh', overflowY: 'auto', paddingRight: '4px' }} className="flex flex-row flex-wrap mt-0.5 gap-1">
                     {props.skills.length > 0 && props.skills.map((skill) => {
                       return (
                         <button
