@@ -1,4 +1,4 @@
-package ru.teamsync.projects.service.jwt;
+package ru.teamsync.projects.service.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;

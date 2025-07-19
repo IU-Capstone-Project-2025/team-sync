@@ -32,7 +32,7 @@ public class ProjectRecommendationsService {
 
 
     public List<ProjectResponse> getProjectRecommendationsForStudent(
-            int studentId,
+            long studentId,
             FiltrationParameters filterParams,
             Pageable pageable
     ) {
@@ -46,12 +46,12 @@ public class ProjectRecommendationsService {
                 .toList();
     }
 
-    private List<Long> fetchProjectIdsForStudent(Integer studentId, Pageable pageable) {
+    private List<Long> fetchProjectIdsForStudent(long studentId, Pageable pageable) {
         int readStart = pageable.getPageSize() * pageable.getPageNumber();
         int amount = pageable.getPageSize();
         var request = RecommendationProto.ProjectsRecommendationsRequest
                 .newBuilder()
-                .setStudentId(studentId)
+                .setStudentId((int) studentId)
                 .setReadStart(readStart)
                 .setAmount(amount)
                 .build();

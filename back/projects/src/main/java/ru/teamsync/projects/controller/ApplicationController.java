@@ -17,7 +17,7 @@ import ru.teamsync.projects.dto.request.ApplicationRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
 import ru.teamsync.projects.dto.response.BaseResponse;
 import ru.teamsync.projects.service.ApplicationService;
-import ru.teamsync.projects.service.SecurityContextService;
+import ru.teamsync.projects.service.security.SecurityContextService;
 
 @RestController
 @RequestMapping("/applications")

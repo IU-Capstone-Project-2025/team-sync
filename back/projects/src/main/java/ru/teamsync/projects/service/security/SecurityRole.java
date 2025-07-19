@@ -1,4 +1,4 @@
-package ru.teamsync.projects.service.jwt;
+package ru.teamsync.projects.service.security;
 
 public enum SecurityRole {
     PROFESSOR,

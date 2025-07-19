@@ -27,10 +27,10 @@ import ru.teamsync.projects.dto.response.ProjectResponse;
 import ru.teamsync.projects.entity.ProjectStatus;
 import ru.teamsync.projects.service.ApplicationService;
 import ru.teamsync.projects.service.ProjectMemberService;
-import ru.teamsync.projects.service.SecurityContextService;
 import ru.teamsync.projects.service.projects.FiltrationParameters;
 import ru.teamsync.projects.service.projects.ProjectRecommendationsService;
 import ru.teamsync.projects.service.projects.ProjectService;
+import ru.teamsync.projects.service.security.SecurityContextService;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
@@ -112,8 +112,9 @@ public class ProjectController {
             @RequestParam(required = false) ProjectStatus status,
             Pageable pageable
     ) {
-        long userId = securityContextService.getCurrentUserId();
-        var projects = projectRecommendationsService.getProjectRecommendationsForUser(userId, pageable);
+        long studentId = securityContextService.getCurrentUserProfileId();
+        var filtrationParameters = new FiltrationParameters(skillIds, roleIds, courseIds, status);
+        var projects = projectRecommendationsService.getProjectRecommendationsForStudent(studentId, filtrationParameters, pageable);
         var page = PageResponse.withContent(projects);
         return BaseResponse.of(page);
     }

@@ -1,10 +1,10 @@
-package ru.teamsync.projects.service.jwt;
+package ru.teamsync.projects.service.security;
 
 import java.util.List;
 
 public record SecurityUser(
-        Integer internalId,
-        Integer profileId,
+        Long internalId,
+        Long profileId,
         List<SecurityRole> roles,
         String email
 ) {
