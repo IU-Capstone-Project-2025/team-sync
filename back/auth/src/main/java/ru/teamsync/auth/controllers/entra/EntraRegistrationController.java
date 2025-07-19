@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import ru.teamsync.auth.controllers.request.RegisterProfessorRequest;
 import ru.teamsync.auth.controllers.request.RegisterStudentRequest;
 import ru.teamsync.auth.controllers.response.AccessTokenResponse;
@@ -19,6 +20,7 @@ import ru.teamsync.auth.services.registration.EntraRegistrationService;
 @RestController
 @RequestMapping("entra/registration")
 @RequiredArgsConstructor
+@Tag(name = "Entra Registration", description = "Register students and professors using Entra ID")
 public class EntraRegistrationController {
 
     private final EntraRegistrationService entraRegistrationService;

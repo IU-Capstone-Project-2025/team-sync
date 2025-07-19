@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import ru.teamsync.projects.dto.request.FavouriteProjectRequest;
 import ru.teamsync.projects.dto.response.BaseResponse;
@@ -25,6 +26,7 @@ import ru.teamsync.projects.service.SecurityContextService;
 @RestController
 @RequestMapping("/favourite")
 @RequiredArgsConstructor
+@Tag(name = "Favourite Projects", description = "Manage user's list of favourite projects")
 public class FavouriteProjectController {
 
     private final FavouriteProjectService favouriteProjectService;

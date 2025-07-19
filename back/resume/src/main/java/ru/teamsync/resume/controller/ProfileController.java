@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import ru.teamsync.resume.dto.response.BaseResponse;
 import ru.teamsync.resume.dto.response.ProfileResponse;
@@ -27,6 +28,7 @@ import ru.teamsync.resume.dto.request.UpdateStudentProfileRequest;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/profile")
+@Tag(name = "Profile", description = "User profile operations")
 public class ProfileController {
 
     private final ProfileService profileService;

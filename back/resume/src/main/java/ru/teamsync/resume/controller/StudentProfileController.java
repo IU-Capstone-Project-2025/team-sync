@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import ru.teamsync.resume.dto.response.BaseResponse;
 import ru.teamsync.resume.dto.response.SkillResponse;
 import ru.teamsync.resume.dto.response.RoleResponse;
@@ -17,6 +18,7 @@ import ru.teamsync.resume.service.ProfileService;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/profile/student")
+@Tag(name = "Student Profiles", description = "Manage student profiles, including their skills and roles")
 public class StudentProfileController {
 
     private final ProfileService profileService;

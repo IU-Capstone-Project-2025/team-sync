@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import ru.teamsync.projects.dto.request.ProjectCreateRequest;
@@ -40,6 +41,7 @@ import ru.teamsync.projects.service.SecurityContextService;
 @RestController
 @RequestMapping("/projects")
 @RequiredArgsConstructor
+@Tag(name = "Projects", description = "Manage projects, their members, and related applications")
 public class ProjectController {
 
     private final ProjectService projectService;

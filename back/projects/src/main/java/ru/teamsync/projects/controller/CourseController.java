@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import ru.teamsync.projects.dto.request.CourseCreateRequest;
 import ru.teamsync.projects.dto.response.BaseResponse;
@@ -25,6 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/courses")
 @AllArgsConstructor
+@Tag(name = "Courses", description = "Manage and retrieve available academic courses")
 public class CourseController {
 
     private final CourseService courseService;

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import ru.teamsync.projects.dto.request.ApplicationRequest;
 import ru.teamsync.projects.dto.response.ApplicationResponse;
@@ -25,6 +26,7 @@ import ru.teamsync.projects.service.SecurityContextService;
 @RestController
 @RequestMapping("/applications")
 @RequiredArgsConstructor
+@Tag(name = "Applications", description = "Manage project applications from users")
 public class ApplicationController {
 
     private final ApplicationService applicationService;

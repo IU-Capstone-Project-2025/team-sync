@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import ru.teamsync.auth.controllers.response.AccessTokenResponse;
 import ru.teamsync.auth.controllers.response.BaseResponse;
 import ru.teamsync.auth.services.login.EntraLoginService;
@@ -15,6 +16,7 @@ import ru.teamsync.auth.services.login.EntraLoginService;
 @RestController
 @RequestMapping("/entra/login")
 @RequiredArgsConstructor
+@Tag(name = "Entra Login", description = "Login using Entra ID and receive internal JWT")
 public class EntraLoginController {
 
     private final EntraLoginService entraLoginService;

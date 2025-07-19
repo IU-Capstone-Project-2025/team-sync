@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import ru.teamsync.resume.dto.response.RoleResponse;
 import ru.teamsync.resume.service.RoleService;
 
 @RestController
 @RequestMapping("/roles")
 @AllArgsConstructor
+@Tag(name = "Roles", description = "Provides access to available roles")
 public class RoleController {
 
     private final RoleService RoleService;

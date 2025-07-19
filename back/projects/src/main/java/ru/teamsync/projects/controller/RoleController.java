@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import ru.teamsync.projects.dto.response.BaseResponse;
 import ru.teamsync.projects.entity.Role;
 import ru.teamsync.projects.service.RoleService;
@@ -15,6 +16,7 @@ import ru.teamsync.projects.service.RoleService;
 @RestController
 @RequestMapping("/roles")
 @RequiredArgsConstructor
+@Tag(name = "Roles", description = "Retrieve roles used in the system and in projects")
 public class RoleController {
     private final RoleService roleService;
 

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import ru.teamsync.resume.dto.request.ProfessorCreationRequest;
 import ru.teamsync.resume.dto.request.StudentCreationRequest;
@@ -20,6 +21,7 @@ import ru.teamsync.resume.service.ProfileService;
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
+@Tag(name = "Resume Management", description = "Handles creation of student and professor profiles")
 public class ResumeController {
     private final ProfileService profileService;
 

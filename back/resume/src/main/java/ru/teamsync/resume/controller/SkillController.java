@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import ru.teamsync.resume.dto.response.SkillResponse;
 import ru.teamsync.resume.service.SkillService;
 
 @RestController
 @RequestMapping("/skills")
 @AllArgsConstructor
+@Tag(name = "Skills", description = "Provides access to skills")
 public class SkillController {
 
     private final SkillService skillService;
