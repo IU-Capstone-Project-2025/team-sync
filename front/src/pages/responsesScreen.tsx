@@ -70,6 +70,7 @@ export default function ResponseScreen(){
             <ResponseCard
               key={app.application_id}
               props={{
+                projectId: app.project.id,
                 courseName: app.project.course_name,
                 description: app.project.description,
                 applicationId: app.application_id,

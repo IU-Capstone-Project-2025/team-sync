@@ -3,6 +3,8 @@ import Popup from "reactjs-popup";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
+const backendHost = import.meta.env.VITE_BACKEND_HOST
+
 function truncateString({string, maxLength} : {string: string, maxLength: number}){
   if (string.length >  maxLength){
     return string.substring(0, maxLength-1) + "...";
@@ -12,11 +14,8 @@ function truncateString({string, maxLength} : {string: string, maxLength: number
   }
 }
 
-async function deleteApplication(token: string, applicationId: number) : Promise<boolean>{
-  const applicationUrl = "https://dev.team-sync.online/projects/api/v1/applications/" + applicationId.toString();
-    const appJson = {
-      applicationId: applicationId
-    };
+async function deleteApplicationByProjectId(token: string, projectId: number) : Promise<boolean>{
+  const applicationUrl = `${backendHost}/projects/api/v1/applications/project/${projectId}`;
     try {
       const response = await fetch(applicationUrl, {  
         method: 'DELETE', 
@@ -25,7 +24,6 @@ async function deleteApplication(token: string, applicationId: number) : Promise
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify(appJson) 
       });
       return response.ok;
     }
@@ -35,7 +33,6 @@ async function deleteApplication(token: string, applicationId: number) : Promise
 }
 
 export default function responseCard({props, onDelete}) {
-
   return (
     <div className="mt-4 bg-(--header-footer-color) w-full max-w-[98vw] text-(--secondary-color) p-5 border-(--secondary-color) border-1 rounded-2xl hover:shadow-md">
       <div className="flex justify-between">
@@ -85,7 +82,7 @@ export default function responseCard({props, onDelete}) {
                       onClick={() => {
                         const token = localStorage.getItem("backendToken");
                         if (token){
-                          deleteApplication(token, props.applicationId).then(success => {
+                          deleteApplicationByProjectId(token, props.id).then(success => {
                             if (success) {
                               close();
                               onDelete();
