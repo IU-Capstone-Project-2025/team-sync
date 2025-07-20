@@ -78,7 +78,7 @@ export async function getProjects(
     params.push("courseId=" + filterCourse);
   }
   const queryString = params.length > 0 ? "&" + params.join("&") : "";
-  const projectsUrl = `${backendHost}/projects/api/v1/projects?sort=id,desc&size=50` + queryString;
+  const projectsUrl = `${backendHost}/projects/api/v1/projects/recommendations` + queryString;
   try {
     const response = await fetch(projectsUrl, {
       headers: {
@@ -184,6 +184,54 @@ export async function getMyProjects(token: string) {
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json"
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Response error: ' + response.status.toString());
+    }
+    const json = await response.json();
+    return {
+      projects: json.data.content
+    }
+  }
+  catch (error) {
+    console.error(error.message);
+    return {
+      projects: []
+    };
+  }
+}
+
+export async function deleteApplication(token: string, applicationId: number) : Promise<boolean>{
+  const applicationUrl = `${backendHost}/projects/api/v1/applications/${applicationId}`;
+    const appJson = {
+      applicationId: applicationId
+    };
+    try {
+      const response = await fetch(applicationUrl, {  
+        method: 'DELETE', 
+        mode: 'cors', 
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(appJson) 
+      });
+      return response.ok;
+    }
+    catch (error){
+      return false;
+    }
+}
+
+export async function getProjectApplications(token: string, projectId: number) {
+  const projectUrl = `${backendHost}/projects/api/v1/projects/${projectId}/applications`;
+  try {
+    const response = await fetch(projectUrl, {
+      mode: 'cors',
+      headers: {
+        "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
       }
     });
     if (!response.ok) {

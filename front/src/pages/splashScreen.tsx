@@ -1,70 +1,64 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import SplashHeader from '../components/splashHeader'
 import Footer from '../components/footer';
 import { useIsAuthenticated, useMsal } from '@azure/msal-react';
 import { useNavigate } from 'react-router-dom';
 import { loginRequest } from '../authConfig';
+import SlidingBanner from '../components/imageBanner';
+
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
 
 async function login(msalInstance) {
+  const registrationData = {
+    study_group: "string",
+    description: "string",
+    github_alias: crypto.randomUUID().toString().substring(0, 15),
+    tg_alias: crypto.randomUUID().toString().substring(0, 15)
+  };
+
+  const account = msalInstance.getAllAccounts()[0];
+  const tokenResponse = await msalInstance.acquireTokenSilent({
+    ...loginRequest,
+    account,
+  });
+  const accessToken = tokenResponse.accessToken;
+
   try {
-    const accounts = msalInstance.getAllAccounts();
-    
-    if (accounts.length === 0) {
-      const loginResponse = await msalInstance.loginPopup(loginRequest);
-      if (!loginResponse.account) throw new Error("Login failed");
-      return await handleTokenExchange(msalInstance, loginResponse.account);
-    }
-
-    const tokenResponse = await msalInstance.acquireTokenSilent({
-      ...loginRequest,
-      account: accounts[0]
-    }).catch(async (error) => {
-      console.log("Silent token acquisition failed, trying popup", error);
-      return msalInstance.loginPopup(loginRequest);
-    });
-
-    return await handleTokenExchange(msalInstance, tokenResponse.account);
-
-  } catch (error) {
-    console.error("Login failed:", error);
-    throw error;
-  }
-}
-
-async function handleTokenExchange(msalInstance, account) {
-  try {
-    const tokenResponse = await msalInstance.acquireTokenSilent({
-      ...loginRequest,
-      account
-    });
-
-    const backendResponse = await fetch(`${backendHost}/auth/api/v1/entra/login`, {
+    const res = await fetch(`${backendHost}/auth/api/v1/entra/login`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${tokenResponse.accessToken}`,
+        "Authorization": `Bearer ${accessToken}`,
         "Content-Type": "application/json"
       }
     });
-
-    const loginResult = await backendResponse.json();
-
-    if (!loginResult.success) {
-      if (backendResponse.status === 409) {
-        return { registered: false };
+    console.log("trying to login");
+    const loginResult = await res.json();
+    if (loginResult.success) {
+      localStorage.setItem("backendToken", loginResult.data.access_token);
+      console.log(loginResult.data.access_token);
+    } else if (res.status === 409) {
+      console.log("trying to register");
+      const regRes = await fetch(`${backendHost}/auth/api/v1/entra/registration/student`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(registrationData)
+      });
+      const regData = await regRes.json();
+      if (regData.success && regData.data && regData.data.access_token) {
+        localStorage.setItem("backendToken", regData.data.access_token);
+        console.log(regData.data.access_token);
+      } else {
+        console.error("Registration failed", regData.error || regData);
       }
-      throw new Error("Backend login failed");
+    } else {
+      console.error("Login failed", loginResult.error || loginResult);
     }
-
-    localStorage.setItem("entraToken", tokenResponse.accessToken);
-    localStorage.setItem("backendToken", loginResult.data.access_token);
-    
-    return { registered: true };
-
   } catch (error) {
-    console.error("Token exchange failed:", error);
-    throw error;
+    console.error("Login/registration failed", error);
   }
 }
 
@@ -72,46 +66,68 @@ export default function SplashScreen() {
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
   const { instance: msalInstance } = useMsal();
-  const [needsRegistration, setNeedsRegistration] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
       (async () => {
-        const result = await login(msalInstance);
-        if (result && result.registered) {
+        await login(msalInstance);
+        if (localStorage.getItem("backendToken") !== null){
           navigate('/home');
-        } else if (result && !result.registered) {
-          setNeedsRegistration(true);
         }
       })();
     }
   }, [isAuthenticated, navigate, msalInstance]);
   
-  // Handler for SSO button
-  const handleSSOClick = () => {
-    if (needsRegistration) {
-      navigate('/register');
-    } else {
-      // fallback: trigger SSO login (should rarely be needed)
-      msalInstance.loginRedirect(loginRequest);
-    }
-  };
-
   return(
     <div className='flex flex-col justify-between h-screen'>
-      <SplashHeader onSSOClick={handleSSOClick} />
-      <div className='lg:flex lg:flex-row lg:justify-between lg:items-center mr-5 ml-5 lg:mr-18 lg:ml-18'>
-        <div className='flex flex-col justify-center items-center gap-5 lg:w-[60%]'>
-          <h1 className='text-(--secondary-color) font-[Manrope] font-extrabold lg:text-7xl text-3xl'>
-            Build your dream team for every project.
-          </h1>
-          <h2 className='text-(--accent-color-1) font-[Manrope] text-md lg:text-2xl'>
-            TeamSync uses structured data and AI recommendations to help students form balanced, 
-            high-performing teams — reducing overhead for faculty and improving outcomes.
-          </h2>
+      <SplashHeader/>
+      <div className='flex flex-col justify-center items-center'>
+        <div className='lg:flex lg:flex-row lg:justify-between lg:items-center pt-50 mr-5 ml-5 lg:mr-18 lg:ml-18'>
+          <div className='flex flex-col justify-center items-center gap-5 lg:w-[60%]'>
+            <h1 className='text-(--secondary-color) font-[Manrope] font-extrabold lg:text-7xl text-3xl'>
+              Build your dream team for every project.
+            </h1>
+            <h2 className='text-(--accent-color-1) font-[Manrope] text-md lg:text-2xl'>
+              TeamSync uses structured data and AI recommendations to help students form balanced, 
+              high-performing teams — reducing overhead for faculty and improving outcomes.
+            </h2>
+          </div>
+          <img className = 'hidden lg:block pr-10 w-[30%] h-auto' src='./splashGraphic.jpg' 
+          alt="Two people looking at each other from open windows drawn in a minimalist style" />
         </div>
-        <img className = 'hidden lg:block pr-10 w-[30%] h-auto' src='./splashGraphic.jpg' 
-        alt="Two people looking at each other from open windows drawn in a minimalist style" />
+        <div className = 'pt-55'>
+          <SlidingBanner/>
+        </div>
+        <div className='text-(--secondary-color) flex flex-col items-center py-20'>
+          <h1 className='font-[Manrope] font-extrabold text-5xl'>How it works</h1>
+          <div className='text-(--secondary-color) flex gap-5 justify-center pt-20'>
+            <div className='flex flex-col items-center w-[25%]'>
+              <div className='relative flex justify-center items-center pb-7'>
+                <div className='absolute rounded-4xl border-(--accent-color-2) border-5 p-4 blur-md'></div>
+                <p className='relative font-[Manrope] text-3xl'>1</p>
+              </div>
+              <h3 className='font-[Inter] text-3xl font-semibold pb-2'>Set up your profile</h3>
+              <p className='font-[Inter] text-xl text-center'>Add your skills, preferred roles, and basic info — it only takes a minute.</p>
+            </div>
+            <div className='flex flex-col items-center w-[25%]'>
+              <div className='relative flex justify-center items-center pb-7'>
+                <div className='absolute rounded-4xl border-(--accent-color-2) border-5 p-4 blur-md'></div>
+                <p className='relative font-[Manrope] text-3xl'>2</p>
+              </div>
+              <h3 className='font-[Inter] text-3xl font-semibold pb-2'>Explore projects</h3>
+              <p className='font-[Inter] text-xl text-center'>Let AI-recommendations suggest the best-fit options for you.</p>
+            </div>
+            <div className='flex flex-col items-center w-[25%]'>
+              <div className='relative flex justify-center items-center pb-7'>
+                <div className='absolute rounded-4xl border-(--accent-color-2) border-5 p-4 blur-md'></div>
+                <p className='relative font-[Manrope] text-3xl'>3</p>
+              </div>
+              <h3 className='font-[Inter] text-3xl font-semibold pb-2'>Send a request</h3>
+              <p className='font-[Inter] text-xl text-center'>Apply to project or add it to your favorites to decide later.</p>
+            </div>
+          </div>
+        </div>
+        <hr className='text-(--primary-color) w-[75%] border-1 rounded-2xl'/>
       </div>
       <Footer />
     </div>

@@ -82,8 +82,8 @@ export default function ResponseScreen(){
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
-      getRoles(token).then(setRoles);
-      getSkills(token).then(setSkills);
+      getRoles().then(setRoles);
+      getSkills().then(setSkills);
     }
   }, []);
   useEffect(() => {

@@ -162,12 +162,6 @@ export default function ProfileScreen() {
             },
             body: JSON.stringify(profileJson)
         });
-
-        if(!response.ok) {
-            alert('Failed to update profile: '+response.statusText);
-        } else {
-            alert('Profile updated successfully');
-        }
     }
 
     return (

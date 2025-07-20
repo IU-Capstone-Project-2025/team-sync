@@ -2,40 +2,11 @@ import { useState } from "react";
 import Popup from "reactjs-popup";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { deleteApplication } from "../utils/backendFetching";
 
-function truncateString({string, maxLength} : {string: string, maxLength: number}){
-  if (string.length >  maxLength){
-    return string.substring(0, maxLength-1) + "...";
-  }
-  else {
-    return string;
-  }
-}
-
-async function deleteApplication(token: string, applicationId: number) : Promise<boolean>{
-  const applicationUrl = "https://dev.team-sync.online/projects/api/v1/applications/" + applicationId.toString();
-    const appJson = {
-      applicationId: applicationId
-    };
-    try {
-      const response = await fetch(applicationUrl, {  
-        method: 'DELETE', 
-        mode: 'cors', 
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(appJson) 
-      });
-      return response.ok;
-    }
-    catch (error){
-      return false;
-    }
-}
 
 export default function responseCard({props, onDelete}) {
-
+  
   return (
     <div className="mt-4 bg-(--header-footer-color) w-full max-w-[98vw] text-(--secondary-color) p-5 border-(--secondary-color) border-1 rounded-2xl hover:shadow-md">
       <div className="flex justify-between">
@@ -51,6 +22,7 @@ export default function responseCard({props, onDelete}) {
               // @ts-ignore
               (close) => (
                 <div className="modal flex flex-col items-start rounded-2xl bg-(--header-footer-color) pl-20 pr-12.5 py-12.5 gap-2 text-(--secondary-color)">
+                  lmao
                 </div>
               )
             }
@@ -103,7 +75,24 @@ export default function responseCard({props, onDelete}) {
           </Popup>
         </div>
       </div>
-      <p className="font-[Inter] text-lg">Status: <em className="font-bold">{props.status.at(0) + props.status.slice(1).toLowerCase()}</em></p>
+      <div className="flex justify-between">
+        <p className="font-[Inter] text-lg">Status: <em className="font-bold">{props.status.at(0) + props.status.slice(1).toLowerCase()}</em></p>
+        <Popup
+            trigger={
+              <div><p>{}</p></div>
+            }
+            modal
+          >
+            {
+              // @ts-ignore
+              (close) => (
+                <div className="modal flex flex-col items-start rounded-2xl bg-(--header-footer-color) pl-20 pr-12.5 py-12.5 gap-2 text-(--secondary-color)">
+                  lmao
+                </div>
+              )
+            }
+        </Popup>
+      </div>
     </div>
   );
 }

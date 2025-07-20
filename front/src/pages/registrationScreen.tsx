@@ -28,10 +28,11 @@ const StepArc = ({ currentStep, labels, color = '#ffc100', onLabelClick }: StepA
 
   const arcStart = 162.5;
   const arcEnd = 197.5;
+  // Reverse the angle calculation and activeIdx
   const getLabelAngle = (idx: number) => {
-    const activeIdx = currentStep - 1;
-    const baseAngle = arcStart + idx * ((arcEnd - arcStart) / (labels.length - 1));
-    const rotate = -(arcStart + activeIdx * ((arcEnd - arcStart) / (labels.length - 1)) - 180);
+    const activeIdx = labels.length - currentStep;
+    const baseAngle = arcEnd - idx * ((arcEnd - arcStart) / (labels.length - 1));
+    const rotate = -(arcEnd - activeIdx * ((arcEnd - arcStart) / (labels.length - 1)) - 180);
     return baseAngle + rotate;
   };
   const opacity = currentStep === 1 ? 0.4 : currentStep === 2 ? 0.7 : 1.0;
@@ -70,7 +71,8 @@ const StepArc = ({ currentStep, labels, color = '#ffc100', onLabelClick }: StepA
         const labelRadius = stepArcRadiusPx * 0.8;
         const tx = Math.cos(rad) * labelRadius;
         const ty = Math.sin(rad) * labelRadius;
-        const isActive = currentStep === idx + 1;
+        // Adjust isActive for reversed labels
+        const isActive = currentStep === labels.length - idx;
         const rotate = angle + 180;
         return (
           <div
@@ -97,7 +99,7 @@ const StepArc = ({ currentStep, labels, color = '#ffc100', onLabelClick }: StepA
             }}
             onMouseOver={e => {
               if (!isActive) {
-              (e.currentTarget as HTMLDivElement).style.color = '#484848';
+                (e.currentTarget as HTMLDivElement).style.color = '#484848';
               }
             }}
             onMouseOut={e => {
@@ -226,7 +228,7 @@ export default function RegistrationScreen() {
                 onChange={(e) => handleChange('tg_alias', e.target.value)}
                 required
               />
-              <label className = "font-[Inter] text-md" htmlFor="github_alias">GitHub link</label>
+              <label className = "font-[Inter] text-md" htmlFor="github_alias">GitHub alias</label>
               <input
                 className="focus:border-(--accent-color-2) focus:outline-none border-(--secondary-color) border-2 rounded-2xl min-h-10 min-w-50 p-1 text-(--secondary-color) font-[Inter] text-md w-[35%]"
                 type="link"
@@ -288,7 +290,14 @@ export default function RegistrationScreen() {
             )}
           </div>
         </form>
-        <StepArc currentStep={step} labels={labels} diameter={1200} color="#f9c846" onLabelClick={idx => setStep(idx + 1)} />
+        {/* Pass reversed labels and adjust onLabelClick to map back to step */}
+        <StepArc
+          currentStep={step}
+          labels={labels.slice().reverse()}
+          diameter={1200}
+          color="#f9c846"
+          onLabelClick={idx => setStep(labels.length - idx)}
+        />
       </div>
     </div>
   );

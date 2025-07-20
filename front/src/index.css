@@ -117,3 +117,19 @@ form>p {
     right: 0;
   }
 }
+
+@keyframes seamless-scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(calc(-100% / 5));
+    /* Move by one segment */
+  }
+}
+
+.animate-seamless-scroll {
+  animation: seamless-scroll 8s linear infinite;
+  width: calc(100% * 5);
+}
