@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { loginRequest } from '../authConfig';
 import SlidingBanner from '../components/imageBanner';
 import FAQ from '../components/faq';
+import ContactSection from '../components/contactSection';
 
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
@@ -100,7 +101,7 @@ export default function SplashScreen() {
           <SlidingBanner/>
         </div>
         <div className = 'pt-10'></div>
-        <div className='text-(--secondary-color) flex flex-col items-center py-20'>
+        <div id="how-it-works" className='text-(--secondary-color) flex flex-col items-center py-20'>
           <h1 className='font-[Manrope] font-extrabold text-7xl'>How it works</h1>
           <div className='text-(--secondary-color) flex gap-15 justify-center pt-30 max-w-8xl mx-auto px-4'>
             <div className='flex flex-col items-center w-[350px]'>
@@ -136,7 +137,7 @@ export default function SplashScreen() {
         <hr className='text-(--primary-color) w-[75%] border-2 rounded-2xl'/>
         
         {/* For students section */}
-        <div className='text-(--secondary-color) flex flex-col items-center py-32'>
+        <div id="for-students" className='text-(--secondary-color) flex flex-col items-center py-32'>
           <h1 className='font-[Manrope] font-extrabold text-7xl pb-32'>For students</h1>
 
           <div className='flex gap-24 justify-center max-w-full mx-auto px-8 pb-24'>
@@ -170,7 +171,7 @@ export default function SplashScreen() {
         <hr className='text-(--primary-color) w-[75%] border-2 rounded-2xl'/>
         
         {/* For teachers section */}
-        <div className='text-(--secondary-color) flex flex-col items-center py-32'>
+        <div id="for-teachers" className='text-(--secondary-color) flex flex-col items-center py-32'>
           <h1 className='font-[Manrope] font-extrabold text-7xl pb-32'>For teachers</h1>
 
           <div className='flex gap-24 justify-center max-w-full mx-auto px-8 pb-24'>
@@ -203,12 +204,15 @@ export default function SplashScreen() {
         </div>
         <hr className='text-(--primary-color) w-[75%] border-2 rounded-2xl'/>
         
-        <FAQ />
+        <div id="faq">
+          <FAQ />
+        </div>
         
-        <div className = 'pt-20'></div>
         <hr className='text-(--primary-color) w-[75%] border-2 rounded-2xl'/>
+        
+        <ContactSection />
+        
       </div>
-      <div className = 'pt-160'></div>
       <Footer />
     </div>
   );
