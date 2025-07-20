@@ -11,7 +11,8 @@ public record JwtProperties(
         String base64Key,
         Long expirationTimeMs,
         String issuer,
-        String userIdClaim
+        String userIdClaim,
+        String profileIdClaim
 ) {
 
     public Key getSecurityKey() {

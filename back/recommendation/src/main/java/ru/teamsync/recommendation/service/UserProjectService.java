@@ -15,8 +15,8 @@ public class UserProjectService {
 
     private final ListOperations<String, ProjectScore> listOps;
 
-    public List<ProjectScore> getProjectScores(long userId, long start, long end) {
-        String key = String.valueOf(userId);
+    public List<ProjectScore> getProjectScores(long studentId, long start, long end) {
+        String key = String.valueOf(studentId);
         return listOps.range(key, start, end-1);
     }
 

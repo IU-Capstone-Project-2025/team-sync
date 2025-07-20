@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.teamsync.auth.config.properties.InternalJwtFilterProperties;
-import ru.teamsync.auth.services.JwtService;
+import ru.teamsync.auth.services.jwt.JwtService;
 
 import java.io.IOException;
 

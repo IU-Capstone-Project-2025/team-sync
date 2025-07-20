@@ -20,6 +20,9 @@ public class SecurityUser {
     @Column(name = "internal_user_id", unique = true)
     Integer internalUserId;
 
+    @Column(name = "profile_id", unique = true)
+    Integer profileId;
+
     @Column(name = "external_user_id", unique = true)
     String externalUserId;
 
