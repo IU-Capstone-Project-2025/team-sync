@@ -80,7 +80,7 @@ public class ProjectController {
     }
 
     @PostMapping("/{projectId}/member/{personId}")
-    public ResponseEntity<BaseResponse<Void>> addUserToProject(
+    public ResponseEntity<BaseResponse<Void>> removeMemberFromProject(
             @PathVariable Long projectId,
             @PathVariable Long personId) {
 
