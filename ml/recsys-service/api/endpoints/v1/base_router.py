@@ -1,5 +1,4 @@
 from fastapi import APIRouter, FastAPI, Request, HTTPException, Header
-from typing import Optional
 
 router = APIRouter(prefix="", tags=["base"])
 
