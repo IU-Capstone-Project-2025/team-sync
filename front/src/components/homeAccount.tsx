@@ -59,13 +59,15 @@ export default function Account({name}){
             <button 
               className="w-full text-left px-4 py-2 text-(--secondary-color) hover:bg-(--accent-color-2)/20 font-[Inter]"
               onClick={() => {
-                console.log('Logout clicked');
-                setIsMenuOpen(false);
-                instance.logoutPopup().then(()=>{
-                  localStorage.removeItem("backendToken");
-                  console.log('cleared token');
-                  navigate('/')
-                });
+                    localStorage.removeItem("backendToken");
+                    localStorage.removeItem("entraToken");
+                    localStorage.removeItem("userProfile");
+
+                    sessionStorage.clear();
+
+                    instance.logoutRedirect({
+                      postLogoutRedirectUri: window.location.origin
+                    }).then(() => navigate('/'));
               }}
             >
               Logout
