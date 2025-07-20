@@ -6,8 +6,10 @@ router = APIRouter(prefix="", tags=["base"])
 async def health_check():
     return {"status": "Base service is running"}
 
-@router.post("/recommendations")
-async def trigger_recommendation(request: Request):
+@router.post("/recommendations/{secret_key}")
+async def trigger_recommendation(request: Request, secret_key: str):
+    if secret_key != request.app.config.SECRET_KEY:
+        return {"error": "Invalid secret key"}
     result = await trigger_recommendation_job(request.app)
     return result
 

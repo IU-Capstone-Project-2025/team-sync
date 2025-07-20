@@ -89,6 +89,13 @@ class Config:
             raise RuntimeError("QDRANT_URL environment variable is not set!")
         return qdrant_url
 
+    @property
+    def SECRET_KEY(self):
+        secret_key = os.getenv("RECSYS_SECRET_KEY")
+        if not secret_key:
+            raise RuntimeError("RECSYS_SECRET_KEY environment variable is not set!")
+        return secret_key
+
     RECOMMENDATION_JOB_INTERVAL = 5
 
     BASE_COEFFICIENT = 0.5
