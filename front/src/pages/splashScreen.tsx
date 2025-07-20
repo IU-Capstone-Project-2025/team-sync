@@ -137,7 +137,8 @@ export default function SplashScreen() {
         <hr className='text-(--primary-color) w-[75%] border-2 rounded-2xl'/>
         
         {/* For students section */}
-        <div id="for-students" className='text-(--secondary-color) flex flex-col items-center py-32'>
+        <div className='text-(--secondary-color) flex flex-col items-center py-32'>
+          <div id="for-students" className='scroll-mt-10'></div>
           <h1 className='font-[Manrope] font-extrabold text-7xl pb-32'>For students</h1>
 
           <div className='flex gap-24 justify-center max-w-full mx-auto px-8 pb-24'>
@@ -171,7 +172,8 @@ export default function SplashScreen() {
         <hr className='text-(--primary-color) w-[75%] border-2 rounded-2xl'/>
         
         {/* For teachers section */}
-        <div id="for-teachers" className='text-(--secondary-color) flex flex-col items-center py-32'>
+        <div className='text-(--secondary-color) flex flex-col items-center py-32'>
+          <div id="for-teachers" className='scroll-mt-10'></div>
           <h1 className='font-[Manrope] font-extrabold text-7xl pb-32'>For teachers</h1>
 
           <div className='flex gap-24 justify-center max-w-full mx-auto px-8 pb-24'>
@@ -204,9 +206,7 @@ export default function SplashScreen() {
         </div>
         <hr className='text-(--primary-color) w-[75%] border-2 rounded-2xl'/>
         
-        <div id="faq">
-          <FAQ />
-        </div>
+        <FAQ />
         
         <hr className='text-(--primary-color) w-[75%] border-2 rounded-2xl'/>
         

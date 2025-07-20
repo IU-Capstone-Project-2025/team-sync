@@ -82,6 +82,7 @@ export default function FAQ() {
 
   return (
     <div className="text-(--secondary-color) flex flex-col items-center py-32">
+      <div id="faq" className='scroll-mt-10'></div>
       <h1 className="font-[Manrope] font-extrabold text-7xl pb-16">FAQ</h1>
       <div className="w-full max-w-6xl mx-auto px-8">
         {faqData.map((item, index) => (
