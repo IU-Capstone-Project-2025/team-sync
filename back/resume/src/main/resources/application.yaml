@@ -11,7 +11,7 @@ spring:
   data:
     web:
       pageable:
-        default-page-size: 100
+        default-page-size: 200
 
 server:
   address: 0.0.0.0
