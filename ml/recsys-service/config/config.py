@@ -65,7 +65,7 @@ class Config:
     EMBEDDER_URL = "http://ml-embedder:8000"
 
     TAG_L2_COEFFICIENT = 0.2
-    TAG_IP_COEFFICIENT = 0.1
+    TAG_OL_COEFFICIENT = 0.1
     TAG_IOU_COEFFICIENT = 0.7
     
     ROLE_L2_COEFFICIENT = 0.2

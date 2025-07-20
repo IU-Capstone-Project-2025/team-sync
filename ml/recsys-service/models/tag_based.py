@@ -34,6 +34,13 @@ def get_IoU_recomendations(user_skills, projects_with_skills):
     return recommendations
 
 
+def get_OL_recomendations(user_skills, projects_with_skills):
+    recommendations = []
+    for project_skills in projects_with_skills:
+        recommendations.append(len(np.intersect1d(user_skills, project_skills)) / min(len(user_skills), len(project_skills)))
+    return recommendations
+
+
 class TagBasedRecommender(Recommender):
     def __init__(self, DBModel, logger, model_name):
         super().__init__(DBModel, logger, model_name)
@@ -57,13 +64,13 @@ class TagBasedRecommender(Recommender):
             user_skills_v[0][self.all_skills[skill]] = 1
 
         recommendations_L2 = get_faiss_recommendations("euclidean distance", num_skills, project_ids, self.projects_with_skills_v, user_skills_v)
-        recommendations_IP = get_faiss_recommendations("inner product", num_skills, project_ids, self.projects_with_skills_v, user_skills_v)
+        recommendations_OL = get_OL_recomendations(self.db.get_user_skills(user_id), self.projects_with_skills)
         recommendations_IoU = get_IoU_recomendations(self.db.get_user_skills(user_id), self.projects_with_skills)
-
+        
         recommendations = []
         for score_id in range(num_projects):
             recommendations.append(recommendations_L2[score_id] * self.config.TAG_L2_COEFFICIENT +
-                                   recommendations_IP[score_id] * self.config.TAG_IP_COEFFICIENT +
+                                   recommendations_OL[score_id] * self.config.TAG_OL_COEFFICIENT +
                                    recommendations_IoU[score_id] * self.config.TAG_IOU_COEFFICIENT)
         
         return recommendations  # [0.14, 0.1, 0.2, 0.15]
