@@ -7,7 +7,12 @@ spring:
     username: ${DB_MAIN_USER}
     password: ${DB_MAIN_PASSWORD}
     driver-class-name: org.postgresql.Driver
-  
+
+  data:
+    web:
+      pageable:
+        default-page-size: 100
+
 server:
   address: 0.0.0.0
   port: 8080
