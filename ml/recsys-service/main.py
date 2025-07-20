@@ -16,7 +16,7 @@ from database.qdrant_model import QdrantModel
 
 async def lifespan(app: FastAPI):    
     app.state.logger = setup_logging()
-    app.config = Config()
+    app.state.config = Config()
     logger = app.state.logger
     logger.info("Application startup")
     app.state.db = DBModel(logger=logger)

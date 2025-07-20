@@ -9,7 +9,7 @@ async def health_check():
 
 @router.post("/recommendations/{secret_key}")
 async def trigger_recommendation(request: Request, secret_key: str):
-    if secret_key != request.app.config.SECRET_KEY:
+    if secret_key != request.app.state.config.SECRET_KEY:
         raise HTTPException(
             status_code=401,
             detail="Invalid secret key"
