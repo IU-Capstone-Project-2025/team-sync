@@ -22,6 +22,9 @@ class RoleBasedRecommender(Recommender):
         num_projects = len(project_ids)
 
         user_roles = self.db.get_user_roles(user_id)
+        if not user_roles:
+            self.logger.info(f"User {user_id} has no roles.")
+            return [0] * num_projects
         user_roles_v = np.zeros(shape=(1, num_roles), dtype=np.float32)
         for role in user_roles:
             user_roles_v[0][self.all_roles[role]] = 1

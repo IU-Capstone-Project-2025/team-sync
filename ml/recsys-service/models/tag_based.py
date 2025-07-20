@@ -24,6 +24,9 @@ class TagBasedRecommender(Recommender):
         num_projects = len(project_ids)
         
         user_skills = self.db.get_user_skills(user_id)
+        if not user_skills:
+            self.logger.info(f"User {user_id} has no skills.")
+            return [0] * num_projects
         user_skills_v = np.zeros(shape=(1, num_skills), dtype=np.float32)
         for skill in user_skills:
             user_skills_v[0][self.all_skills[skill]] = 1
