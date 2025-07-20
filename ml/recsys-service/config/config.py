@@ -103,8 +103,6 @@ class Config:
 
     DESCRIPTION_MODEL_NAME = "all-MiniLM-L6-v2"
 
-    EMBEDDER_URL = "http://ml-embedder:8000"
-
     TAG_L2_COEFFICIENT = 0.2
     TAG_OL_COEFFICIENT = 0.1
     TAG_IOU_COEFFICIENT = 0.7

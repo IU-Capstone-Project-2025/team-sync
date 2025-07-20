@@ -1,42 +1,8 @@
-import faiss
 import numpy as np
 from models.base_recommender import Recommender
-
-def get_faiss_recommendations(index_type, num_skills, project_ids, projects_with_skills_v, user_skills_v):
-    if index_type == "euclidean distance":
-        index = faiss.IndexFlatL2(num_skills)
-    else:
-        index = faiss.IndexFlatIP(num_skills)
-    index.add(projects_with_skills_v)
-    distances, indices = index.search(user_skills_v, len(project_ids))
-    distances, indices = distances[0], indices[0]
-    
-    if index_type == "euclidean distance":
-        min_dist, max_dist = np.min(distances), np.max(distances)
-        normalized_scores = 1 - (distances - min_dist) / (max_dist - min_dist)
-    else:
-        min_dist, max_dist = np.min(distances), np.max(distances)
-        normalized_scores = (distances - min_dist) / (max_dist - min_dist)
-
-    recommendations = []
-    for i, score in zip(indices, normalized_scores):
-        recommendations.append((project_ids[i], score))
-    recommendations = [i[1] for i in sorted(recommendations, key=lambda x: x[0])]
-    return recommendations
-
-
-def get_IoU_recommendations(user_skills, projects_with_skills):
-    recommendations = []
-    for project_skills in projects_with_skills:
-        recommendations.append(len(np.intersect1d(user_skills, project_skills)) / len(np.union1d(user_skills, project_skills)))
-    return recommendations
-
-
-def get_OL_recommendations(user_skills, projects_with_skills):
-    recommendations = []
-    for project_skills in projects_with_skills:
-        recommendations.append(len(np.intersect1d(user_skills, project_skills)) / min(len(user_skills), len(project_skills)))
-    return recommendations
+from models.tools.faiss_tools import get_faiss_recommendations
+from models.tools.IOU_tools import get_IOU_recommendations
+from models.tools.OL_tools import get_OL_recommendations
 
 
 class TagBasedRecommender(Recommender):
@@ -64,14 +30,13 @@ class TagBasedRecommender(Recommender):
 
         recommendations_L2 = get_faiss_recommendations("euclidean distance", num_skills, project_ids, self.projects_with_skills_v, user_skills_v)
         recommendations_OL = get_OL_recommendations(user_skills, self.projects_with_skills)
-        recommendations_IoU = get_IoU_recommendations(user_skills, self.projects_with_skills)
+        recommendations_IOU = get_IOU_recommendations(user_skills, self.projects_with_skills)
         
         recommendations = []
         for score_id in range(num_projects):
             recommendations.append(recommendations_L2[score_id] * self.config.TAG_L2_COEFFICIENT +
                                    recommendations_OL[score_id] * self.config.TAG_OL_COEFFICIENT +
                                    recommendations_IoU[score_id] * self.config.TAG_IOU_COEFFICIENT)
-        
         return recommendations  # [0.14, 0.1, 0.2, 0.15]
     
     def save_data_for_calculation(self, project_ids=None, user_ids=None):
