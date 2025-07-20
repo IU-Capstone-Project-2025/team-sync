@@ -13,6 +13,7 @@ from metrics.metrics_model import Metrics
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from models.als_based import ALSRecommender
 from database.qdrant_model import QdrantModel
+from models.cold_start import ColdStartModel
 
 async def lifespan(app: FastAPI):    
     app.state.logger = setup_logging()
@@ -29,7 +30,16 @@ async def lifespan(app: FastAPI):
     # recommendation models initialization
 
     logger.info("Initializing recommendation models...")
-    app.state.merger = ModelsMerger(logger, app.state.db, app.state.redis)
+    als_recommender = ALSRecommender(
+        DBModel=app.state.db,
+        logger=logger,
+        model_name="als_based"
+    )
+    cold_start_model = ColdStartModel(
+        ALSRecommender=als_recommender,
+        logger=logger
+    )
+    app.state.merger = ModelsMerger(logger, app.state.db, app.state.redis, cold_start_model=cold_start_model)
     app.state.merger.add_model(
         TagBasedRecommender(
             DBModel=app.state.db,
@@ -53,15 +63,9 @@ async def lifespan(app: FastAPI):
         )
     )
     app.state.merger.add_model(
-        ALSRecommender(
-            DBModel=app.state.db,
-            logger=logger,
-            model_name="als_based"
+        als_recommender
         )
-    )
     logger.info("Recommendation models initialized successfully.")
-
-    # scheduler initialization
 
     # init calculations
     await trigger_recommendation_job(app)
