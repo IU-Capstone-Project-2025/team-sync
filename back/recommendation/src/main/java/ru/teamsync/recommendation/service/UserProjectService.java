@@ -23,7 +23,7 @@ public class UserProjectService {
         if (recommendations != null  && !recommendations.isEmpty()){
             return recommendations;
         }
-        return listOps.range(COLD_START_USER_ID, start, end - 1);
+        return listOps.range(String.valueOf(COLD_START_USER_ID), start, end - 1);
     }
 
 }
