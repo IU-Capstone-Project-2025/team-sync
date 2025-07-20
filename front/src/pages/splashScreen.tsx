@@ -7,32 +7,6 @@ import { loginRequest } from '../authConfig';
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
 
-async function logout(msalInstance, navigate) {
-  try {
-    // Clear local storage tokens
-    localStorage.removeItem("backendToken");
-    localStorage.removeItem("entraToken");
-    
-    // Clear any other stored data
-    localStorage.removeItem("userProfile");
-    
-    // Clear session storage as well
-    sessionStorage.clear();
-    
-    // Clear MSAL cache and logout from Microsoft
-    await msalInstance.logoutRedirect({
-      postLogoutRedirectUri: window.location.origin
-    });
-    
-    console.info("Logout successful");
-  } catch (error) {
-    console.error("Logout failed:", error);
-    // Fallback: at least clear local data and redirect
-    localStorage.clear();
-    navigate('/');
-  }
-}
-
 async function handleTokenExchange(entraToken) {
   try {
 
