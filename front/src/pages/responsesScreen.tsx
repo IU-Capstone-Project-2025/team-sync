@@ -19,6 +19,7 @@ interface Project {
 }
 interface Application {
   application_id: number;
+  person_id: number;
   project: Project;
   status: "PENDING" | "APPROVED" | "REJECTED";
   created_at: string;

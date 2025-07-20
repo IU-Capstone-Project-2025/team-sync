@@ -21,6 +21,7 @@ interface Project {
 
 interface Application {
   application_id: number;
+  person_id: number;
   project: Project;
   status: string;
   created_at: number[];

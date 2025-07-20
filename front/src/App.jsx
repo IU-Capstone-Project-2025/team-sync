@@ -9,6 +9,7 @@ import LikesScreen from './pages/likesScreen';
 import ProfileScreen from './pages/profileScreen';
 import RegistrationScreen from './pages/registrationScreen';
 import RecommendationsScreen from './pages/recommendationsScreen'
+import UserProfileScreen from './pages/userProfileScreen';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
       <Route path = "/profile" element = {<ProfileScreen/>} />
       <Route path = "/register" element = {<RegistrationScreen/>} />
       <Route path = "/recommendations" element = {<RecommendationsScreen/>} />
+      <Route path = "/users/:userID" element = {<UserProfileScreen/>} />
     </Routes>
   )
 }

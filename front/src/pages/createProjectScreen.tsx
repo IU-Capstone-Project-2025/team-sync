@@ -16,8 +16,8 @@ export default function CreateProjectScreen() {
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
-      getSkills(token).then(setSkills);
-      getRoles(token).then(setRoles);
+      getSkills().then(setSkills);
+      getRoles().then(setRoles);
     }
    }, []);
 
