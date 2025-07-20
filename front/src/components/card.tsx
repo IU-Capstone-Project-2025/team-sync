@@ -56,11 +56,8 @@ async function sendApplication(projId: number, token: string){
   }
 }
 
-async function deleteApplication(projId: number, token: string){
-  const applicationJson = {
-    project_id: projId
-  };
-  const applicationUrl = `${backendHost}/projects/api/v1/applications/${projId}`;
+async function deleteApplicationByProjectId(projId: number, token: string){
+  const applicationUrl = `${backendHost}/projects/api/v1/applications/project/${projId}`;
   const response = await fetch(applicationUrl, {  
     method: 'DELETE', 
     mode: 'cors', 
@@ -68,7 +65,6 @@ async function deleteApplication(projId: number, token: string){
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`
     },
-    body: JSON.stringify(applicationJson) 
   });
   if (!response.ok){
     const json = await response.json();
@@ -130,7 +126,7 @@ export default function Card({props, onLikeChange}: CardProps) {
     const token = localStorage.getItem("backendToken");
     if (token) {
       if (applied){
-        const success = await deleteApplication(props.id, token);
+        const success = await deleteApplicationByProjectId(props.id, token);
         setApplied(success);
       }
       else{

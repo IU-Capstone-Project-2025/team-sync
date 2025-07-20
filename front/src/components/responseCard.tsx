@@ -14,11 +14,8 @@ function truncateString({string, maxLength} : {string: string, maxLength: number
   }
 }
 
-async function deleteApplication(token: string, applicationId: number) : Promise<boolean>{
-  const applicationUrl = `${backendHost}/projects/api/v1/applications/` + applicationId.toString();
-    const appJson = {
-      applicationId: applicationId
-    };
+async function deleteApplicationByProjectId(token: string, projectId: number) : Promise<boolean>{
+  const applicationUrl = `${backendHost}/projects/api/v1/applications/project/${projectId}`;
     try {
       const response = await fetch(applicationUrl, {  
         method: 'DELETE', 
@@ -26,8 +23,7 @@ async function deleteApplication(token: string, applicationId: number) : Promise
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(appJson) 
+        }
       });
       return response.ok;
     }
@@ -133,7 +129,7 @@ export default function responseCard({props, onDelete}) {
                       onClick={() => {
                         const token = localStorage.getItem("backendToken");
                         if (token){
-                          deleteApplication(token, props.applicationId).then(success => {
+                          deleteApplicationByProjectId(token, props.projectId).then(success => {
                             if (success) {
                               close();
                               onDelete();

@@ -8,6 +8,7 @@ import CustomizedHook from "./autocompleteInput";
 import { useNavigate } from "react-router-dom";
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
+
 interface Project {
   course_id: number;
   description: string;
@@ -102,7 +103,6 @@ export default function responseCard({props, onDelete}) {
       "status": "OPEN",
       "required_members_count": formData.get('numPeople')
     };
-
     const token = localStorage.getItem("backendToken");
 
     const response = await fetch(projectUrl, {  
@@ -198,7 +198,7 @@ export default function responseCard({props, onDelete}) {
                       onClick={() => {
                         const token = localStorage.getItem("backendToken");
                         if (token){
-                          deleteApplication(token, props.applicationId).then(success => {
+                          deleteApplicationByProjectId(token, props.id).then(success => {
                             if (success) {
                               close();
                               onDelete();
