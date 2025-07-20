@@ -25,14 +25,14 @@ def get_faiss_recommendations(index_type, num_skills, project_ids, projects_with
     return recommendations
 
 
-def get_IoU_recomendations(user_skills, projects_with_skills):
+def get_IoU_recommendations(user_skills, projects_with_skills):
     recommendations = []
     for project_skills in projects_with_skills:
         recommendations.append(len(np.intersect1d(user_skills, project_skills)) / len(np.union1d(user_skills, project_skills)))
     return recommendations
 
 
-def get_OL_recomendations(user_skills, projects_with_skills):
+def get_OL_recommendations(user_skills, projects_with_skills):
     recommendations = []
     for project_skills in projects_with_skills:
         recommendations.append(len(np.intersect1d(user_skills, project_skills)) / min(len(user_skills), len(project_skills)))
@@ -57,13 +57,14 @@ class TagBasedRecommender(Recommender):
         num_skills = len(self.all_skills)
         num_projects = len(project_ids)
         
+        user_skills = self.db.get_user_skills(user_id)
         user_skills_v = np.zeros(shape=(1, num_skills), dtype=np.float32)
-        for skill in self.db.get_user_skills(user_id):
+        for skill in user_skills:
             user_skills_v[0][self.all_skills[skill]] = 1
 
         recommendations_L2 = get_faiss_recommendations("euclidean distance", num_skills, project_ids, self.projects_with_skills_v, user_skills_v)
-        recommendations_OL = get_OL_recomendations(self.db.get_user_skills(user_id), self.projects_with_skills)
-        recommendations_IoU = get_IoU_recomendations(self.db.get_user_skills(user_id), self.projects_with_skills)
+        recommendations_OL = get_OL_recommendations(user_skills, self.projects_with_skills)
+        recommendations_IoU = get_IoU_recommendations(user_skills, self.projects_with_skills)
         
         recommendations = []
         for score_id in range(num_projects):

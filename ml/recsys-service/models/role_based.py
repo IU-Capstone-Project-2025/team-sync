@@ -19,14 +19,14 @@ def get_faiss_recommendations(num_roles, project_ids, projects_with_roles_v, use
     return recommendations
 
 
-def get_IoU_recomendations(user_roles, projects_with_roles):
+def get_IoU_recommendations(user_roles, projects_with_roles):
     recommendations = []
     for project_roles in projects_with_roles:
         recommendations.append(len(np.intersect1d(user_roles, project_roles)) / len(np.union1d(user_roles, project_roles)))
     return recommendations
 
 
-def get_OL_recomendations(user_roles, projects_with_roles):
+def get_OL_recommendations(user_roles, projects_with_roles):
     recommendations = []
     for project_roles in projects_with_roles:
         recommendations.append(len(np.intersect1d(user_roles, project_roles)) / min(len(user_roles), len(project_roles)))
@@ -50,14 +50,15 @@ class RoleBasedRecommender(Recommender):
 
         num_roles = len(self.all_roles)
         num_projects = len(project_ids)
-        
+
+        user_roles = self.db.get_user_roles(user_id)
         user_roles_v = np.zeros(shape=(1, num_roles), dtype=np.float32)
-        for role in self.db.get_user_roles(user_id):
+        for role in user_roles:
             user_roles_v[0][self.all_roles[role]] = 1
 
         recommendations_L2 = get_faiss_recommendations(num_roles, project_ids, self.projects_with_roles_v, user_roles_v)
-        recommendations_IoU = get_IoU_recomendations(self.db.get_user_roles(user_id), self.projects_with_roles)
-        recommendations_OL = get_OL_recomendations(self.db.get_user_roles(user_id), self.projects_with_roles)
+        recommendations_IoU = get_IoU_recommendations(, self.projects_with_roles)
+        recommendations_OL = get_OL_recommendations(user_roles, self.projects_with_roles)
 
         recommendations = []
         for score_id in range(num_projects):
