@@ -13,7 +13,7 @@ def get_faiss_recommendations(index_type, num_data, project_ids, projects_with_d
     
     min_dist, max_dist = np.min(distances), np.max(distances)
     if max_dist - min_dist == 0:
-        normalized_scores = 1 - (max_dist - min_dist)
+        normalized_scores = np.ones_like(distances)
     elif index_type == "euclidean distance":
         normalized_scores = 1 - (distances - min_dist) / (max_dist - min_dist)
     else:
