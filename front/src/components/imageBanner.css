@@ -1,7 +1,7 @@
 .banner-outer {
   position: relative;
   width: 100%;
-  height: 5rem;
+  height: 7.5rem;
   overflow: hidden;
 }
 
@@ -10,14 +10,15 @@
   align-items: center;
   height: 100%;
   width: max-content;
-  animation: seamless-scroll 20s linear infinite;
+  animation: seamless-scroll 25s linear infinite;
 }
 
 .banner-img {
-  height: 4rem;
+  height: 6rem;
   width: auto;
   object-fit: contain;
-  padding-right: 1.25rem;
+  padding-right: 4.5rem;
+  opacity: 1;
 }
 
 @keyframes seamless-scroll {
@@ -25,6 +26,6 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(-33.333%);
   }
 } 

@@ -1,14 +1,14 @@
 import React from 'react';
 import './imageBanner.css';
 
-const duplicates = 5;
+const duplicates = 8;
 const images = Array.from({ length: duplicates });
 
 const SlidingBanner = () => (
   <div className="banner-outer">
     <div className="banner-inner">
-      {/* Render two sets for seamless looping */}
-      {[...images, ...images].map((_, i) => (
+      {/* Render multiple sets for seamless looping */}
+      {[...images, ...images, ...images].map((_, i) => (
         <img
           key={i}
           src="../innopolis.png"
