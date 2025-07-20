@@ -7,43 +7,39 @@ import { loginRequest } from '../authConfig';
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
 
-async function login(msalInstance) {
+async function logout(msalInstance, navigate) {
   try {
-    const accounts = msalInstance.getAllAccounts();
+    // Clear local storage tokens
+    localStorage.removeItem("backendToken");
+    localStorage.removeItem("entraToken");
     
-    if (accounts.length === 0) {
-      const loginResponse = await msalInstance.loginPopup(loginRequest);
-      if (!loginResponse.account) throw new Error("Login failed");
-      return await handleTokenExchange(msalInstance, loginResponse.account);
-    }
-
-    const tokenResponse = await msalInstance.acquireTokenSilent({
-      ...loginRequest,
-      account: accounts[0]
-    }).catch(async (error) => {
-      console.log("Silent token acquisition failed, trying popup", error);
-      return msalInstance.loginPopup(loginRequest);
+    // Clear any other stored data
+    localStorage.removeItem("userProfile");
+    
+    // Clear session storage as well
+    sessionStorage.clear();
+    
+    // Clear MSAL cache and logout from Microsoft
+    await msalInstance.logoutRedirect({
+      postLogoutRedirectUri: window.location.origin
     });
-
-    return await handleTokenExchange(msalInstance, tokenResponse.account);
-
+    
+    console.info("Logout successful");
   } catch (error) {
-    console.error("Login failed:", error);
-    throw error;
+    console.error("Logout failed:", error);
+    // Fallback: at least clear local data and redirect
+    localStorage.clear();
+    navigate('/');
   }
 }
 
-async function handleTokenExchange(msalInstance, account) {
+async function handleTokenExchange(entraToken) {
   try {
-    const tokenResponse = await msalInstance.acquireTokenSilent({
-      ...loginRequest,
-      account
-    });
 
     const backendResponse = await fetch(`${backendHost}/auth/api/v1/entra/login`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${tokenResponse.accessToken}`,
+        "Authorization": `Bearer ${entraToken}`,
         "Content-Type": "application/json"
       }
     });
@@ -57,9 +53,8 @@ async function handleTokenExchange(msalInstance, account) {
       throw new Error("Backend login failed");
     }
 
-    localStorage.setItem("entraToken", tokenResponse.accessToken);
     localStorage.setItem("backendToken", loginResult.data.access_token);
-    
+
     return { registered: true };
 
   } catch (error) {
@@ -75,18 +70,37 @@ export default function SplashScreen() {
   const [needsRegistration, setNeedsRegistration] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      (async () => {
-        const result = await login(msalInstance);
-        if (result && result.registered) {
-          navigate('/home');
-        } else if (result && !result.registered) {
-          setNeedsRegistration(true);
-        }
-      })();
-    }
-  }, [isAuthenticated, navigate, msalInstance]);
-  
+    const initializeAndHandleRedirect = async () => {
+      try {
+        console.info("Initializing MSAL and handling redirect promise");
+        await msalInstance.initialize();
+        
+        msalInstance.handleRedirectPromise().then(res => {
+          console.info("Handled");
+
+          if (res) {
+            msalInstance.setActiveAccount(res.account);
+            console.info("Redirect login successful", res.accessToken);
+            handleTokenExchange(res.accessToken).then(result => {
+              if (result && result.registered) {
+                navigate('/home');
+              } else if (result && !result.registered) {
+                console.info("User needs to register");
+                localStorage.setItem("entraToken", res.accessToken);
+                setNeedsRegistration(true);
+              }
+            });
+          }
+        });
+
+      } catch (err) {
+        console.error("MSAL initialization or redirect handling failed:", err);
+      }
+    };
+
+    initializeAndHandleRedirect();
+  }, [navigate, msalInstance])
+
   // Handler for SSO button
   const handleSSOClick = () => {
     if (needsRegistration) {
@@ -97,7 +111,7 @@ export default function SplashScreen() {
     }
   };
 
-  return(
+  return (
     <div className='flex flex-col justify-between h-screen'>
       <SplashHeader onSSOClick={handleSSOClick} />
       <div className='lg:flex lg:flex-row lg:justify-between lg:items-center mr-5 ml-5 lg:mr-18 lg:ml-18'>
@@ -106,12 +120,12 @@ export default function SplashScreen() {
             Build your dream team for every project.
           </h1>
           <h2 className='text-(--accent-color-1) font-[Manrope] text-md lg:text-2xl'>
-            TeamSync uses structured data and AI recommendations to help students form balanced, 
+            TeamSync uses structured data and AI recommendations to help students form balanced,
             high-performing teams — reducing overhead for faculty and improving outcomes.
           </h2>
         </div>
-        <img className = 'hidden lg:block pr-10 w-[30%] h-auto' src='./splashGraphic.jpg' 
-        alt="Two people looking at each other from open windows drawn in a minimalist style" />
+        <img className='hidden lg:block pr-10 w-[30%] h-auto' src='./splashGraphic.jpg'
+          alt="Two people looking at each other from open windows drawn in a minimalist style" />
       </div>
       <Footer />
     </div>

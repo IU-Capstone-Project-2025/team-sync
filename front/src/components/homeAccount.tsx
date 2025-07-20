@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useNavigate } from "react-router-dom";
-import { useMsal } from '@azure/msal-react';
+import { useMsal } from "@azure/msal-react";
 
 export default function Account({name}){
   const navigate = useNavigate();
