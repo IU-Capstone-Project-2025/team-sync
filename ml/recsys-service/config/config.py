@@ -3,23 +3,38 @@ import os
 class Config:
     @property
     def POSTGRES_HOST(self):
-        return os.getenv("POSTGRES_HOST", "postgres")
+        host = os.getenv("POSTGRES_HOST")
+        if not host:
+            raise RuntimeError("POSTGRES_HOST environment variable is not set!")
+        return host
 
     @property
     def POSTGRES_USER(self):
-        return os.getenv("DB_USER", "dev-user")
+        user = os.getenv("DB_USER")
+        if not user:
+            raise RuntimeError("DB_USER environment variable is not set!")
+        return user
 
     @property
     def POSTGRES_PASSWORD(self):
-        return os.getenv("DB_PASSWORD", "dev-psw")
+        password = os.getenv("DB_PASSWORD")
+        if not password:
+            raise RuntimeError("DB_PASSWORD environment variable is not set!")
+        return password
 
     @property
     def POSTGRES_DB(self):
-        return os.getenv("DB_NAME", "dev-db")
+        db = os.getenv("DB_NAME")
+        if not db:
+            raise RuntimeError("DB_NAME environment variable is not set!")
+        return db
 
     @property
     def POSTGRES_PORT(self):
-        return int(os.getenv("POSTGRES_PORT", 5432))
+        port = os.getenv("POSTGRES_PORT")
+        if not port:
+            raise RuntimeError("POSTGRES_PORT environment variable is not set!")
+        return int(port)
 
     @property
     def DB_URL(self):
@@ -27,26 +42,52 @@ class Config:
 
     @property
     def REDIS_HOST(self):
-        return os.getenv("REDIS_HOST", "keydb")
+        host = os.getenv("KEY_DB_HOST")
+        if not host:
+            raise RuntimeError("KEY_DB_HOST environment variable is not set!")
+        return host
 
     @property
     def REDIS_PORT(self):
-        return int(os.getenv("REDIS_PORT", 6379))
+        port = os.getenv("KEY_DB_PORT")
+        if not port:
+            raise RuntimeError("KEY_DB_PORT environment variable is not set!")
+        return int(port)
 
     @property
     def REDIS_DB(self):
-        return int(os.getenv("REDIS_DB", 0))
+        db = os.getenv("KEY_DB_DB")
+        if not db:
+            raise RuntimeError("KEY_DB_DB environment variable is not set!")
+        return int(db)
 
     @property
     def REDIS_PASSWORD(self):
-        return os.getenv("KEY_DB_PASSWORD", "dev-keydb-psw")
+        password = os.getenv("KEY_DB_PASSWORD")
+        if not password:
+            raise RuntimeError("KEY_DB_PASSWORD environment variable is not set!")
+        return password
 
     @property
     def QDRANT_API_KEY(self):
-        return os.getenv("QDRANT_API_KEY", "dev-qdrant-api-key")
+        api_key = os.getenv("QDRANT_API_KEY")
+        if not api_key:
+            raise RuntimeError("QDRANT_API_KEY environment variable is not set!")
+        return api_key
 
-    QDRANT_HOST = "qdrant"
-    QDRANT_PORT = 6333
+    @property
+    def EMBEDDER_URL(self):
+        embedder_url = os.getenv("EMBEDDER_URL")
+        if not embedder_url:
+            raise RuntimeError("EMBEDDER_URL environment variable is not set!")
+        return embedder_url
+
+    @property
+    def QDRANT_URL(self):
+        qdrant_url = os.getenv("QDRANT_URL")
+        if not qdrant_url:
+            raise RuntimeError("QDRANT_URL environment variable is not set!")
+        return qdrant_url
 
     RECOMMENDATION_JOB_INTERVAL = 5
 
@@ -71,7 +112,7 @@ class Config:
     ROLE_L2_COEFFICIENT = 0.2
     ROLE_IOU_COEFFICIENT = 0.4
     ROLE_OL_COEFFICIENT = 0.4
-
+    
     ALS_FACTORS = 64
     ALS_REGULARIZATION = 0.01
     ALS_ITERATIONS = 20

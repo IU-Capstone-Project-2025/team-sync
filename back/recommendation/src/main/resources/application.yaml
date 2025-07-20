@@ -3,7 +3,7 @@ spring:
     name: recommendation
   data:
     redis:
-      host: localhost
-      port: 6379
-      password: dev-keydb-psw
-      username: default
+      host: ${KEY_DB_HOST}
+      port: ${KEY_DB_PORT}
+      password: ${KEY_DB_PASSWORD}
+      username: ${KEY_DB_USER}

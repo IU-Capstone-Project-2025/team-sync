@@ -1,8 +1,6 @@
 import faiss
 import numpy as np
 from models.base_recommender import Recommender
-from config.config import Config
-
 
 def get_faiss_recommendations(index_type, num_skills, project_ids, projects_with_skills_v, user_skills_v):
     if index_type == "euclidean distance":

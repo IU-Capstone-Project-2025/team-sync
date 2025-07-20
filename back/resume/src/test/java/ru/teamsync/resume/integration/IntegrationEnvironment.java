@@ -1,6 +1,8 @@
 package ru.teamsync.resume.integration;
 
 import groovy.util.logging.Log4j2;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import ru.teamsync.resume.client.EmbedderClient;
 import ru.teamsync.resume.integration.utils.JwtUtilityService;
 import ru.teamsync.resume.integration.utils.StudentUtilityService;
 import ru.teamsync.resume.integration.utils.ProfessorUtilityService;
@@ -63,6 +65,9 @@ public abstract class IntegrationEnvironment {
 
     @Autowired
     protected ProfessorUtilityService professorUtilityService;
+
+    @MockitoBean
+    protected EmbedderClient embedderClient;
 
     static {
         try {

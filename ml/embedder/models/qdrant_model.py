@@ -2,9 +2,9 @@ from qdrant_client import QdrantClient
 from config.config import Config
 
 class QdrantModel:
-    def __init__(self, host: str = Config.QDRANT_HOST, port: int = Config.QDRANT_PORT, 
+    def __init__(self, url: str = Config().QDRANT_URL,
                  api_key: str = Config().QDRANT_API_KEY, embedding_shape = 384, logger=None):
-        self.client = QdrantClient(url=f"http://{host}:{port}", api_key=api_key)
+        self.client = QdrantClient(url=url, api_key=api_key)
         self.logger = logger
         self.create_collection("project", embedding_shape=embedding_shape)
         self.create_collection("student", embedding_shape=embedding_shape)

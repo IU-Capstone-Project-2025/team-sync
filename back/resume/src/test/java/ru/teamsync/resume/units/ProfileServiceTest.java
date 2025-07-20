@@ -3,6 +3,7 @@ package ru.teamsync.resume.units;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import ru.teamsync.resume.client.EmbedderClient;
 import ru.teamsync.resume.dto.request.UpdateStudentProfileRequest;
 import ru.teamsync.resume.dto.response.ProfileResponse;
 import ru.teamsync.resume.entity.Person;
@@ -35,6 +36,8 @@ public class ProfileServiceTest {
     private SkillRepository skillRepository;
     private RoleRepository roleRepository;
     private StudyGroupRepository studyGroupRepository;
+    private EmbedderClient embedderClient;
+
     private PersonMapper personMapper;
     private ProfileMapper profileMapper;
 
@@ -46,18 +49,22 @@ public class ProfileServiceTest {
         skillRepository = Mockito.mock(SkillRepository.class);
         roleRepository = Mockito.mock(RoleRepository.class);
         studyGroupRepository = Mockito.mock(StudyGroupRepository.class);
+        embedderClient = Mockito.mock(EmbedderClient.class);
+
         personMapper = Mockito.mock(PersonMapper.class);
         profileMapper = Mockito.mock(ProfileMapper.class);
 
+
         profileService = new ProfileService(
-            personRepository, 
-            professorRepository, 
-            studentRepository, 
-            skillRepository, 
-            roleRepository, 
-            studyGroupRepository,
-            personMapper, 
-            profileMapper
+                personRepository,
+                professorRepository,
+                studentRepository,
+                skillRepository,
+                roleRepository,
+                studyGroupRepository,
+                embedderClient,
+                personMapper,
+                profileMapper
         );
     }
 
@@ -126,7 +133,7 @@ public class ProfileServiceTest {
         when(personRepository.findById(1L)).thenReturn(Optional.empty());
 
         var request = new UpdateStudentProfileRequest(
-        null, null, null, null, List.of(), List.of()
+                null, null, null, null, List.of(), List.of()
         );
 
         assertThatThrownBy(() -> profileService.updateStudentProfile(1L, request, 1L))

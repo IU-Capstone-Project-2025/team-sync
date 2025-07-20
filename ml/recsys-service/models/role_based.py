@@ -1,8 +1,6 @@
 import faiss
 import numpy as np
 from models.base_recommender import Recommender
-from config.config import Config
-
 
 def get_faiss_recommendations(num_roles, project_ids, projects_with_roles_v, user_roles_v):
     index = faiss.IndexFlatL2(num_roles)

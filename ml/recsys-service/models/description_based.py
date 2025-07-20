@@ -1,12 +1,10 @@
 from models.base_recommender import Recommender
-from config.config import Config
 from models.embedder import Embedder
 import numpy as np
 
 class DescriptionBasedRecommender(Recommender):
     def __init__(self, DBModel, qdrant_model, logger, model_name):
         super().__init__(DBModel, logger, model_name)
-        self.config = Config()
         self.coefficient = self.config.DESCRIPTION_COEFFICIENT
         self.sbert = Embedder(url=self.config.EMBEDDER_URL, logger=logger)
         self.qdrant = qdrant_model

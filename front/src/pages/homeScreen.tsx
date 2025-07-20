@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Card from "../components/card";
 import Checkbox from "@mui/material/Checkbox";
 import ClearIcon from '@mui/icons-material/Clear';
+import { getProjects, getRoles, getSkills, getCourses, getLikedProjects, getApplications, getNames } from "../utils/backendFetching";
 interface Project {
   course_id: number;
   description: string;
@@ -27,200 +28,28 @@ interface Application {
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
 
-async function getRoles(token: string) {
-  const rolesUrl = `${backendHost}/projects/api/v1/roles`;
-  try {
-    const response = await fetch(rolesUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content.map((role: { id: number; name: string }) => ({ id: role.id, name: role.name }));
-  }
-  catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    } else {
-      console.error(error);
-    }
-  }
-}
-
-async function getSkills(token: string) {
-  const rolesUrl = `${backendHost}/projects/api/v1/skills`;
-  try {
-    const response = await fetch(rolesUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content.map((skill: { id: number; name: string }) => ({ id: skill.id, name: skill.name }));
-  }
-  catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    } else {
-      console.error(error);
-    }
-  }
-}
-
-async function getCourses(token: string) {
-  const rolesUrl = `${backendHost}/projects/api/v1/courses`;
-  try {
-    const response = await fetch(rolesUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.map((course: { id: number; name: string }) => ({ id: course.id, name: course.name }));
-  }
-  catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    } else {
-      console.error(error);
-    }
-    return [];
-  }
-}
-
-async function getProjects(
-  token: string,
-  filterSkills: {id: number, name: string}[],
-  filterRoles: {id: number, name: string}[],
-  filterCourse: string
-) {
-  let params: string[] = [];
-  if (filterSkills.length > 0) {
-    params.push("skillIds=" + filterSkills.map(skill => skill.id).join(','));
-  }
-  if (filterRoles.length > 0) {
-    params.push("roleIds=" + filterRoles.map(role => role.id).join(','));
-  }
-  if (filterCourse !== "") {
-    params.push("courseId=" + filterCourse);
-  }
-  const queryString = params.length > 0 ? "&" + params.join("&") : "";
-  const projectsUrl = `${backendHost}/projects/api/v1/projects?sort=id,desc&size=50` + queryString;
-  try {
-    const response = await fetch(projectsUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return {
-      projects: json.data.content,
-      total: json.data.number_of_elements
-    }
-  }
-  catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    } else {
-      console.error(error);
-    }
-    return {
-      projects: [],
-      totalProjects: 0
-    };
-  }
-}
-
-async function getLikedProjects(token: string) {
-  const projectsUrl = `${backendHost}/projects/api/v1/favourite/my`;
-  try {
-    const response = await fetch(projectsUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content
-  }
-  catch (error) {
-    if (error instanceof Error) {
-      console.error(error.message);
-    } else {
-      console.error(error);
-    }
-    return [];
-  }
-}
-
-async function getApplications(token: string) {
-  const applicationsUrl = `${backendHost}/projects/api/v1/applications/my`;
-  try {
-    const response = await fetch(applicationsUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content;
-  }
-  catch (error) {
-    console.error(error.message);
-    return [];
-  }
-}
-
-function getNames(ids: number[] = [], all: {id: number, name: string}[] = []) {
-  const names = ids.map(id => all.find(obj => obj.id === id)?.name ?? "Unknown");
-  return names;
-}
-
 export default function HomeScreen(){
   const [roles, setRoles] = useState<{id: number, name: string}[]>([]);
   const [skills, setSkills] = useState<{id: number, name: string}[]>([]);
   const [courses, setCourses] = useState<{id: number, name: string}[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [likedProjects, setLikedProjects] = useState<{id: number, person_id: number, project: Project}[]>([]);
-  const [filterCourse, setFilterCourse] = useState<string>("");
+  const [filterCourse, setfilterCourse] = useState<{id: number, name: string} | null>(null);
   const [filterSkills, setFilterSkills] = useState<{id: number, name: string}[]>([]);
   const [filterRoles, setFilterRoles] = useState<{id: number, name: string}[]>([]);
   const [numProjects, setNumProjects] = useState<number>(0);
   const [applications, setApplications] = useState<Application[]>([]);
-  
 
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
-      getProjects(token, filterSkills, filterRoles, filterCourse).then((result => {
+      getProjects(token, filterSkills, filterRoles, (filterCourse === null) ? '' : filterCourse.id.toString()).then((result => {
         setProjects(result.projects);
         setNumProjects(result.total);
       }));
       getLikedProjects(token).then(setLikedProjects)
-      getRoles(token).then(setRoles);
-      getSkills(token).then(setSkills);
+      getRoles().then(setRoles);
+      getSkills().then(setSkills);
       getCourses(token).then(setCourses);
       getApplications(token).then(setApplications);
     }
@@ -229,7 +58,7 @@ export default function HomeScreen(){
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
-      getProjects(token, filterSkills, filterRoles, filterCourse).then((result => {
+      getProjects(token, filterSkills, filterRoles, (filterCourse === null) ? '' : filterCourse.id.toString()).then((result => {
         setProjects(result.projects);
         setNumProjects(result.total);
       }));
@@ -263,9 +92,30 @@ export default function HomeScreen(){
                 <h3 className="font-[Inter] text-(--secondary-color) font-bold text-xl">
                   Courses
                 </h3>
-                <h4 className="font-[Inter] text-(--secondary-color) border-(--accent-color-2) border-3 rounded-lg mt-3 px-3 py-1 w-fit">
-                  {filterCourse === "" ? "All courses" : (courses.find(c => c.id.toString() === filterCourse)?.name || "Unknown")}
-                </h4>
+                {filterCourse === null ? (
+                  <h4 className="font-[Inter] text-(--secondary-color) border-(--accent-color-2) border-3 rounded-lg mt-3 px-3 py-1 w-fit">
+                    All courses
+                  </h4>
+                ) : (
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {<span key={filterCourse.id} className="flex justify-between align-center font-[Inter] text-(--secondary-color) border-(--accent-color-2) border-3 rounded-lg px-3 pr-1 py-1 w-fit gap-0.5">
+                        {filterCourse.name}
+                        <ClearIcon
+                          sx={{
+                            padding: 0,
+                            color: "var(--primary-color)",
+                            '&.Mui-checked': {
+                              color: "var(--accent-color-2)",
+                            }
+                          }}
+                          onClick={() => {
+                            setfilterCourse(null);
+                          }}
+                        />
+                      </span>
+                    }
+                  </div>
+                )}
                 <Popup
                   trigger={
                     <button className="hover:underline font-[Inter] font-bold mt-1 ml-0.5 text-(--primary-color)">
@@ -277,56 +127,65 @@ export default function HomeScreen(){
                   {
                     // @ts-ignore
                     (close) => {
-                      const [selectedCourse, setSelectedCourse] = useState<string>(filterCourse);
+                      const [selectedCourse, setSelectedCourse] = useState<number | null>(() =>
+                        (filterCourse != null) ? filterCourse.id : null
+                      );
                       useEffect(() => {
-                        setSelectedCourse(filterCourse);
+                        setSelectedCourse(filterCourse === null ? null : filterCourse.id);
                       }, [filterCourse]);
 
-                      const handleCourseSelect = (id: string) => {
+                      const handleCourseToggle = (id: number) => {
                         setSelectedCourse(id);
                       };
 
                       const handleSubmit = () => {
-                        setFilterCourse(selectedCourse);
+                        setfilterCourse(courses.filter(course => course.id === selectedCourse)[0]);
                         close();
                       };
 
                       return (
-                        <div className="modal rounded-2xl text-black bg-(--header-footer-color)">
-                          <button className="close" onClick={close}> &times;</button>
-                          <div style={{ maxHeight: '500px', overflowY: 'auto', paddingRight: '4px' }}>
-                            <h2>Choose course</h2>
+                        <div className="flex flex-col modal rounded-2xl text-(--secondary-color) bg-(--header-footer-color)">
+                          <button className="close self-end mr-3 text-(--secondary-color) text-4xl" onClick={close}> &times;</button>
+                          <div className="flex flex-col p-18">
+                            <h2 className="font-[Inter] font-bold text-4xl pb-2">
+                              Choose courses
+                            </h2>
+                            <div style={{ maxHeight: '50vh', overflowY: 'auto', paddingRight: '4px' }}>
+                              {courses.length > 0 && courses.map((course) => {
+                                const isChecked = selectedCourse === course.id;
+                                return (
+                                  <button
+                                    key={course.id}
+                                    type="button"
+                                    onClick={() => handleCourseToggle(course.id)}
+                                    className={
+                                      "inline-flex flex-row items-center font-[Inter] text-(--secondary-color) border-2 rounded-lg mt-3 px-2 mx-1 py-1 w-fit" +
+                                      (isChecked ? " border-(--accent-color-2)" : " border-(--primary-color)")
+                                    }
+                                  >
+                                    <Checkbox
+                                      checked={isChecked}
+                                      size="small"
+                                      sx={{
+                                        padding: 0,
+                                        color: "var(--primary-color)",
+                                        '&.Mui-checked': {
+                                          color: "var(--accent-color-2)",
+                                        }
+                                      }}
+                                    />
+                                    <span className="ml-2">{course.name}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
                             <button
-                              type="button"
-                              className={
-                                "block w-full text-left px-4 py-2 mt-2 rounded-lg " +
-                                (selectedCourse === "" ? "bg-(--accent-color-2)/42 text-(--secondary-color)" : "bg-transparent text-(--secondary-color)")
-                              }
-                              onClick={() => handleCourseSelect("")}
+                              className="mt-6 px-4 py-2 bg-(--accent-color-2)/42 text-(--secondary-color) rounded-2xl text-xl w-fit"
+                              onClick={handleSubmit}
                             >
-                              All courses
+                              Add courses
                             </button>
-                            {courses.map(course => (
-                              <span key={course.id} className="flex justify-between align-center font-[Inter] text-(--secondary-color) border-(--accent-color-2) border-3 rounded-lg px-3 pr-1 py-1 w-fit gap-0.5">
-                                {course.name}
-                                <ClearIcon
-                                sx={{
-                                  padding: 0,
-                                  color: "var(--primary-color)",
-                                  '&.Mui-checked': {
-                                    color: "var(--accent-color-2)",
-                                  }
-                                  }}
-                                  onClick={() => handleCourseSelect(course.id.toString())}/>
-                              </span>
-                            ))}
                           </div>
-                          <button
-                            className="mt-6 px-4 py-2 bg-(--accent-color-2)/42 text-(--secondary-color) rounded-2xl text-xl w-fit"
-                            onClick={handleSubmit}
-                          >
-                            Set course
-                          </button>
                         </div>
                       );
                     }

@@ -7,6 +7,7 @@ import ResponseCard from "../components/responseCard"
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useNavigate } from "react-router-dom";
 import Card from "../components/card";
+import { getRoles, getSkills, getLikedProjects, getNames } from "../utils/backendFetching";
 interface Project {
   course_id: number;
   description: string;
@@ -26,66 +27,6 @@ interface Application {
 }
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
-
-async function getRoles(token: string) {
-  const rolesUrl = `${backendHost}/projects/api/v1/roles`;
-  try {
-    const response = await fetch(rolesUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content.map((role) => ({ id: role.id, name: role.name }));
-  }
-  catch (error) {
-    console.error(error.message);
-  }
-}
-
-async function getSkills(token: string) {
-  const rolesUrl = `${backendHost}/projects/api/v1/skills`;
-  try {
-    const response = await fetch(rolesUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content.map((skill) => ({ id: skill.id, name: skill.name }));
-  }
-  catch (error) {
-    console.error(error.message);
-  }
-}
-async function getLikedProjects(token: string) {
-  const projectsUrl = `${backendHost}/projects/api/v1/favourite/my`;
-  try {
-    const response = await fetch(projectsUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content
-  }
-  catch (error) {
-    console.error(error.message);
-    return [];
-  }
-}
 
 async function likeProject(projId: number, token: string){
   const projectJson = {
@@ -123,11 +64,6 @@ async function unlikeProject(projId: number, token: string){
     return false;
   }
   return true;
-}
-
-function getNames(ids: number[] = [], all: {id: number, name: string}[] = []) {
-  const names = ids.map(id => all.find(obj => obj.id === id)?.name ?? "Unknown");
-  return names;
 }
 
 export default function ResponseScreen(){

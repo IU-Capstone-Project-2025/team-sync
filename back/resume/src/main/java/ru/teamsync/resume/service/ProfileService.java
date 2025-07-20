@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
+import ru.teamsync.resume.client.EmbedderClient;
 import ru.teamsync.resume.dto.request.ProfessorCreationRequest;
 import ru.teamsync.resume.dto.request.StudentCreationRequest;
 import ru.teamsync.resume.dto.request.UpdateProfessorProfileRequest;
@@ -42,6 +43,7 @@ public class ProfileService {
     private final SkillRepository skillRepository;
     private final RoleRepository roleRepository;
     private final StudyGroupRepository studyGroupRepository;
+    private final EmbedderClient embedderClient;
 
     private final PersonMapper personMapper;
     private final ProfileMapper profileMapper;
@@ -82,6 +84,9 @@ public class ProfileService {
         profileMapper.updateStudent(request, studyGroup, student);
         studentRepository.save(student);
 
+        if(request.description() != null) {
+            embedderClient.recalculateStudentPoints(personId);
+        }
     }
 
     @Transactional
@@ -147,6 +152,7 @@ public class ProfileService {
 
         studentRepository.save(student);
 
+        embedderClient.recalculateStudentPoints(student.getId());
         return new StudentCreationResponse(student.getId(), person.getId());
     }
 

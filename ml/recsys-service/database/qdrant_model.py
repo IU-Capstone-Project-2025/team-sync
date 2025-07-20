@@ -4,9 +4,13 @@ from typing import Optional
 import requests
 
 class QdrantModel:
-    def __init__(self, host: str = Config.QDRANT_HOST, port: int = Config.QDRANT_PORT, 
-                 api_key: str = Config().QDRANT_API_KEY, logger=None):
-        self.client = QdrantClient(url=f"http://{host}:{port}", api_key=api_key)
+    def __init__(self, url: str = None, logger=None):
+        self.config = Config()
+        if not url:
+            url = self.config.QDRANT_URL
+        if not url:
+            raise ValueError("Qdrant URL is not set in the configuration.")
+        self.client = QdrantClient(url=url, api_key=self.config.QDRANT_API_KEY)
         self.logger = logger
 
     def _create_collection(self, collection_name: str, embedding_shape: int = None, distance = "Cosine"):
@@ -51,8 +55,7 @@ class QdrantModel:
         return result
 
     def _update_embeddings(self, collection_name, id) -> bool:
-        request_data = {"id": id, "table": collection_name}
-        response = requests.post(f"{Config.EMBEDDER_URL}/api/v1/points", json=request_data, timeout=5)
+        response = requests.post(f"{Config().EMBEDDER_URL}/api/v1/points/{collection_name}/{id}")
         if response.status_code != 200:
             self.logger.error(f"Embedder service returned error: {response.text}")
             return False

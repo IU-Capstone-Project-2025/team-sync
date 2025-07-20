@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ResponseCard from "../components/responseCard"
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { useNavigate } from "react-router-dom";
+import { getRoles, getSkills, getApplications, getNames } from "../utils/backendFetching";
 interface Project {
   course_name: string;
   description: string;
@@ -19,81 +20,11 @@ interface Project {
 interface Application {
   application_id: number;
   project: Project;
-  status: string;
-  created_at: number[];
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  created_at: string;
 }
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
-
-async function getRoles(token: string) {
-  const rolesUrl = `${backendHost}/projects/api/v1/roles`;
-  try {
-    const response = await fetch(rolesUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content.map((role) => ({ id: role.id, name: role.name }));
-  }
-  catch (error) {
-    console.error(error.message);
-  }
-}
-
-async function getSkills(token: string) {
-  const rolesUrl = `${backendHost}/projects/api/v1/skills`;
-  try {
-    const response = await fetch(rolesUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return json.data.content.map((skill) => ({ id: skill.id, name: skill.name }));
-  }
-  catch (error) {
-    console.error(error.message);
-  }
-}
-
-async function getApplications(token: string) {
-  const applicationsUrl = `${backendHost}/projects/api/v1/applications/my`;
-  try {
-    const response = await fetch(applicationsUrl, {
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    if (!response.ok) {
-      throw new Error('Response error: ' + response.status.toString());
-    }
-    const json = await response.json();
-    return {
-      applications: json.data.content
-    }
-  }
-  catch (error) {
-    console.error(error.message);
-    return {
-      applications: []
-    };
-  }
-}
-
-function getNames(ids: number[] = [], all: {id: number, name: string}[] = []) {
-  const names = ids.map(id => all.find(obj => obj.id === id)?.name ?? "Unknown");
-  return names;
-}
 
 export default function ResponseScreen(){
   const navigate = useNavigate();
@@ -108,14 +39,15 @@ export default function ResponseScreen(){
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
-      getRoles(token).then(setRoles);
-      getSkills(token).then(setSkills);
+      getRoles().then(setRoles);
+      getSkills().then(setSkills);
+      getApplications(token).then(result => setApplications(result));
     }
   }, []);
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
-      getApplications(token).then(result => setApplications(result.applications));
+      getApplications(token).then(result => setApplications(result));
     }
   }, [refreshKey]);
   return(
@@ -134,7 +66,7 @@ export default function ResponseScreen(){
           <div className="flex flex-row gap-4">
             <Pill type="Active" number={0}/>
           </div>
-          {applications.length && applications.map((app) => (
+          {applications.length > 0 && applications.map((app) => (
             <ResponseCard
               key={app.application_id}
               props={{
