@@ -161,3 +161,21 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ; 
+  - changeSet:
+      id: 19
+      author: Dementev Stepan
+      changes:
+        - sqlFile:
+            path: scripts/TS-281-add-profile-id-to-security-user.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ; 
+  - changeSet:
+      id: 20
+      author: Dementev Stepan
+      changes:
+        - sqlFile:
+            path: scripts/TS-281-1-add-constraints-to-security.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            endDelimiter: ; 

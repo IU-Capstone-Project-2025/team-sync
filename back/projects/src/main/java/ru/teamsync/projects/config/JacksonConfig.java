@@ -14,6 +14,7 @@ public class JacksonConfig {
     public ObjectMapper objectMapper() {
         return Jackson2ObjectMapperBuilder
                 .json()
+                .failOnUnknownProperties(false)
                 .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
                 .build();
     }

@@ -13,8 +13,9 @@ import ru.teamsync.projects.repository.ProjectMemberRepository;
 import ru.teamsync.projects.repository.CourseRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.repository.StudentProjectClickRepository;
-import ru.teamsync.projects.service.ProjectService;
+import ru.teamsync.projects.service.projects.ProjectService;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
+import ru.teamsync.projects.service.projects.utils.ProjectUtils;
 
 import java.util.Optional;
 
@@ -28,32 +29,29 @@ public class ProjectServiceTest {
     private CourseRepository courseRepositoryMock;
 
 
-    private ApplicationRepository applicationRepositoryMock;
     private ApplicationMapper applicationMapperMock;
-    private ProjectMemberRepository projectMemberRepositoryMock;
     private StudentProjectClickRepository studentProjectClickRepositoryMock;
     private EmbedderClient embedderClientMock;
+    private ProjectUtils projectUtilsSpy;
 
     private ProjectRepository projectRepositoryMock;
     private ProjectMapper projectMapperMock;
 
     @BeforeEach
     public void init() {
-        applicationRepositoryMock = Mockito.mock(ApplicationRepository.class);
         applicationMapperMock = Mockito.mock(ApplicationMapper.class);
         projectRepositoryMock = Mockito.mock(ProjectRepository.class);
         projectMapperMock = Mockito.mock(ProjectMapper.class);
-        projectMemberRepositoryMock = Mockito.mock(ProjectMemberRepository.class);
         studentProjectClickRepositoryMock = Mockito.mock(StudentProjectClickRepository.class);
+        embedderClientMock = Mockito.mock(EmbedderClient.class);
+        projectUtilsSpy = Mockito.mock(ProjectUtils.class);
 
         projectService = new ProjectService(
-                applicationRepositoryMock,
                 courseRepositoryMock,
                 projectRepositoryMock,
-                projectMemberRepositoryMock,
                 studentProjectClickRepositoryMock,
                 embedderClientMock,
-                applicationMapperMock,
+                projectUtilsSpy,
                 projectMapperMock);
     }
 

@@ -21,7 +21,7 @@ import ru.teamsync.projects.dto.request.FavouriteProjectRequest;
 import ru.teamsync.projects.dto.response.BaseResponse;
 import ru.teamsync.projects.dto.response.FavouriteProjectResponse;
 import ru.teamsync.projects.service.FavouriteProjectService;
-import ru.teamsync.projects.service.SecurityContextService;
+import ru.teamsync.projects.service.security.SecurityContextService;
 
 @RestController
 @RequestMapping("/favourite")

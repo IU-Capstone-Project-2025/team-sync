@@ -11,6 +11,7 @@ import ru.teamsync.projects.entity.ApplicationStatus;
 import ru.teamsync.projects.entity.Project;
 import ru.teamsync.projects.mapper.ApplicationMapper;
 import ru.teamsync.projects.repository.ApplicationRepository;
+import ru.teamsync.projects.repository.ProjectMemberRepository;
 import ru.teamsync.projects.repository.ProjectRepository;
 import ru.teamsync.projects.service.ApplicationService;
 import ru.teamsync.projects.service.exception.ResourceAccessDeniedException;
@@ -29,14 +30,16 @@ public class ApplicationServiceTest {
     private ProjectRepository projectRepositoryMock;
     private ApplicationRepository applicationRepositoryMock;
     private ApplicationMapper applicationMapperMock;
+    private ProjectMemberRepository projectMemberRepositoryMock;
 
     @BeforeEach
     public void init() {
         projectRepositoryMock = Mockito.mock(ProjectRepository.class);
         applicationRepositoryMock = Mockito.mock(ApplicationRepository.class);
         applicationMapperMock = Mockito.mock(ApplicationMapper.class);
+        projectMemberRepositoryMock = Mockito.mock(ProjectMemberRepository.class);
 
-        applicationService = new ApplicationService(projectRepositoryMock, applicationRepositoryMock, applicationMapperMock);
+        applicationService = new ApplicationService(projectRepositoryMock, applicationRepositoryMock, projectMemberRepositoryMock, applicationMapperMock);
     }
 
     @Test

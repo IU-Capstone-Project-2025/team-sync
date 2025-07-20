@@ -10,12 +10,14 @@ import java.util.Date;
 @Service
 public class JwtUtilityService {
 
+    private static final String INTERNAL_ID_CLAIM = "user_id";
+
     @Autowired
     private JwtProperties jwtProperties;
 
     public String generateTokenWithUserId(int userId) {
         return Jwts.builder()
-                .claim(jwtProperties.userIdClaim(), userId)
+                .claim(INTERNAL_ID_CLAIM, userId)
                 .issuer(jwtProperties.issuer())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.expirationTimeMs()))
