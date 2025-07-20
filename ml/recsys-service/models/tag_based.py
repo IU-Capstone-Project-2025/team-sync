@@ -24,9 +24,6 @@ class TagBasedRecommender(Recommender):
         num_projects = len(project_ids)
         
         user_skills = self.db.get_user_skills(user_id)
-        if not user_skills:
-            self.logger.info(f"User {user_id} has no skills.")
-            return [0] * num_projects
         user_skills_v = np.zeros(shape=(1, num_skills), dtype=np.float32)
         for skill in user_skills:
             user_skills_v[0][self.all_skills[skill]] = 1
@@ -39,7 +36,7 @@ class TagBasedRecommender(Recommender):
         for score_id in range(num_projects):
             recommendations.append(recommendations_L2[score_id] * self.config.TAG_L2_COEFFICIENT +
                                    recommendations_OL[score_id] * self.config.TAG_OL_COEFFICIENT +
-                                   recommendations_IoU[score_id] * self.config.TAG_IOU_COEFFICIENT)
+                                   recommendations_IOU[score_id] * self.config.TAG_IOU_COEFFICIENT)
         return recommendations  # [0.14, 0.1, 0.2, 0.15]
     
     def save_data_for_calculation(self, project_ids=None, user_ids=None):

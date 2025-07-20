@@ -11,11 +11,12 @@ def get_faiss_recommendations(index_type, num_data, project_ids, projects_with_d
     distances, indices = index.search(user_data_v, len(project_ids))
     distances, indices = distances[0], indices[0]
     
-    if index_type == "euclidean distance":
-        min_dist, max_dist = np.min(distances), np.max(distances)
+    min_dist, max_dist = np.min(distances), np.max(distances)
+    if max_dist - min_dist == 0:
+        normalized_scores = 1 - (max_dist - min_dist)
+    elif index_type == "euclidean distance":
         normalized_scores = 1 - (distances - min_dist) / (max_dist - min_dist)
     else:
-        min_dist, max_dist = np.min(distances), np.max(distances)
         normalized_scores = (distances - min_dist) / (max_dist - min_dist)
 
     recommendations = []

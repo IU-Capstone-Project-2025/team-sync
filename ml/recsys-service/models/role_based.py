@@ -1,6 +1,9 @@
 import faiss
 import numpy as np
 from models.base_recommender import Recommender
+from models.tools.faiss_tools import get_faiss_recommendations
+from models.tools.IOU_tools import get_IOU_recommendations
+from models.tools.OL_tools import get_OL_recommendations
 
 
 class RoleBasedRecommender(Recommender):
@@ -22,14 +25,11 @@ class RoleBasedRecommender(Recommender):
         num_projects = len(project_ids)
 
         user_roles = self.db.get_user_roles(user_id)
-        if not user_roles:
-            self.logger.info(f"User {user_id} has no roles.")
-            return [0] * num_projects
         user_roles_v = np.zeros(shape=(1, num_roles), dtype=np.float32)
         for role in user_roles:
             user_roles_v[0][self.all_roles[role]] = 1
 
-        recommendations_L2 = get_faiss_recommendations(num_roles, project_ids, self.projects_with_roles_v, user_roles_v)
+        recommendations_L2 = get_faiss_recommendations("euclidean distance", num_roles, project_ids, self.projects_with_roles_v, user_roles_v)
         recommendations_IOU = get_IOU_recommendations(user_roles, self.projects_with_roles)
         recommendations_OL = get_OL_recommendations(user_roles, self.projects_with_roles)
 
