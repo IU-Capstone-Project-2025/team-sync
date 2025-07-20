@@ -61,7 +61,6 @@ export default function Account({name}){
               onClick={() => {
                     localStorage.removeItem("backendToken");
                     localStorage.removeItem("entraToken");
-                    localStorage.removeItem("userProfile");
 
                     sessionStorage.clear();
 
