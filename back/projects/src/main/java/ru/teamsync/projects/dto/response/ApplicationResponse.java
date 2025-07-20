@@ -1,12 +1,14 @@
 package ru.teamsync.projects.dto.response;
 
-import java.time.LocalDateTime;
-
 import ru.teamsync.projects.entity.ApplicationStatus;
 
+import java.time.LocalDateTime;
+
 public record ApplicationResponse(
-    Long applicationId,
-    ProjectResponse project,
-    ApplicationStatus status,
-    LocalDateTime createdAt
-) {}
+        Long applicationId,
+        Long personId,
+        ProjectResponse project,
+        ApplicationStatus status,
+        LocalDateTime createdAt
+) {
+}
