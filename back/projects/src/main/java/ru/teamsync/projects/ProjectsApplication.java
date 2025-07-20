@@ -6,15 +6,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import ru.teamsync.projects.config.properties.JwtProperties;
-import ru.teamsync.projects.config.properties.PaginationDefaultProperties;
 import ru.teamsync.projects.config.properties.SecurityWebProperties;
 
 @SpringBootApplication
 @EnableExchangeClients(basePackages = "ru.teamsync.projects.client")
 @EnableConfigurationProperties({
         JwtProperties.class,
-        SecurityWebProperties.class,
-        PaginationDefaultProperties.class
+        SecurityWebProperties.class
 })
 public class ProjectsApplication {
 

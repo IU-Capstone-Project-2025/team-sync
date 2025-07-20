@@ -8,6 +8,11 @@ spring:
     password: ${DB_MAIN_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
+  data:
+    web:
+      pageable:
+        default-page-size: 200
+
 server:
   servlet:
     context-path: /projects/api/v1
@@ -34,10 +39,6 @@ teamsync:
         - https://dev.shqcore.ru
         - https://team-sync.online
         - https://dev.team-sync.online
-  pagination:
-    default:
-      page-number: 0
-      page-size: 100
   client:
     embedder:
       api-url: ${EMBEDDER_HOST}
