@@ -52,7 +52,7 @@ jobs:
       pull-requests: write
     uses: ./.github/workflows/template-build-backend.yml
     with:
-      service-dir: back/recommendations
+      service-dir: back/recommendation
       image-name: ts-recommendations
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -78,7 +78,7 @@ jobs:
       pull-requests: write
     uses: ./.github/workflows/template-build-backend.yml
     with:
-      service-dir: ml/recsys
+      service-dir: ml/recsys-service
       image-name: ts-recsys
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
