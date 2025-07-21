@@ -44,6 +44,45 @@ jobs:
     secrets:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  
+  build-recommendations:
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/template-build-backend.yml
+    with:
+      service-dir: back/recommendations
+      image-name: ts-recommendations
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+ 
+  build-embedder:
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/template-build-backend.yml
+    with:
+      service-dir: ml/embedder
+      image-name: ts-embedder
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  build-recsys:
+    permissions:
+      contents: read
+      packages: write
+      pull-requests: write
+    uses: ./.github/workflows/template-build-backend.yml
+    with:
+      service-dir: ml/recsys
+      image-name: ts-recsys
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
   build-frontend:
     permissions:
@@ -61,7 +100,7 @@ jobs:
 
 
   prod-deploy-all:
-    needs: [build-projects, build-resume, build-auth, build-frontend]
+    needs: [build-projects, build-resume, build-auth, build-frontend, build-recommendations, build-embedder, build-recsys]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
