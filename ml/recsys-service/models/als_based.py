@@ -51,8 +51,6 @@ class ALSRecommender(Recommender):
         
         user_vector_sum = self.user_items[user_id].sum()
 
-        
-
         recommendations = []
         for project_id in project_ids:
             score = float(score_dict.get(project_id, 0.0)) * self._coefficient_for_projects_score(user_vector_sum)
@@ -111,3 +109,4 @@ class ALSRecommender(Recommender):
         self.user_items = data.tocsr()
         self.als_model.fit(data)
         self.logger.info(f"Data saved for {self.model_name} recommender with {len(als_user_ids)} users and {len(als_item_ids)} projects.")
+

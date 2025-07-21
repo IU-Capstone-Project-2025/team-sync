@@ -78,7 +78,7 @@ export async function getProjects(
     params.push("courseId=" + filterCourse);
   }
   const queryString = params.length > 0 ? "&" + params.join("&") : "";
-  const projectsUrl = `${backendHost}/projects/api/v1/projects/recommendations` + queryString;
+  const projectsUrl = `${backendHost}/projects/api/v1/projects/recommendations?sort=id,desc&size=200` + queryString;
   try {
     const response = await fetch(projectsUrl, {
       headers: {
@@ -91,7 +91,8 @@ export async function getProjects(
     }
     const json = await response.json();
     return {
-      projects: json.data.content
+      projects: json.data.content,
+      total: json.data.content.length
     }
   }
   catch (error) {
@@ -105,7 +106,7 @@ export async function getProjects(
 export async function getRecs(
   token: string
 ) {
-  const projectsUrl = `${backendHost}/projects/api/v1/projects/recommendations`;
+  const projectsUrl = `${backendHost}/projects/api/v1/projects/recommendations?size=200`;
   try {
     const response = await fetch(projectsUrl, {
       headers: {

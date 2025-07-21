@@ -1,7 +1,19 @@
 import json
 import redis
+import numpy as np
 from redis.asyncio import Redis
 from config.config import Config
+
+class NumpyEncoder(json.JSONEncoder):
+    """Custom JSON encoder that handles numpy types"""
+    def default(self, obj):
+        if isinstance(obj, (np.integer, np.int64, np.int32)):
+            return int(obj)
+        elif isinstance(obj, (np.floating, np.float64, np.float32)):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return super().default(obj)
 
 class RedisModel:
     def __init__(self, logger):
@@ -31,7 +43,7 @@ class RedisModel:
         # Key - user_id
         # Value - [{"project_id": 123, "score": 0.95}, {"project_id": 456, "score": 0.88}]
         self.logger.info(f"Setting key: {key}")
-        json_value = json.dumps(value)
+        json_value = json.dumps(value, cls=NumpyEncoder)
         await self.client.delete(key)
         await self.client.set(key, json_value)
         self.logger.info(f"Value set for key: {key}")
@@ -41,7 +53,7 @@ class RedisModel:
         self.logger.info(f"Setting list for key: {key}")
         await self.client.delete(key)
         for item in value_list:
-            await self.client.rpush(key, json.dumps(item))
+            await self.client.rpush(key, json.dumps(item, cls=NumpyEncoder))
 
     async def get_range(self, key, start, end):
         """Get a range of values from a list in Redis."""
