@@ -92,7 +92,7 @@ export async function getProjects(
     const json = await response.json();
     return {
       projects: json.data.content,
-      total: json.data.number_of_elements
+      total: json.data.content.length
     }
   }
   catch (error) {
