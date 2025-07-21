@@ -96,6 +96,8 @@ class Config:
             raise RuntimeError("RECSYS_SECRET_KEY environment variable is not set!")
         return secret_key
 
+    AVAILABLE_PROJECT_STATUS = "OPEN"
+
     RECOMMENDATION_JOB_INTERVAL = 5
 
     BASE_COEFFICIENT = 0.5
