@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import Card from "../components/card";
 import Checkbox from "@mui/material/Checkbox";
 import ClearIcon from '@mui/icons-material/Clear';
-import { getProjects, getRoles, getSkills, getCourses, getLikedProjects, getApplications, getNames } from "../utils/backendFetching";
+import { getProjects, getRoles, getSkills, getCourses, getLikedProjects, getApplications, getNames, getRecs } from "../utils/backendFetching";
 interface Project {
   course_id: number;
   description: string;
@@ -58,7 +58,7 @@ export default function HomeScreen(){
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
-      getProjects(token, filterSkills, filterRoles, (filterCourse === null) ? '' : filterCourse.id.toString()).then((result => {
+      getRecs(token, filterSkills, filterRoles, (filterCourse === null) ? '' : filterCourse.id.toString()).then((result => {
         setProjects(result.projects);
         setNumProjects(result.total);
       }));
