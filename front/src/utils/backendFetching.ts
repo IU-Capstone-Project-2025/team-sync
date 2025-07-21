@@ -75,7 +75,7 @@ export async function getProjects(
     params.push("roleIds=" + filterRoles.map(role => role.id).join(','));
   }
   if (filterCourse !== "") {
-    params.push("courseId=" + filterCourse);
+    params.push("courseIds=" + filterCourse);
   }
   const queryString = params.length > 0 ? "&" + params.join("&") : "";
   const projectsUrl = `${backendHost}/projects/api/v1/projects/recommendations?sort=id,desc&size=200` + queryString;
