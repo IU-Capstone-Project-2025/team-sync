@@ -13,11 +13,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserProjectService {
 
+    private static final Integer COLD_START_USER_ID = 0;
+
     private final ListOperations<String, ProjectScore> listOps;
 
     public List<ProjectScore> getProjectScores(long studentId, long start, long end) {
         String key = String.valueOf(studentId);
-        return listOps.range(key, start, end-1);
+        var recommendations = listOps.range(key, start, end - 1);
+        if (recommendations != null  && !recommendations.isEmpty()){
+            return recommendations;
+        }
+        return listOps.range(String.valueOf(COLD_START_USER_ID), start, end - 1);
     }
 
 }
