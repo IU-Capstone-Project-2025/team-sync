@@ -55,11 +55,10 @@ class ModelsMerger:
             value.sort(key=lambda x: x["score"], reverse=True)
             await self.redis.set_list(user_id, value)
         
-        self.logger.info("Cold start model is enabled, running for users with no scores.")
         if self.cold_start_model:
             self.logger.info("Running cold start model for users with no scores.")
             cold_start_scores = self.cold_start_model.calculate_scores(project_ids)
             cold_start_scores.sort(key=lambda x: x["score"], reverse=True)
-            await self.redis.set_list(user_id, cold_start_scores)
+            await self.redis.set_list(0, cold_start_scores)
             self.logger.info("Cold start model completed for users with no scores.")
         
