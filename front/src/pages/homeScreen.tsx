@@ -21,8 +21,9 @@ interface Project {
 
 interface Application {
   application_id: number;
+  person_id: number;
   project: Project;
-  status: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
   created_at: number[];
 }
 
@@ -45,7 +46,7 @@ export default function HomeScreen(){
     if (token){
       getProjects(token, filterSkills, filterRoles, (filterCourse === null) ? '' : filterCourse.id.toString()).then((result => {
         setProjects(result.projects);
-        setNumProjects(result.total);
+        setNumProjects(result.projects.length);
       }));
       getLikedProjects(token).then(setLikedProjects)
       getRoles().then(setRoles);
@@ -60,7 +61,7 @@ export default function HomeScreen(){
     if (token){
       getProjects(token, filterSkills, filterRoles, (filterCourse === null) ? '' : filterCourse.id.toString()).then((result => {
         setProjects(result.projects);
-        setNumProjects(result.total);
+        setNumProjects(result.projects.length);
       }));
       console.log(projects);
     }

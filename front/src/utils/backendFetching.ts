@@ -98,8 +98,7 @@ export async function getProjects(
   catch (error) {
     console.error(error.message);
     return {
-      projects: [],
-      total: 0
+      projects: []
     };
   }
 }
@@ -131,6 +130,44 @@ export async function getRecs(
       total: 0
     };
   }
+}
+
+export async function likeProject(projId: number, token: string){
+  const projectJson = {
+    project_id: projId
+  };
+  const applicationUrl = `${backendHost}/projects/api/v1/favourite`;
+  const response = await fetch(applicationUrl, {  
+    method: 'POST', 
+    mode: 'cors', 
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify(projectJson) 
+  });
+  if (!response.ok){
+    alert("Like operation failed");
+    return false;
+  }
+  return true;
+}
+
+export async function unlikeProject(projId: number, token: string){
+  const applicationUrl = `${backendHost}/projects/api/v1/favourite/${projId}`;
+  const response = await fetch(applicationUrl, {  
+    method: 'DELETE', 
+    mode: 'cors', 
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  if (!response.ok){
+    alert("Unlike operation failed");
+    return false;
+  }
+  return true;
 }
 
 export async function getLikedProjects(token: string) {
@@ -177,7 +214,6 @@ export async function getApplications(token: string) {
 }
 
 export async function getMyProjects(token: string) {
-  let params: string[] = [];
   const projectsUrl = backendHost + "/projects/api/v1/projects/my";
   try {
     const response = await fetch(projectsUrl, {
@@ -199,6 +235,138 @@ export async function getMyProjects(token: string) {
     return {
       projects: []
     };
+  }
+}
+
+export async function deleteApplication(token: string, applicationId: number) : Promise<boolean>{
+  const applicationUrl = `${backendHost}/projects/api/v1/applications/${applicationId}`;
+    const appJson = {
+      applicationId: applicationId
+    };
+    try {
+      const response = await fetch(applicationUrl, {  
+        method: 'DELETE', 
+        mode: 'cors', 
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(appJson) 
+      });
+      return response.ok;
+    }
+    catch (error){
+      return false;
+    }
+}
+
+export async function getProjectApplications(token: string, projectId: number) {
+  const projectUrl = `${backendHost}/projects/api/v1/projects/${projectId}/applications`;
+  try {
+    const response = await fetch(projectUrl, {
+      mode: 'cors',
+      headers: {
+        "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Response error: ' + response.status.toString());
+    }
+    const json = await response.json();
+    return json.content
+  }
+  catch (error) {
+    console.error(error.message);
+    return [];
+  }
+}
+
+export async function getPersonById(token: string, personId: number){
+  const personUrl = `${backendHost}/resume/api/v1/profile/${personId}`;
+  try {
+    const response = await fetch(personUrl, {
+      mode: 'cors',
+      headers: {
+        "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+      }
+    });
+    if (!response.ok) {
+      throw new Error('Response error: ' + response.status.toString());
+    }
+    const json = await response.json();
+    return json.data;
+  }
+  catch (error) {
+    console.error(error.message);
+    return [];
+  }
+}
+
+export async function approveApplication(token: string, projectId: number, applicationId: number){
+  const appJson = {
+    status: "APPROVED"
+  }
+  const applicationUrl = `${backendHost}/projects/api/v1/projects/${projectId}/applications/${applicationId}`;
+  try {
+    const response = await fetch(applicationUrl, {
+      method: "PATCH",
+      mode: 'cors',
+      headers: {
+        "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(appJson)
+    });
+  return response.ok;
+  }
+  catch (error){
+    return false;
+  }
+}
+
+export async function rejectApplication(token: string, projectId: number, applicationId: number){
+  const appJson = {
+    status: "REJECTED"
+  }
+  const applicationUrl = `${backendHost}/projects/api/v1/projects/${projectId}/applications/${applicationId}`;
+  try {
+    const response = await fetch(applicationUrl, {
+      method: "PATCH",
+      mode: 'cors',
+      headers: {
+        "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(appJson)
+    });
+  return response.ok;
+  }
+  catch (error){
+    return false;
+  }
+}
+
+export async function returnApplication(token: string, projectId: number, applicationId: number){
+  const appJson = {
+    status: "PENDING"
+  }
+  const applicationUrl = `${backendHost}/projects/api/v1/projects/${projectId}/applications/${applicationId}`;
+  try {
+    const response = await fetch(applicationUrl, {
+      method: "PATCH",
+      mode: 'cors',
+      headers: {
+        "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(appJson)
+    });
+  return response.ok;
+  }
+  catch (error){
+    return false;
   }
 }
 
