@@ -11,56 +11,33 @@ import ContactSection from '../components/contactSection';
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
 
-async function login(msalInstance) {
-  const registrationData = {
-    study_group: "string",
-    description: "string",
-    github_alias: crypto.randomUUID().toString().substring(0, 15),
-    tg_alias: crypto.randomUUID().toString().substring(0, 15)
-  };
-
-  const account = msalInstance.getAllAccounts()[0];
-  const tokenResponse = await msalInstance.acquireTokenSilent({
-    ...loginRequest,
-    account,
-  });
-  const accessToken = tokenResponse.accessToken;
-
+async function handleTokenExchange(entraToken) {
   try {
-    const res = await fetch(`${backendHost}/auth/api/v1/entra/login`, {
+
+    const backendResponse = await fetch(`${backendHost}/auth/api/v1/entra/login`, {
       method: "GET",
       headers: {
-        "Authorization": `Bearer ${accessToken}`,
+        "Authorization": `Bearer ${entraToken}`,
         "Content-Type": "application/json"
       }
     });
-    console.log("trying to login");
-    const loginResult = await res.json();
-    if (loginResult.success) {
-      localStorage.setItem("backendToken", loginResult.data.access_token);
-      console.log(loginResult.data.access_token);
-    } else if (res.status === 409) {
-      console.log("trying to register");
-      const regRes = await fetch(`${backendHost}/auth/api/v1/entra/registration/student`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${accessToken}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(registrationData)
-      });
-      const regData = await regRes.json();
-      if (regData.success && regData.data && regData.data.access_token) {
-        localStorage.setItem("backendToken", regData.data.access_token);
-        console.log(regData.data.access_token);
-      } else {
-        console.error("Registration failed", regData.error || regData);
+
+    const loginResult = await backendResponse.json();
+
+    if (!loginResult.success) {
+      if (backendResponse.status === 409) {
+        return { registered: false };
       }
-    } else {
-      console.error("Login failed", loginResult.error || loginResult);
+      throw new Error("Backend login failed");
     }
+
+    localStorage.setItem("backendToken", loginResult.data.access_token);
+
+    return { registered: true };
+
   } catch (error) {
-    console.error("Login/registration failed", error);
+    console.error("Token exchange failed:", error);
+    throw error;
   }
 }
 
@@ -68,17 +45,49 @@ export default function SplashScreen() {
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
   const { instance: msalInstance } = useMsal();
+  const [needsRegistration, setNeedsRegistration] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      (async () => {
-        await login(msalInstance);
-        if (localStorage.getItem("backendToken") !== null){
-          navigate('/home');
-        }
-      })();
+    const initializeAndHandleRedirect = async () => {
+      try {
+        console.info("Initializing MSAL and handling redirect promise");
+        await msalInstance.initialize();
+        
+        msalInstance.handleRedirectPromise().then(res => {
+          console.info("Handled");
+
+          if (res) {
+            msalInstance.setActiveAccount(res.account);
+            console.info("Redirect login successful", res.accessToken);
+            handleTokenExchange(res.accessToken).then(result => {
+              if (result && result.registered) {
+                navigate('/home');
+              } else if (result && !result.registered) {
+                console.info("User needs to register");
+                localStorage.setItem("entraToken", res.accessToken);
+                setNeedsRegistration(true);
+              }
+            });
+          }
+        });
+
+      } catch (err) {
+        console.error("MSAL initialization or redirect handling failed:", err);
+      }
+    };
+
+    initializeAndHandleRedirect();
+  }, [navigate, msalInstance])
+
+  // Handler for SSO button
+  const handleSSOClick = () => {
+    if (needsRegistration) {
+      navigate('/register');
+    } else {
+      // fallback: trigger SSO login (should rarely be needed)
+      msalInstance.loginRedirect(loginRequest);
     }
-  }, [isAuthenticated, navigate, msalInstance]);
+  };
   
   return(
     <div className='flex flex-col justify-between h-screen'>
@@ -211,7 +220,6 @@ export default function SplashScreen() {
         <hr className='text-(--primary-color) w-[75%] border-2 rounded-2xl'/>
         
         <ContactSection />
-        
       </div>
       <Footer />
     </div>

@@ -25,13 +25,11 @@ The table below lists the default ports and example endpoints for each service i
 | **Service** | **Swagger or url** |
 | --- | --- |
 | frontend | https://team-sync.online or https://dev.team-sync.online |
-| backend-projects | https://team-sync.online/projects/api/v1/swagger-ui/index.html or https://dev.team-sync.online/projects/api/v1/swagger-ui/index.html |
-| backend-resume | https://team-sync.online/resume/api/v1/swagger-ui/index.html or https://dev.team-sync.online/resume/api/v1/swagger-ui/index.html |
-| backend-auth | https://team-sync.online/auth/api/v1/swagger-ui/index.html or https://dev.team-sync.online/auth/api/v1/swagger-ui/index.html |
-| ml-recsys |  https://team-sync.online/recsys/api/v1/docs or https://dev.team-sync.online/recsys/api/v1/docs |
-| ml-embedder |  https://team-sync.online/embedder/api/v1/docs or https://dev.team-sync.online/embedder/api/v1/docs |
-
-It's planned to use the _api_ and _api.dev_ subdomain for backend and ml services
+| backend-projects | https://api.team-sync.online/projects/api/v1/swagger-ui/index.html or https://api.dev.team-sync.online/projects/api/v1/swagger-ui/index.html |
+| backend-resume | https://api.team-sync.online/resume/api/v1/swagger-ui/index.html or https://api.dev.team-sync.online/resume/api/v1/swagger-ui/index.html |
+| backend-auth | https://api.team-sync.online/auth/api/v1/swagger-ui/index.html or https://api.dev.team-sync.online/auth/api/v1/swagger-ui/index.html |
+| ml-recsys |  https://api.team-sync.online/recsys/api/v1/docs or https://api.dev.team-sync.online/recsys/api/v1/docs |
+| ml-embedder |  https://api.team-sync.online/embedder/api/v1/docs or https://api.dev.team-sync.online/embedder/api/v1/docs |
 
 ## Tech Stack
 

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, FastAPI, Request
+from fastapi import APIRouter, FastAPI, Request, HTTPException
 
 router = APIRouter(prefix="", tags=["base"])
 
@@ -6,10 +6,25 @@ router = APIRouter(prefix="", tags=["base"])
 async def health_check():
     return {"status": "Base service is running"}
 
-@router.post("/recommendations")
-async def trigger_recommendation(request: Request):
-    result = await trigger_recommendation_job(request.app)
-    return result
+@router.post("/recommendations/{secret_key}")
+async def trigger_recommendation(request: Request, secret_key: str):
+    if secret_key != request.app.state.config.SECRET_KEY:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid secret key"
+        )
+    
+    try:
+        result = await trigger_recommendation_job(request.app)
+        return result
+    except Exception as e:
+        if hasattr(request.app.state, 'logger'):
+            request.app.state.logger.error(f"Error in trigger_recommendation endpoint: {e}")
+        
+        raise HTTPException(
+            status_code=500,
+            detail="Internal server error occurred while processing recommendation job"
+        )
 
 async def trigger_recommendation_job(app: FastAPI):
     logger = app.state.logger
@@ -17,6 +32,10 @@ async def trigger_recommendation_job(app: FastAPI):
     try:
         await app.state.merger.iterate_all_users()
         logger.info("Scheduled recommendation job completed successfully")
+        return {"status": "Scheduled recommendation job executed successfully"}
     except Exception as e:
         logger.error(f"Error during scheduled recommendation job: {e}")
-    return {"status": "Scheduled recommendation job executed"}
+        raise HTTPException(
+            status_code=500,
+            detail=f"Recommendation job failed: {str(e)}"
+        )

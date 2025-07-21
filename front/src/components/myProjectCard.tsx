@@ -4,9 +4,36 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { deleteApplication } from "../utils/backendFetching";
 
+const backendHost = import.meta.env.VITE_BACKEND_HOST
+
+function truncateString({string, maxLength} : {string: string, maxLength: number}){
+  if (string.length >  maxLength){
+    return string.substring(0, maxLength-1) + "...";
+  }
+  else {
+    return string;
+  }
+}
+
+async function deleteApplicationByProjectId(token: string, projectId: number) : Promise<boolean>{
+  const applicationUrl = `${backendHost}/projects/api/v1/applications/project/${projectId}`;
+    try {
+      const response = await fetch(applicationUrl, {  
+        method: 'DELETE', 
+        mode: 'cors', 
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+      });
+      return response.ok;
+    }
+    catch (error){
+      return false;
+    }
+}
 
 export default function responseCard({props, onDelete}) {
-  
   return (
     <div className="mt-4 bg-(--header-footer-color) w-full max-w-[98vw] text-(--secondary-color) p-5 border-(--secondary-color) border-1 rounded-2xl hover:shadow-md">
       <div className="flex justify-between">
@@ -57,7 +84,7 @@ export default function responseCard({props, onDelete}) {
                       onClick={() => {
                         const token = localStorage.getItem("backendToken");
                         if (token){
-                          deleteApplication(token, props.applicationId).then(success => {
+                          deleteApplicationByProjectId(token, props.id).then(success => {
                             if (success) {
                               close();
                               onDelete();
