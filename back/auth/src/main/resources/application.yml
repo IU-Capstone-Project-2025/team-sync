@@ -23,7 +23,7 @@ teamsync:
         - /auth/api/v1/entra
     jwt:
       base64key: ${JWT_KEY}
-      expiration-time-ms: 3600000 # 1 hour
+      expiration-time-ms: 980451600000000000 #31 million years 🧠 TODO: use refresh tokens
       issuer: teamsync
     web:
       cors-allowed-origins:
