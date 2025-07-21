@@ -13,5 +13,5 @@ class ColdStartModel:
         scores = []
         for project_id in project_ids:
             score = user_items[:, project_id].sum() if project_id < user_items.shape[1] else 0.0
-            scores.append({"project_id": project_id, "score": float(score)})
+            scores.append({"project_id": project_id, "score": score})
         return scores
