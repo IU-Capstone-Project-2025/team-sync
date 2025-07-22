@@ -86,18 +86,31 @@ class DBModel:
             self.connection.rollback()
             return []
 
-    def fetch_ids(self, table_name):
-        """Fetches all IDs from a given table."""
+    def get_student_ids(self) -> list[int]:
+        """Fetches all IDs from the student table."""
         if not self.connection:
             raise ConnectionError("Database connection is not established.")
-        
         try:
             with self.connection.cursor() as cursor:
-                query = sql.SQL("SELECT id FROM {}").format(sql.Identifier(table_name))
+                query = sql.SQL("SELECT id FROM student")
                 cursor.execute(query)
                 return [row[0] for row in cursor.fetchall()]
         except psycopg2.Error as e:
-            self.logger.error(f"Error fetching IDs from table {table_name}: {e}")
+            self.logger.error(f"Error fetching IDs from table student: {e}")
+            self.connection.rollback()
+            return []
+
+    def get_project_ids(self) -> list[int]:
+        """Fetches all project IDs from a given table."""
+        if not self.connection:
+            raise ConnectionError("Database connection is not established.")
+        try:
+            with self.connection.cursor() as cursor:
+                query = sql.SQL("SELECT id FROM project WHERE status = %s")
+                cursor.execute(query, (self.config.AVAILABLE_PROJECT_STATUS,))
+                return [row[0] for row in cursor.fetchall()]
+        except psycopg2.Error as e:
+            self.logger.error(f"Error fetching IDs from table project: {e}")
             self.connection.rollback()
             return []
 
@@ -218,14 +231,6 @@ class DBModel:
     def get_all_projects(self):
         """Returns list of tuples with all projects in the database."""
         return self.fetch_all("project")
-
-    def get_project_ids(self):
-        """Fetches all project IDs from the database."""
-        return self.fetch_ids("project")
-    
-    def get_student_ids(self):
-        """Fetches all student IDs from the database."""
-        return self.fetch_ids("student")
 
     async def disconnect(self):
         if self.connection:

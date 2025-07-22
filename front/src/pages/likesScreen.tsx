@@ -21,50 +21,13 @@ interface Project {
 }
 interface Application {
   application_id: number;
+  person_id: number;
   project: Project;
-  status: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
   created_at: number[];
 }
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
-
-async function likeProject(projId: number, token: string){
-  const projectJson = {
-    project_id: projId
-  };
-  const applicationUrl = `${backendHost}/projects/api/v1/favourite`;
-  const response = await fetch(applicationUrl, {  
-    method: 'POST', 
-    mode: 'cors', 
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    },
-    body: JSON.stringify(projectJson) 
-  });
-  if (!response.ok){
-    alert("Like operation failed");
-    return false;
-  }
-  return true;
-}
-
-async function unlikeProject(projId: number, token: string){
-  const applicationUrl = `${backendHost}/projects/api/v1/favourite/${projId}`;
-  const response = await fetch(applicationUrl, {  
-    method: 'DELETE', 
-    mode: 'cors', 
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`
-    }
-  });
-  if (!response.ok){
-    alert("Unlike operation failed");
-    return false;
-  }
-  return true;
-}
 
 export default function ResponseScreen(){
   const navigate = useNavigate();
@@ -100,7 +63,7 @@ export default function ResponseScreen(){
       <div className="flex flex-col flex-1"> 
         <div className="flex flex-col px-18">
           <div className="flex flex-row justify-start items-center py-5"> 
-            <ArrowBackIosIcon onClick = {() => {navigate(-1)}} sx={{ fontSize: 24 }} className="cursor-pointer text-[color:var(--secondary-color)]"/>
+            <ArrowBackIosIcon onClick = {() => {navigate("/home")}} sx={{ fontSize: 24 }} className="cursor-pointer text-[color:var(--secondary-color)]"/>
             <h2 className="font-[Inter] text-(--primary-color) text-xl">
               All projects
             </h2>

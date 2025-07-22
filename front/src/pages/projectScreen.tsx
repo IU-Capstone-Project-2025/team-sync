@@ -6,11 +6,11 @@ import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import MyCard from "../components/myProjectCard";
-import { getMyProjects } from "../utils/backendFetching"
+import { getMyProjects, getCourses } from "../utils/backendFetching"
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
 interface Project {
-  course_name: string;
+  course_id: string;
   description: string;
   id: number;
   name: string;
@@ -18,15 +18,18 @@ interface Project {
   role_ids: number[];
   status: "DRAFT" | "OPEN" | "IN_PROGRESS" | "COMPLETE";
   team_lead_id: number;
+  required_members_count: number;
 }
 export default function ProjectScreen() {
   const navigate = useNavigate();
   const [projects, setProjects] = useState<Project[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [courses, setCourses] = useState<{id: number, name: string}[]>([])
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
       getMyProjects(token).then(result => setProjects(result.projects));
+      getCourses(token).then(setCourses);
     }
   }, [refreshKey]);
 
@@ -51,18 +54,32 @@ export default function ProjectScreen() {
             <Pill type="Drafts" number={0}/>
             <Pill type="Completed" number={0}/>
           </div>
+          {projects.length > 0 ? <button
+            className="flex flex-row items-center px-4 mt-4 border-(--accent-color-2) border-2 rounded-xl text-(--secondary-color) cursor-pointer gap-x-4 w-60"
+            onClick={() => navigate("/projects/create")}
+          >
+            <AddIcon fontSize="large" />
+            <p className="font-[Inter] text-xl leading-none m-0">
+              Create a project
+            </p>
+          </button> : <div></div>}
           {projects.length > 0 ? (
               projects.map((proj) => (
                 <MyCard
                   key={proj.id}
-                  props={{
-                    courseName: proj.course_name,
-                    description: proj.description,
-                    id: proj.id,
-                    projectName: proj.name,
-                    status: proj.status,
-                    teamLeadId: proj.team_lead_id
-                  }}
+                  props={
+                    {
+                      course_name: courses.filter((course) => proj.course_id == course.id.toString()).map((course) => course.name),
+                      description: proj.description,
+                      id: proj.id,
+                      name: proj.name,
+                      skill_ids: proj.skill_ids,
+                      role_ids: proj.role_ids,
+                      status: proj.status,
+                      team_lead_id: proj.team_lead_id,
+                      required_members_count: proj.required_members_count
+                    }
+                  }
                   onDelete={handleProjectUnlike}
                 />
               ))
