@@ -25,6 +25,8 @@ export default function ProjectScreen() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);
   const [courses, setCourses] = useState<{id: number, name: string}[]>([])
+  const [activeFilter, setActiveFilter] = useState<'Active' | 'Completed'>('Active');
+
   useEffect(() => {
     const token = localStorage.getItem("backendToken");
     if (token){
@@ -36,6 +38,11 @@ export default function ProjectScreen() {
   const handleProjectUnlike = () => {
     setRefreshKey(prev => prev + 1);
   };
+
+  const activeProjects = projects.filter(p => p.status === 'OPEN' || p.status === 'IN_PROGRESS');
+  const completedProjects = projects.filter(p => p.status === 'COMPLETE');
+  const filteredProjects = activeFilter === 'Active' ? activeProjects : completedProjects;
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="mb-32">
@@ -50,9 +57,8 @@ export default function ProjectScreen() {
             </h2>
           </div>
           <div className="flex flex-row gap-4">
-            <Pill type="Active" number={0}/>
-            <Pill type="Drafts" number={0}/>
-            <Pill type="Completed" number={0}/>
+            <Pill type="Active" number={activeProjects.length} isActive={activeFilter === 'Active'} onClick={() => setActiveFilter('Active')} />
+            <Pill type="Completed" number={completedProjects.length} isActive={activeFilter === 'Completed'} onClick={() => setActiveFilter('Completed')} />
           </div>
           {projects.length > 0 ? <button
             className="flex flex-row items-center px-4 mt-4 border-(--accent-color-2) border-2 rounded-xl text-(--secondary-color) cursor-pointer gap-x-4 w-60"
@@ -63,8 +69,8 @@ export default function ProjectScreen() {
               Create a project
             </p>
           </button> : <div></div>}
-          {projects.length > 0 ? (
-              projects.map((proj) => (
+          {filteredProjects.length > 0 ? (
+              filteredProjects.map((proj) => (
                 <MyCard
                   key={proj.id}
                   props={
@@ -84,13 +90,13 @@ export default function ProjectScreen() {
                 />
               ))
             ) : (
-              <div className="flex flex-1 flex-col items-center justify-center">
-                <img className="w-[5%]" src="./sadFace.jpg" alt="A sad face" />
-                <p className="font-[Inter] text-xl text-(--primary-color)">
+              <div className="flex flex-1 flex-col items-center justify-center min-h-[40vh]">
+                <img className="w-[5%] mb-4" src="./sadFace.jpg" alt="A sad face" />
+                <p className="font-[Inter] text-xl text-(--primary-color) mb-4">
                   You don't have any projects
                 </p>
                 <button
-                  className="flex flex-row items-center px-4 mt-4 border-(--accent-color-2) border-2 rounded-xl text-(--secondary-color) cursor-pointer gap-x-2"
+                  className="flex flex-row items-center px-4 border-(--accent-color-2) border-2 rounded-xl text-(--secondary-color) cursor-pointer gap-x-2"
                   onClick={() => navigate("/projects/create")}
                 >
                   <AddIcon fontSize="large" />

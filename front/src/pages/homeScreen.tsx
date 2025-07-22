@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Card from "../components/card";
 import Checkbox from "@mui/material/Checkbox";
 import ClearIcon from '@mui/icons-material/Clear';
+import Radio from '@mui/material/Radio';
 import { getProjects, getRoles, getSkills, getCourses, getLikedProjects, getApplications, getNames } from "../utils/backendFetching";
 interface Project {
   course_id: number;
@@ -107,7 +108,8 @@ export default function HomeScreen(){
                             color: "var(--primary-color)",
                             '&.Mui-checked': {
                               color: "var(--accent-color-2)",
-                            }
+                            },
+                            cursor: "pointer"
                           }}
                           onClick={() => {
                             setfilterCourse(null);
@@ -119,7 +121,7 @@ export default function HomeScreen(){
                 )}
                 <Popup
                   trigger={
-                    <button className="hover:underline font-[Inter] font-bold mt-1 ml-0.5 text-(--primary-color)">
+                    <button className="hover:underline font-[Inter] font-bold mt-1 ml-0.5 text-(--primary-color) cursor-pointer">
                       Change
                     </button>
                   }
@@ -135,12 +137,12 @@ export default function HomeScreen(){
                         setSelectedCourse(filterCourse === null ? null : filterCourse.id);
                       }, [filterCourse]);
 
-                      const handleCourseToggle = (id: number) => {
+                      const handleCourseSelect = (id: number | null) => {
                         setSelectedCourse(id);
                       };
 
                       const handleSubmit = () => {
-                        setfilterCourse(courses.filter(course => course.id === selectedCourse)[0]);
+                        setfilterCourse(selectedCourse === null ? null : courses.find(course => course.id === selectedCourse));
                         close();
                       };
 
@@ -149,7 +151,7 @@ export default function HomeScreen(){
                           <button className="close self-end mr-3 text-(--secondary-color) cursor-pointer text-4xl" onClick={close}> &times;</button>
                           <div className="flex flex-col p-18">
                             <h2 className="font-[Inter] font-bold text-4xl pb-2">
-                              Choose courses
+                              Choose course
                             </h2>
                             <div style={{ maxHeight: '50vh', overflowY: 'auto', paddingRight: '4px' }}>
                               {courses.length > 0 && courses.map((course) => {
@@ -158,16 +160,16 @@ export default function HomeScreen(){
                                   <button
                                     key={course.id}
                                     type="button"
-                                    onClick={() => handleCourseToggle(course.id)}
+                                    onClick={() => handleCourseSelect(course.id)}
                                     className={
-                                      "inline-flex flex-row items-center font-[Inter] text-(--secondary-color) border-2 rounded-lg mt-3 px-2 mx-1 py-1 w-fit" +
+                                      "inline-flex flex-row items-center font-[Inter] text-(--secondary-color) border-2 rounded-lg mt-3 px-2 mx-1 py-1 w-fit cursor-pointer" +
                                       (isChecked ? " border-(--accent-color-2)" : " border-(--primary-color)")
                                     }
                                   >
-                                    <Checkbox
+                                    <Radio
                                       checked={isChecked}
                                       size="small"
-                                      onClick={() => handleCourseToggle(course.id)}
+                                      onClick={() => handleCourseSelect(course.id)}
                                       sx={{
                                         padding: 0,
                                         color: "var(--primary-color)",
@@ -182,10 +184,10 @@ export default function HomeScreen(){
                               })}
                             </div>
                             <button
-                              className="mt-6 px-4 py-2 bg-(--accent-color-2)/42 text-(--secondary-color) rounded-2xl text-xl w-fit"
+                              className="mt-6 px-4 py-2 bg-(--accent-color-2)/42 text-(--secondary-color) rounded-2xl text-xl w-fit cursor-pointer"
                               onClick={handleSubmit}
                             >
-                              Add courses
+                              Add course
                             </button>
                           </div>
                         </div>
@@ -215,7 +217,8 @@ export default function HomeScreen(){
                           color: "var(--primary-color)",
                           '&.Mui-checked': {
                             color: "var(--accent-color-2)",
-                          }
+                          },
+                          cursor: "pointer"
                           }}
                           onClick = {() => {
                             const skillsAfterDeletion = filterSkills.filter((skill2) => skill2 != skill);
@@ -228,7 +231,7 @@ export default function HomeScreen(){
                 )}
                 <Popup
                   trigger={
-                    <button className="hover:underline font-[Inter] font-bold mt-1 ml-0.5 text-(--primary-color)">
+                    <button className="hover:underline font-[Inter] font-bold mt-1 ml-0.5 text-(--primary-color) cursor-pointer">
                       Change
                     </button>
                   }
@@ -258,6 +261,7 @@ export default function HomeScreen(){
                       return (
                         <div className="flex flex-col modal rounded-2xl text-(--secondary-color) bg-(--header-footer-color)">
                           <button className="close self-end mr-3 text-(--secondary-color) text-4xl cursor-pointer" onClick={close}> &times;</button>
+                          <button className="close self-end mr-3 text-(--secondary-color) text-4xl cursor-pointer" onClick={close}> &times;</button>
                           <div className="flex flex-col p-18">
                             <h2 className="font-[Inter] font-bold text-4xl pb-2">
                               Choose skills
@@ -271,8 +275,8 @@ export default function HomeScreen(){
                                     type="button"
                                     onClick={() => handleSkillToggle(skill.id)}
                                     className={
-                                      "inline-flex flex-row items-center font-[Inter] text-(--secondary-color) border-2 rounded-lg mt-3 px-2 mx-1 py-1 w-fit" +
-                                      (isChecked ? "border-(--accent-color-2)" : "border-(--primary-color)")
+                                      "inline-flex flex-row items-center font-[Inter] text-(--secondary-color) border-2 rounded-lg mt-3 px-2 mx-1 py-1 w-fit cursor-pointer" +
+                                      (isChecked ? " border-(--accent-color-2)" : " border-(--primary-color)")
                                     }
                                   >
                                     <Checkbox
@@ -293,7 +297,7 @@ export default function HomeScreen(){
                               })}
                             </div>
                             <button
-                              className="mt-6 px-4 py-2 bg-(--accent-color-2)/42 text-(--secondary-color) rounded-2xl text-xl w-fit"
+                              className="mt-6 px-4 py-2 bg-(--accent-color-2)/42 text-(--secondary-color) rounded-2xl text-xl w-fit cursor-pointer"
                               onClick={handleSubmit}
                             >
                               Add skills
@@ -326,7 +330,8 @@ export default function HomeScreen(){
                             color: "var(--primary-color)",
                             '&.Mui-checked': {
                               color: "var(--accent-color-2)",
-                            }
+                            },
+                            cursor: "pointer"
                           }}
                           onClick={() => {
                             const rolesAfterDeletion = filterRoles.filter((role2) => role2 !== role);
@@ -339,7 +344,7 @@ export default function HomeScreen(){
                 )}
                 <Popup
                   trigger={
-                    <button className="hover:underline font-[Inter] font-bold mt-1 ml-0.5 text-(--primary-color)">
+                    <button className="hover:underline font-[Inter] font-bold mt-1 ml-0.5 text-(--primary-color) cursor-pointer">
                       Change
                     </button>
                   }
@@ -369,6 +374,7 @@ export default function HomeScreen(){
                       return (
                         <div className="flex flex-col modal rounded-2xl text-(--secondary-color) bg-(--header-footer-color)">
                           <button className="close self-end mr-3 text-(--secondary-color) text-4xl cursor-pointer" onClick={close}> &times;</button>
+                          <button className="close self-end mr-3 text-(--secondary-color) text-4xl cursor-pointer" onClick={close}> &times;</button>
                           <div className="flex flex-col p-18">
                             <h2 className="font-[Inter] font-bold text-4xl">
                               Choose roles
@@ -382,14 +388,12 @@ export default function HomeScreen(){
                                     type="button"
                                     onClick={() => handleRoleToggle(role.id)}
                                     className={
-                                      "inline-flex flex-row items-center font-[Inter] text-(--secondary-color) border-2 rounded-lg mt-3 px-2 mx-1 py-1 w-fit " +
-                                      (isChecked ? "border-(--accent-color-2)" : "border-(--primary-color)")
+                                      "inline-flex flex-row items-center font-[Inter] text-(--secondary-color) border-2 rounded-lg mt-3 px-2 mx-1 py-1 w-fit cursor-pointer" +
+                                      (isChecked ? " border-(--accent-color-2)" : " border-(--primary-color)")
                                     }
                                   >
                                     <Checkbox
                                       checked={isChecked}
-                                      onClick={() => handleRoleToggle(role.id)}
-                                      onChange={() => handleRoleToggle(role.id)}
                                       size="small"
                                       sx={{
                                         padding: 0,
@@ -405,7 +409,7 @@ export default function HomeScreen(){
                               })}
                             </div>
                             <button
-                              className="mt-6 px-4 py-2 bg-(--accent-color-2)/42 text-(--secondary-color) rounded-2xl text-xl w-fit"
+                              className="mt-6 px-4 py-2 bg-(--accent-color-2)/42 text-(--secondary-color) rounded-2xl text-xl w-fit cursor-pointer"
                               onClick={handleSubmit}
                             >
                               Add roles

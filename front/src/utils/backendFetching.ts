@@ -260,6 +260,28 @@ export async function deleteApplication(token: string, applicationId: number) : 
     }
 }
 
+export async function deleteProject(token: string, projectId: number) : Promise<boolean>{
+  const projectUrl = `${backendHost}/projects/api/v1/projects/${projectId}`;
+    const appJson = {
+      projectId: projectId
+    };
+    try {
+      const response = await fetch(projectUrl, {  
+        method: 'DELETE', 
+        mode: 'cors', 
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(appJson) 
+      });
+      return response.ok;
+    }
+    catch (error){
+      return false;
+    }
+}
+
 export async function getProjectApplications(token: string, projectId: number) {
   const projectUrl = `${backendHost}/projects/api/v1/projects/${projectId}/applications`;
   try {

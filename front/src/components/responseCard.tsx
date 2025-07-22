@@ -61,7 +61,7 @@ export default function responseCard({props, onDelete}) {
                   </div>
                   <div>
                     <h3 className="font-[Inter] text-lg text-(--secondary-color)/48">REQUIRED ROLES</h3>
-                    <span style={{ maxHeight: '10vh', overflowY: 'auto', paddingRight: '4px' }} className="flex flex-row flex-wrap mt-0.5 flex gap-1">
+                    <span style={{ maxHeight: '10vh', overflowY: 'auto', paddingRight: '4px' }} className="flex-row flex-wrap mt-0.5 flex gap-1">
                       {props.roles.length > 0 && props.roles.map((role) => {
                         return (
                           <button
@@ -78,7 +78,7 @@ export default function responseCard({props, onDelete}) {
                   </div>
                   <div>
                     <h3 className="font-[Inter] text-lg text-(--secondary-color)/48">REQUIRED SKILLS</h3>
-                    <span style={{ maxHeight: '10vh', overflowY: 'auto', paddingRight: '4px' }} className="flex flex-row flex-wrap mt-0.5 flex gap-1">
+                    <span style={{ maxHeight: '10vh', overflowY: 'auto', paddingRight: '4px' }} className="flex-row flex-wrap mt-0.5 flex gap-1">
                       {props.skills.length > 0 && props.skills.map((skill) => {
                         return (
                           <button

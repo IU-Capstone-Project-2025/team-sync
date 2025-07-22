@@ -40,7 +40,7 @@ export default function HomeHeader(){
               <path d="M41.4324 24.9514C41.4324 15.6525 33.9584 8.11429 24.7388 8.11429C15.5191 8.11429 8.04513 15.6525 8.04513 24.9514C8.04513 34.2503 15.5191 41.7886 24.7388 41.7886V49.9029C11.0759 49.9029 0 38.7317 0 24.9514C0 11.1711 11.0759 0 24.7388 0C38.4016 0 49.4776 11.1711 49.4776 24.9514C49.4776 38.7317 38.4016 49.9029 24.7388 49.9029V41.7886C33.9584 41.7886 41.4324 34.2503 41.4324 24.9514Z" fill="#FFC100"/>
             </svg>
             <span className='flex flex-row justify-end items-center space-x-6'>
-              <NavButton text = "My responses" link = "/responses"/>
+              <NavButton text = "My applications" link = "/responses"/>
               <NavButton text = "My projects" link = "/projects"/>
               <FavoriteBorderIcon onClick = {() => {if(window.location.pathname != "/likes"){navigate("/likes")}}} sx={{ fontSize: 30 }} className="cursor-pointer text-[color:var(--secondary-color)]" />
               <Account name ={fullName}/>

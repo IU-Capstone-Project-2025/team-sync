@@ -63,7 +63,7 @@ export default function CreateProjectScreen() {
         <HomeHeader/>
       </div>
       <main className="flex-1 pl-16 pb-10">
-        <h1 className="font-[Manrope] text-(--secondary-color) text-5xl font-bold mb-11">New project</h1>
+        <h1 className="font-[Manrope] text-(--secondary-color) text-5xl font-bold mb-11 mt-5">New project</h1>
         <form onSubmit={createProject}>
           <p className="mb-2">Name</p>
           <input name = "projectName" required className = "focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 min-w-50 p-1 text-(--secondary-color) font-[Inter] text-md" type="query" />
