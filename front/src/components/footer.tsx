@@ -6,9 +6,9 @@ export default function Footer(){
       <p className="font-[Manrope] text-(--secondary-color)">
         © 2025 Innopolis University
       </p>
-      <p className="font-[Manrope] text-(--secondary-color)">
+      {/* <p className="font-[Manrope] text-(--secondary-color)">
         Help
-      </p>
+      </p> */}
     </div>
   );
 }
