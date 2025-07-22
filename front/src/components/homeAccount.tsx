@@ -29,7 +29,7 @@ export default function Account({name}){
   return (
     <div className='relative flex flex-row items-center gap-1' ref={menuRef}>
       <span className="bg-(--secondary-color) rounded-4xl min-w-13 min-h-13 inline-block"></span>
-      <h3 className='font-[Inter] text-(--secondary-color) font-bold text-xl pl-3'>
+      <h3 className='font-[Inter] text-(--secondary-color) font-bold text-xl pl-3 cursor-pointer' onClick={toggleMenu}>
         {name}
       </h3>
       <ExpandMoreIcon 

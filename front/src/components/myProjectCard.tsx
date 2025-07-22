@@ -3,9 +3,11 @@ import Popup from "reactjs-popup";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { deleteApplication, getPersonById, getProjectApplications, getSkills, getRoles, approveApplication, rejectApplication, returnApplication } from "../utils/backendFetching";
+import { deleteProject, getPersonById, getProjectApplications, getSkills, getRoles, approveApplication, rejectApplication, returnApplication } from "../utils/backendFetching";
 import CustomizedHook from "./autocompleteInput";
 import { useNavigate } from "react-router-dom";
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 const backendHost = import.meta.env.VITE_BACKEND_HOST
 
@@ -52,7 +54,7 @@ interface Person {
   }
 }
 
-export default function responseCard({props, onDelete}) {
+export default function myProjCard({props, onDelete}) {
   const navigate = useNavigate();
   const [applications, setApplications] = useState<Application[]>([]);
   const [applicants, setApplicants] = useState<Person[]>([]);
@@ -120,6 +122,7 @@ export default function responseCard({props, onDelete}) {
       alert("Failed to edit project");
     }
   }
+
   return (
     <div className="mt-4 bg-(--header-footer-color) w-full max-w-[98vw] text-(--secondary-color) p-5 border-(--secondary-color) border-1 rounded-2xl hover:shadow-md">
       <div className="flex justify-between">
@@ -137,6 +140,7 @@ export default function responseCard({props, onDelete}) {
                 <div className="modal flex flex-col items-start rounded-2xl bg-(--header-footer-color) pl-10 pr-7 py-5 pb-10 gap-2 text-(--secondary-color)">
                   <button className="text-3xl close self-end cursor-pointer" onClick={close}> &times;</button>
                   <form onSubmit={editProject} className="w-full">
+                    <h1 className="font-[Manrope] text-4xl font-extrabold mb-3">Edit project</h1>
                     <p className="mb-1">Name</p>
                     <input name = "projectName" required className = "focus:border-(--accent-color-2) focus:outline-none mb-2 border-(--secondary-color) border-2 rounded-2xl min-h-10 w-[30%] p-1 text-(--secondary-color) font-[Inter] text-md" type="query" value={props.name}/>
                     <p className="mb-1">Description</p>
@@ -198,7 +202,7 @@ export default function responseCard({props, onDelete}) {
                       onClick={() => {
                         const token = localStorage.getItem("backendToken");
                         if (token){
-                          deleteApplicationByProjectId(token, props.id).then(success => {
+                          deleteProject(token, props.id).then(success => {
                             if (success) {
                               close();
                               onDelete();
@@ -216,8 +220,10 @@ export default function responseCard({props, onDelete}) {
           </Popup>
         </div>
       </div>
-      <div className="flex justify-between">
-        <p className="font-[Inter] text-lg">Status: <em className="font-bold">{props.status.at(0) + props.status.slice(1).toLowerCase()}</em></p>
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <p className="font-[Inter] text-lg">Status: <em className="font-bold">{props.status.at(0) + props.status.slice(1).toLowerCase()}</em></p>
+        </div>
         {
           applications.length > 0 ?
           <Popup
