@@ -201,7 +201,7 @@ export default function SplashScreen() {
           
           <div className='flex gap-24 justify-center max-w-full mx-auto px-8'>
             <div className='flex items-center gap-50 w-[1100px]'>
-              <img className='w-96 h-auto flex-shrink-0 rounded-lg' src='./clash.png' alt="Clash Royale illustration" />
+              <img className='w-96 h-auto flex-shrink-0 rounded-lg' src='./brain.svg' alt="Brain illustration" />
               <div className='flex flex-col flex-1'>
                 <h3 className='font-[Inter] text-5xl font-semibold pb-8'>Streamline project management</h3>
                 <p className='font-[Inter] text-2xl leading-relaxed'>
