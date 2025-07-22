@@ -88,7 +88,9 @@ export default function SplashScreen() {
       msalInstance.loginRedirect(loginRequest);
     }
   };
-  
+
+  useEffect(() => handleSSOClick(),[needsRegistration]);
+
   return(
     <div className='flex flex-col justify-between h-screen'>
       <SplashHeader/>
