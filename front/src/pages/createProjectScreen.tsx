@@ -68,7 +68,7 @@ export default function CreateProjectScreen() {
           <p className="mb-2">Name</p>
           <input name = "projectName" required className = "focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 min-w-50 p-1 text-(--secondary-color) font-[Inter] text-md" type="query" />
           <p className="mb-2">Description</p>
-          <input name = "description" required className = "focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-30 min-w-150 p-1 text-(--secondary-color) font-[Inter] text-md" type="query" />
+          <textarea name = "description" required className = "focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-30 min-w-150 p-1 text-(--secondary-color) font-[Inter] text-md"/>
           <p className="mb-2">Course</p>
           <input name = "courseName" required className = "focus:border-(--accent-color-2) focus:outline-none mb-5 border-(--secondary-color) border-2 rounded-2xl min-h-10 min-w-50 p-1 text-(--secondary-color) font-[Inter] text-md" type="query" />
           <p className="mb-2">Required roles</p>

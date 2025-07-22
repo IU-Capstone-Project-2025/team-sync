@@ -146,7 +146,7 @@ export default function HomeScreen(){
 
                       return (
                         <div className="flex flex-col modal rounded-2xl text-(--secondary-color) bg-(--header-footer-color)">
-                          <button className="close self-end mr-3 text-(--secondary-color) text-4xl" onClick={close}> &times;</button>
+                          <button className="close self-end mr-3 text-(--secondary-color) cursor-pointer text-4xl" onClick={close}> &times;</button>
                           <div className="flex flex-col p-18">
                             <h2 className="font-[Inter] font-bold text-4xl pb-2">
                               Choose courses
@@ -167,6 +167,7 @@ export default function HomeScreen(){
                                     <Checkbox
                                       checked={isChecked}
                                       size="small"
+                                      onClick={() => handleCourseToggle(course.id)}
                                       sx={{
                                         padding: 0,
                                         color: "var(--primary-color)",
@@ -256,7 +257,7 @@ export default function HomeScreen(){
 
                       return (
                         <div className="flex flex-col modal rounded-2xl text-(--secondary-color) bg-(--header-footer-color)">
-                          <button className="close self-end mr-3 text-(--secondary-color) text-4xl" onClick={close}> &times;</button>
+                          <button className="close self-end mr-3 text-(--secondary-color) text-4xl cursor-pointer" onClick={close}> &times;</button>
                           <div className="flex flex-col p-18">
                             <h2 className="font-[Inter] font-bold text-4xl pb-2">
                               Choose skills
@@ -276,6 +277,7 @@ export default function HomeScreen(){
                                   >
                                     <Checkbox
                                       checked={isChecked}
+                                      onClick={() => handleSkillToggle(skill.id)}
                                       size="small"
                                       sx={{
                                         padding: 0,
@@ -366,7 +368,7 @@ export default function HomeScreen(){
 
                       return (
                         <div className="flex flex-col modal rounded-2xl text-(--secondary-color) bg-(--header-footer-color)">
-                          <button className="close self-end mr-3 text-(--secondary-color) text-4xl" onClick={close}> &times;</button>
+                          <button className="close self-end mr-3 text-(--secondary-color) text-4xl cursor-pointer" onClick={close}> &times;</button>
                           <div className="flex flex-col p-18">
                             <h2 className="font-[Inter] font-bold text-4xl">
                               Choose roles
@@ -386,6 +388,7 @@ export default function HomeScreen(){
                                   >
                                     <Checkbox
                                       checked={isChecked}
+                                      onClick={() => handleRoleToggle(role.id)}
                                       onChange={() => handleRoleToggle(role.id)}
                                       size="small"
                                       sx={{

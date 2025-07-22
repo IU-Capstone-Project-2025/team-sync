@@ -26,10 +26,10 @@ export default function SplashHeader({ onSSOClick }: SplashHeaderProps) {
         <path d="M41.4324 24.9514C41.4324 15.6525 33.9584 8.11429 24.7388 8.11429C15.5191 8.11429 8.04513 15.6525 8.04513 24.9514C8.04513 34.2503 15.5191 41.7886 24.7388 41.7886V49.9029C11.0759 49.9029 0 38.7317 0 24.9514C0 11.1711 11.0759 0 24.7388 0C38.4016 0 49.4776 11.1711 49.4776 24.9514C49.4776 38.7317 38.4016 49.9029 24.7388 49.9029V41.7886C33.9584 41.7886 41.4324 34.2503 41.4324 24.9514Z" fill="#FFC100"/>
       </svg>
       <span className='flex flex-row justify-end items-center space-x-2 lg:space-x-4'>
-        <NavButton text = "How it works" link='google.com'/>
-        <NavButton text = "For students" link='google.com'/>
-        <NavButton text = "For teachers" link='google.com'/>
-        <NavButton text = "Help" link='google.com'/>
+        <NavButton text = "How it works" link='#how-it-works'/>
+        <NavButton text = "For students" link='#for-students'/>
+        <NavButton text = "For teachers" link='#for-teachers'/>
+        <NavButton text = "FAQ" link='#faq'/>
         <SignUpButton onSSOClick={onSSOClick}/>
       </span>
     </div>
