@@ -101,12 +101,16 @@ class ALSRecommender(Recommender):
             als_user_ids.append(user_id)
             als_item_ids.append(project_id)
             als_confidence.append(value)
+            self.logger.info(f"Processed user {user_id} for project {project_id} with confidence {value}.")
+        self.logger.info("Finished processing confidence scores for ALS recommender.")
 
         num_users = max(als_user_ids) + 1
         num_items = max(als_item_ids) + 1
+        self.logger.info(f"Creating sparse matrix with shape ({num_users}, {num_items}) for ALS recommender.")
         data = coo_matrix((als_confidence, (als_user_ids, als_item_ids)), shape=(num_users, num_items))
-
+        self.logger.info("Sparse matrix created successfully.")
         self.user_items = data.tocsr()
         self.als_model.fit(data)
+
         self.logger.info(f"Data saved for {self.model_name} recommender with {len(als_user_ids)} users and {len(als_item_ids)} projects.")
 
