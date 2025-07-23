@@ -89,7 +89,7 @@ export default function SplashScreen() {
     }
   };
 
-  useEffect(() => handleSSOClick(),[needsRegistration]);
+  useEffect(handleSSOClick,[needsRegistration]);
 
   return(
     <div className='flex flex-col justify-between h-screen'>
