@@ -109,7 +109,6 @@ export default function SplashScreen() {
           alt="Two people looking at each other from open windows drawn in a minimalist style" />
         </div>
         <div className = 'pt-40'>
-          <SlidingBanner/>
         </div>
         <div className = 'pt-10'></div>
         <div id="how-it-works" className='text-(--secondary-color) flex flex-col items-center py-20'>
